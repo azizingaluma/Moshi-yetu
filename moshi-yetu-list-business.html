@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moshi Yetu — List Your Business</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --kilimanjaro-900: #0f2a2e;
+        --kilimanjaro-700: #1b4b4f;
+        --kilimanjaro-500: #2e7d6b;
+        --savanna-500: #e0a939;
+        --savanna-700: #b98320;
+        --sunrise-500: #e8703a;
+        --earth-500: #8a5a3b;
+        --sky-500: #4fa5d8;
+        --stone-50: #faf8f5;
+        --stone-100: #f3efe9;
+        --stone-200: #e7e1d8;
+        --stone-400: #a79c8c;
+        --stone-600: #6b6055;
+        --stone-800: #332c24;
+        --stone-950: #1a1611;
+        --success-500: #3f9142;
+        --warning-500: #d6963b;
+        --error-500: #c4483a;
+        --info-500: #4a7fbf;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+        --radius-full: 999px;
+        --shadow-xs: 0 1px 2px rgba(26, 22, 17, 0.04);
+        --shadow-sm: 0 2px 8px rgba(26, 22, 17, 0.06);
+        --shadow-md: 0 8px 24px rgba(26, 22, 17, 0.08);
+        --shadow-lg: 0 16px 48px rgba(26, 22, 17, 0.12);
+        --shadow-xl: 0 24px 64px rgba(26, 22, 17, 0.16);
+        --shadow-glow-gold: 0 0 32px rgba(224, 169, 57, 0.25);
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-6: 24px;
+        --space-8: 32px;
+        --space-12: 48px;
+        --space-16: 64px;
+        --space-24: 96px;
+        --space-32: 128px;
+        --icon-sm: 16px;
+        --icon-md: 20px;
+        --icon-lg: 24px;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        color: var(--stone-800);
+        background: var(--stone-50);
+        line-height: 1.5;
+      }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; text-decoration: none; }
+
+      /* Accessible focus ring — visible everywhere, not just inputs */
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      .card:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 2px solid var(--savanna-500);
+        outline-offset: 3px;
+        border-radius: var(--radius-sm);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      .icon {
+        width: var(--icon-md);
+        height: var(--icon-md);
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .icon-sm { width: var(--icon-sm); height: var(--icon-sm); }
+      .icon-lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+      .container {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+      .section {
+        padding: var(--space-24) 0;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--savanna-500);
+        margin-bottom: var(--space-3);
+      }
+      h1, h2, h3, .display {
+        font-family: Fraunces, Georgia, serif;
+        letter-spacing: -0.01em;
+      }
+      .display-xl { font-size: clamp(2.75rem, 5vw, 5.5rem); line-height: 0.95; }
+      .display-l { font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.05; }
+      .display-m { font-size: clamp(1.6rem, 2.3vw, 2.2rem); line-height: 1.15; }
+      .heading-m { font-size: 1.5rem; line-height: 1.2; }
+      .text-body { font-size: 1rem; color: var(--stone-600); }
+      .muted { color: var(--stone-600); }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(250, 248, 245, 0.86);
+        backdrop-filter: blur(20px) saturate(140%);
+        border-bottom: 1px solid rgba(231, 225, 216, 0.8);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 88px;
+        gap: var(--space-4);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--savanna-500), var(--kilimanjaro-500));
+        position: relative;
+      }
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 2px solid white;
+        border-radius: 50%;
+        border-top-color: transparent;
+        transform: rotate(25deg);
+      }
+      .nav-links { display: flex; gap: var(--space-6); color: var(--stone-800); }
+      .nav-links a:hover { color: var(--savanna-500); }
+      .nav-actions { display: flex; gap: var(--space-3); align-items: center; }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        border: 0;
+        border-radius: var(--radius-md);
+        padding: 0 16px;
+        height: 44px;
+        font-weight: 600;
+        font-family: inherit;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, opacity 180ms ease;
+      }
+      .button:hover { transform: translateY(-1px); }
+      .button:active { transform: translateY(0); filter: brightness(0.96); }
+      .button:disabled,
+      .button.is-disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        transform: none;
+        box-shadow: none;
+      }
+      .button-primary {
+        background: var(--savanna-500);
+        color: var(--stone-950);
+        box-shadow: var(--shadow-sm);
+      }
+      .button-primary:hover { box-shadow: var(--shadow-glow-gold); }
+      .button-secondary {
+        background: var(--kilimanjaro-700);
+        color: white;
+      }
+      .button-secondary:hover { background: var(--kilimanjaro-900); }
+      .button-outline {
+        background: transparent;
+        color: var(--stone-800);
+        border: 1.5px solid var(--stone-800);
+      }
+      .button-outline:hover { background: var(--stone-800); color: white; }
+      .button-ghost {
+        background: transparent;
+        color: var(--stone-800);
+        padding: 0;
+        height: auto;
+      }
+      .button-ghost:hover { color: var(--savanna-700); transform: none; }
+      .button-ghost:active { transform: none; }
+
+      .hero {
+        min-height: 90vh;
+        display: grid;
+        align-items: end;
+        position: relative;
+        color: white;
+        background:
+          linear-gradient(180deg, rgba(15, 42, 46, 0.14) 0%, rgba(15, 42, 46, 0.82) 100%),
+          url("https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&w=1600&q=80") center/cover;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(15,42,46,0.5) 0%, rgba(15,42,46,0.12) 100%);
+        pointer-events: none;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 7rem 0 5rem;
+      }
+      .hero-search {
+        margin-top: var(--space-8);
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: var(--radius-full);
+        padding: var(--space-3);
+        display: flex;
+        gap: var(--space-2);
+        align-items: center;
+        box-shadow: var(--shadow-md);
+      }
+      .hero-search .field {
+        background: rgba(255,255,255,0.9);
+        color: var(--stone-800);
+        border-radius: var(--radius-full);
+        padding: 0 16px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+      }
+      .hero-search .field + .field { border-left: 1px solid var(--stone-200); margin-left: var(--space-2); }
+
+      .pill-row {
+        display: flex;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+        margin-top: var(--space-6);
+      }
+      .pill {
+        padding: 10px 14px;
+        border-radius: var(--radius-full);
+        background: rgba(255,255,255,0.18);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .grid-2, .grid-3, .grid-4 {
+        display: grid;
+        gap: var(--space-6);
+      }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+      .panel {
+        background: white;
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        box-shadow: var(--shadow-sm);
+      }
+      .panel.alt { background: var(--stone-100); }
+      .swatches { display: grid; gap: var(--space-4); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .swatch { border-radius: var(--radius-lg); padding: var(--space-4); min-height: 110px; color: white; box-shadow: var(--shadow-xs); }
+      .swatch.light { color: var(--stone-800); }
+      .swatch small { display: block; margin-top: var(--space-2); opacity: 0.85; }
+
+      .type-sample { padding: var(--space-4) 0; border-bottom: 1px solid var(--stone-200); }
+      .type-sample:last-child { border-bottom: 0; }
+
+      .card {
+        background: white;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--stone-200);
+        box-shadow: var(--shadow-sm);
+        transition: transform 250ms ease, box-shadow 250ms ease;
+      }
+      .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+      .card-media {
+        aspect-ratio: 4 / 3;
+        background-size: cover;
+        background-position: center;
+      }
+      .card-body { padding: var(--space-6); }
+      .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--stone-600);
+        font-size: 0.9rem;
+        margin-top: var(--space-3);
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .badge-green { background: rgba(46, 125, 107, 0.14); color: var(--kilimanjaro-500); }
+      .badge-gold { background: rgba(224, 169, 57, 0.18); color: var(--savanna-500); }
+      .badge-orange { background: rgba(232, 112, 58, 0.16); color: var(--sunrise-500); }
+      .list-card { display: flex; gap: var(--space-4); align-items: center; }
+      .list-card .thumb { width: 92px; height: 92px; border-radius: var(--radius-lg); background-size: cover; background-position: center; flex-shrink: 0; }
+      .stat-card { text-align: center; padding: var(--space-8); }
+      .stat-card strong { display: block; font-size: 2rem; font-family: Fraunces, Georgia, serif; margin-bottom: var(--space-2); }
+
+      .form-stack { display: grid; gap: var(--space-4); }
+      .field-label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: var(--space-2); }
+      .input {
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-md);
+        padding: 0 14px;
+        height: 48px;
+        width: 100%;
+        background: var(--stone-50);
+      }
+      .input:focus { outline: 2px solid var(--savanna-500); outline-offset: 2px; border-color: var(--kilimanjaro-500); }
+      .input::placeholder { color: var(--stone-400); }
+      .input:disabled {
+        background: var(--stone-100);
+        color: var(--stone-400);
+        cursor: not-allowed;
+        border-color: var(--stone-200);
+      }
+      .input.is-success { border-color: var(--success-500); background: rgba(63, 145, 66, 0.05); }
+      .input.is-success:focus { outline-color: var(--success-500); }
+      .input.is-error { border-color: var(--error-500); background: rgba(196, 72, 58, 0.05); }
+      .input.is-error:focus { outline-color: var(--error-500); }
+      .field-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        margin-top: var(--space-2);
+        color: var(--stone-600);
+      }
+      .field-hint.is-success { color: var(--success-500); }
+      .field-hint.is-error { color: var(--error-500); }
+      .footer {
+        background: var(--kilimanjaro-900);
+        color: white;
+        padding: var(--space-24) 0 var(--space-8);
+      }
+      .footer-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: var(--space-8); }
+      .footer a { color: rgba(255,255,255,0.8); }
+      .footer a:hover { color: white; }
+      .footer .newsletter { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+      .footer .newsletter input { flex: 1; height: 44px; border-radius: var(--radius-full); border: 0; padding: 0 14px; }
+
+      .nav-toggle {
+        display: none;
+        background: transparent;
+        border: 0;
+        padding: 8px;
+        cursor: pointer;
+        color: var(--stone-800);
+      }
+      .nav-toggle .icon { width: 24px; height: 24px; }
+      .nav-drawer {
+        display: none;
+        position: fixed;
+        inset: 88px 0 0 0;
+        background: var(--stone-50);
+        z-index: 19;
+        padding: var(--space-6) 0;
+        overflow-y: auto;
+      }
+      .nav-drawer.is-open { display: block; }
+      .nav-drawer-links { display: flex; flex-direction: column; gap: var(--space-1); }
+      .nav-drawer-links a {
+        padding: 14px 4px;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.3rem;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .nav-drawer-actions { display: flex; gap: var(--space-3); margin-top: var(--space-6); }
+      .nav-drawer-actions .button { flex: 1; }
+
+      .icon-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-lg);
+        background: white;
+      }
+      .icon-tile .icon { width: var(--icon-lg); height: var(--icon-lg); color: var(--kilimanjaro-500); }
+      .icon-tile span { font-size: 0.8rem; color: var(--stone-600); text-align: center; }
+      .icon-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-3); }
+
+      .state-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-4) 0;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .state-row:last-child { border-bottom: 0; }
+      .state-row .state-label {
+        width: 90px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--stone-600);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 900px) {
+        .nav-links { display: none; }
+        .nav-actions .button-outline { display: none; }
+        .nav-toggle { display: inline-flex; }
+        .grid-3, .grid-4, .footer-grid { grid-template-columns: 1fr 1fr; }
+        .icon-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      }
+      @media (max-width: 640px) {
+        .grid-2, .grid-3, .grid-4, .footer-grid, .swatches { grid-template-columns: 1fr; }
+        .icon-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .hero-search { flex-direction: column; align-items: stretch; border-radius: var(--radius-xl); }
+        .hero-search .field + .field { border-left: 0; border-top: 1px solid var(--stone-200); margin-left: 0; padding-top: var(--space-2); }
+        .hero-content { padding: 4.5rem 0 3.5rem; }
+        .nav-inner { height: 72px; }
+        .nav-drawer { inset: 72px 0 0 0; }
+        .state-row { flex-direction: column; align-items: flex-start; }
+      }
+
+      /* ---------- List Your Business ---------- */
+      .onboard-shell { padding: var(--space-8) 0 var(--space-24); }
+      .onboard-layout { display: grid; grid-template-columns: 1fr 320px; gap: var(--space-8); align-items: start; }
+
+      .stepper { display: flex; align-items: center; margin-bottom: var(--space-8); }
+      .step-item { display: flex; align-items: center; gap: 10px; color: var(--stone-400); }
+      .step-item .step-dot {
+        width: 30px; height: 30px; border-radius: 50%;
+        border: 1.5px solid var(--stone-200);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+        background: white; color: var(--stone-400);
+        transition: all 200ms ease;
+      }
+      .step-item .step-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
+      .step-item.is-active { color: var(--stone-800); }
+      .step-item.is-active .step-dot { border-color: var(--kilimanjaro-500); background: var(--kilimanjaro-500); color: white; }
+      .step-item.is-done .step-dot { border-color: var(--kilimanjaro-500); background: white; color: var(--kilimanjaro-500); }
+      .step-line { flex: 1; height: 1.5px; background: var(--stone-200); margin: 0 12px; }
+      .step-line.is-done { background: var(--kilimanjaro-500); }
+
+      .step-panel { display: none; }
+      .step-panel.is-active { display: block; }
+      .step-actions { display: flex; justify-content: space-between; margin-top: var(--space-8); }
+
+      .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
+      textarea.input { height: auto; padding: 12px 14px; resize: vertical; min-height: 96px; font-family: inherit; }
+
+      .category-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); margin-top: var(--space-2); }
+      .category-option {
+        border: 1.5px solid var(--stone-200); border-radius: var(--radius-lg);
+        padding: var(--space-4); text-align: center; cursor: pointer; background: white;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+      .category-option:hover { border-color: var(--kilimanjaro-500); }
+      .category-option.is-selected { border-color: var(--kilimanjaro-500); box-shadow: 0 0 0 3px rgba(46,125,107,0.12); }
+      .category-option .icon { color: var(--kilimanjaro-500); margin: 0 auto 8px; }
+      .category-option span { display: block; font-size: 0.85rem; font-weight: 600; }
+
+      .dropzone {
+        border: 2px dashed var(--stone-200);
+        border-radius: var(--radius-lg);
+        padding: var(--space-12) var(--space-6);
+        text-align: center;
+        color: var(--stone-600);
+        cursor: pointer;
+        transition: border-color 150ms ease, background 150ms ease;
+      }
+      .dropzone:hover, .dropzone.is-dragover { border-color: var(--kilimanjaro-500); background: rgba(46,125,107,0.04); }
+      .dropzone .icon { color: var(--stone-400); margin: 0 auto var(--space-3); }
+      .photo-previews { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3); margin-top: var(--space-4); }
+      .photo-thumb { position: relative; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; background: var(--stone-100); }
+      .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+      .photo-thumb .remove-btn {
+        position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%;
+        background: rgba(15,42,46,0.75); color: white; border: 0; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+      }
+
+      .benefit-list { display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-4); }
+      .benefit-item { display: flex; gap: 12px; align-items: flex-start; }
+      .benefit-item .icon { color: var(--savanna-500); flex-shrink: 0; margin-top: 2px; }
+      .benefit-item strong { display: block; font-size: 0.92rem; }
+      .benefit-item p { margin: 2px 0 0; font-size: 0.85rem; color: var(--stone-600); }
+
+      .review-block { border: 1px solid var(--stone-200); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-6); margin-bottom: var(--space-4); }
+      .review-block h5 { margin: 0 0 var(--space-2); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--stone-600); }
+      .review-block dl { display: grid; grid-template-columns: 140px 1fr; row-gap: 6px; margin: 0; font-size: 0.9rem; }
+      .review-block dt { color: var(--stone-600); }
+      .review-block dd { margin: 0; font-weight: 500; }
+
+      .confirm-hero { text-align: center; padding: var(--space-16) 0 var(--space-8); }
+      .confirm-check {
+        width: 72px; height: 72px; border-radius: 50%;
+        background: rgba(46,125,107,0.12); color: var(--kilimanjaro-500);
+        display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-6);
+      }
+      .confirm-ref {
+        display: inline-block; margin-top: var(--space-4);
+        border: 1.5px dashed var(--stone-200); border-radius: var(--radius-md);
+        padding: 10px 18px; font-family: Fraunces, Georgia, serif; letter-spacing: 0.05em;
+      }
+
+      @media (max-width: 900px) {
+        .onboard-layout { grid-template-columns: 1fr; }
+        .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .step-item .step-name { display: none; }
+        .field-row { grid-template-columns: 1fr; }
+        .photo-previews { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-mark"></span>
+          <span>Moshi Yetu</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="moshi-yetu-destinations.html">Destinations</a>
+          <a href="moshi-yetu-culture.html">Culture</a>
+          <a href="moshi-yetu-hotels.html">Hotels</a>
+          <a href="moshi-yetu-coffee.html">Coffee</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="button button-outline">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/><path d="M3 12h18"/></svg>
+            EN / SW
+          </button>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer" onclick="toggleNavDrawer()">
+            <svg class="icon" id="navToggleIcon" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <nav id="navDrawer" class="nav-drawer" aria-label="Mobile">
+        <div class="container">
+          <div class="nav-drawer-links">
+            <a href="index.html">Home</a>
+            <a href="moshi-yetu-destinations.html">Destinations</a>
+            <a href="moshi-yetu-culture.html">Culture</a>
+            <a href="moshi-yetu-hotels.html">Hotels</a>
+            <a href="moshi-yetu-coffee.html">Coffee</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <script>
+      function toggleNavDrawer() {
+        const drawer = document.getElementById('navDrawer');
+        const toggle = document.querySelector('.nav-toggle');
+        const isOpen = drawer.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        document.getElementById('navToggleIcon').innerHTML = isOpen
+          ? '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'
+          : '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>';
+      }
+    </script>
+
+    <main class="onboard-shell">
+      <div class="container">
+        <p class="eyebrow">For business owners</p>
+        <h1 class="display-l" style="margin-bottom: var(--space-8);">List your business on Moshi Yetu</h1>
+
+        <div id="stepper" class="stepper">
+          <div class="step-item is-active" data-step="1"><span class="step-dot">1</span><span class="step-name">Business basics</span></div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="2"><span class="step-dot">2</span><span class="step-name">Location &amp; contact</span></div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="3"><span class="step-dot">3</span><span class="step-name">Photos</span></div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="4"><span class="step-dot">4</span><span class="step-name">Review &amp; submit</span></div>
+        </div>
+
+        <div id="onboardLayout" class="onboard-layout">
+          <div>
+            <!-- Step 1: Business basics -->
+            <div class="step-panel is-active" data-panel="1">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Tell us about your business</h3>
+                <div class="form-stack" style="margin-top: var(--space-4);">
+                  <div>
+                    <label class="field-label" for="bizName">Business name</label>
+                    <input class="input" id="bizName" placeholder="e.g. Kilimanjaro View Lodge" />
+                    <p class="field-hint is-error" id="bizNameError" style="display:none;">
+                      <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                      Enter your business name
+                    </p>
+                  </div>
+                  <div>
+                    <label class="field-label">Category</label>
+                    <div class="category-grid" id="categoryGrid">
+                      <div class="category-option is-selected" data-cat="Hotel &amp; Lodge">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="10" rx="1.5"/><path d="M3 10V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3"/><path d="M7 20v-3M17 20v-3"/></svg>
+                        <span>Hotel &amp; Lodge</span>
+                      </div>
+                      <div class="category-option" data-cat="Restaurant &amp; Café">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M6 9V3.5"/><path d="M10 9V3.5"/><path d="M5 9h11a1 1 0 0 1 1 1c0 5-3.5 8-6.5 8S4 15 4 10a1 1 0 0 1 1-1Z"/></svg>
+                        <span>Restaurant &amp; Café</span>
+                      </div>
+                      <div class="category-option" data-cat="Tour Operator">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15l2.5-6.5L17 6l-2.5 6.5L8 15Z"/></svg>
+                        <span>Tour Operator</span>
+                      </div>
+                      <div class="category-option" data-cat="Coffee Experience">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M6 9V3.5"/><path d="M10 9V3.5"/><path d="M5 9h11a1 1 0 0 1 1 1c0 5-3.5 8-6.5 8S4 15 4 10a1 1 0 0 1 1-1Z"/><path d="M16.5 10.5c2 0 3.5 1.2 3.5 3s-1.5 2.5-3 2"/></svg>
+                        <span>Coffee Experience</span>
+                      </div>
+                      <div class="category-option" data-cat="Cultural Site">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M4 21h16"/><path d="M6 21V9l6-5 6 5v12"/><path d="M10 21v-6h4v6"/></svg>
+                        <span>Cultural Site</span>
+                      </div>
+                      <div class="category-option" data-cat="Transport">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>
+                        <span>Transport</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="field-label" for="bizDesc">Short description</label>
+                    <textarea class="input" id="bizDesc" placeholder="What makes your business worth the visit? 2–3 sentences, written for the traveler." rows="3"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Location & contact -->
+            <div class="step-panel" data-panel="2">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Where can travelers find you?</h3>
+                <div class="form-stack" style="margin-top: var(--space-4);">
+                  <div>
+                    <label class="field-label" for="address">Street address / landmark</label>
+                    <input class="input" id="address" placeholder="e.g. Along Marangu Road, 2km from Moshi town centre" />
+                  </div>
+                  <div class="field-row">
+                    <div>
+                      <label class="field-label" for="region">Region</label>
+                      <select id="region" class="input" style="padding-top:0; padding-bottom:0;">
+                        <option>Moshi Urban</option>
+                        <option>Moshi Rural</option>
+                        <option>Marangu</option>
+                        <option>Machame</option>
+                        <option>Rombo</option>
+                        <option>Hai</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="field-label" for="phone">Phone number</label>
+                      <input class="input" id="phone" placeholder="+255 7XX XXX XXX" />
+                      <p class="field-hint is-error" id="phoneError" style="display:none;">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                        Enter a phone number travelers can reach
+                      </p>
+                    </div>
+                  </div>
+                  <div class="field-row">
+                    <div>
+                      <label class="field-label" for="email">Business email</label>
+                      <input class="input" id="email" type="email" placeholder="hello@yourbusiness.co.tz" />
+                      <p class="field-hint is-error" id="emailError" style="display:none;">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                        Enter a valid email address
+                      </p>
+                    </div>
+                    <div>
+                      <label class="field-label" for="website">Website or Instagram (optional)</label>
+                      <input class="input" id="website" placeholder="instagram.com/yourbusiness" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Photos -->
+            <div class="step-panel" data-panel="3">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Add photos</h3>
+                <p class="muted">Listings with at least 3 photos get significantly more bookings. Use natural light, no filters — travelers trust real over polished.</p>
+                <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+                  <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+                  <p style="margin: 0; font-weight: 600; color: var(--stone-800);">Drag photos here, or click to browse</p>
+                  <p style="margin: 4px 0 0; font-size: 0.85rem;">JPG or PNG, up to 10MB each</p>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display:none;" onchange="handleFiles(this.files)" />
+                <div class="photo-previews" id="photoPreviews"></div>
+              </div>
+            </div>
+
+            <!-- Step 4: Review -->
+            <div class="step-panel" data-panel="4">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Review your listing</h3>
+                <div id="reviewSummary" style="margin-top: var(--space-4);"></div>
+                <label style="display:flex; gap:10px; align-items:flex-start; margin-top: var(--space-6); font-size:0.9rem; color: var(--stone-600);">
+                  <input type="checkbox" id="terms" style="margin-top:3px; accent-color: var(--kilimanjaro-500);" onchange="document.getElementById('submitBtn').disabled = !this.checked" />
+                  I confirm this information is accurate and I'm authorized to list this business.
+                </label>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button type="button" class="button button-outline" id="backBtn" onclick="goStep(-1)" style="visibility:hidden;">Back</button>
+              <button type="button" class="button button-primary" id="nextBtn" onclick="goStep(1)">Continue</button>
+              <button type="button" class="button button-primary" id="submitBtn" onclick="submitListing()" style="display:none;" disabled>Submit for review</button>
+            </div>
+          </div>
+
+          <aside class="panel">
+            <h4 class="heading-m" style="margin-top:0;">Why list with Moshi Yetu</h4>
+            <div class="benefit-list">
+              <div class="benefit-item">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                <div><strong>Verified badge</strong><p>Our team confirms every listing on-site before it goes live.</p></div>
+              </div>
+              <div class="benefit-item">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <div><strong>Direct discovery</strong><p>Appear in search and category pages travelers actually browse.</p></div>
+              </div>
+              <div class="benefit-item">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
+                <div><strong>Built-in bookings</strong><p>Receive requests straight to your phone — no extra software.</p></div>
+              </div>
+              <div class="benefit-item">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16v13H7l-3 3V4Z"/></svg>
+                <div><strong>You keep control</strong><p>Set your own prices, availability, and cancellation terms.</p></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Confirmation state -->
+        <div id="confirmPanel" style="display:none;">
+          <div class="confirm-hero">
+            <div class="confirm-check">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <h2 class="display-m">Listing submitted for review</h2>
+            <p class="text-body">Our local team will visit or call to verify your business, usually within 3 business days. You'll get an email once you're live.</p>
+            <div class="confirm-ref" id="confirmRef">MY-B-000000</div>
+            <div style="margin-top: var(--space-8);">
+              <a href="index.html" class="button button-outline">Back to home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // ---- Supabase config ----
+      const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      let currentStep = 1;
+      let selectedCategory = 'Hotel & Lodge';
+      let uploadedPhotos = [];
+
+      document.querySelectorAll('.category-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.category-option').forEach(o => o.classList.remove('is-selected'));
+          opt.classList.add('is-selected');
+          selectedCategory = opt.dataset.cat;
+        });
+      });
+
+      const dropzone = document.getElementById('dropzone');
+      ['dragover', 'dragleave', 'drop'].forEach(evt => {
+        dropzone.addEventListener(evt, e => {
+          e.preventDefault();
+          dropzone.classList.toggle('is-dragover', evt === 'dragover');
+          if (evt === 'drop') handleFiles(e.dataTransfer.files);
+        });
+      });
+
+      function handleFiles(files) {
+        Array.from(files).forEach(file => {
+          if (!file.type.startsWith('image/')) return;
+          const reader = new FileReader();
+          reader.onload = e => {
+            uploadedPhotos.push(e.target.result);
+            renderPhotos();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function renderPhotos() {
+        const wrap = document.getElementById('photoPreviews');
+        wrap.innerHTML = uploadedPhotos.map((src, i) => `
+          <div class="photo-thumb">
+            <img src="${src}" alt="Uploaded photo ${i + 1}" />
+            <button type="button" class="remove-btn" onclick="removePhoto(${i})" aria-label="Remove photo">×</button>
+          </div>
+        `).join('');
+      }
+
+      function removePhoto(i) {
+        uploadedPhotos.splice(i, 1);
+        renderPhotos();
+      }
+
+      function validateStep1() {
+        let valid = true;
+        const name = document.getElementById('bizName');
+        const nameErr = document.getElementById('bizNameError');
+        name.classList.remove('is-error'); nameErr.style.display = 'none';
+        if (name.value.trim().length < 2) { name.classList.add('is-error'); nameErr.style.display = 'flex'; valid = false; }
+        return valid;
+      }
+
+      function validateStep2() {
+        let valid = true;
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const emailErr = document.getElementById('emailError');
+        const phoneErr = document.getElementById('phoneError');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        [email, phone].forEach(f => f.classList.remove('is-error'));
+        [emailErr, phoneErr].forEach(e => e.style.display = 'none');
+        if (!emailPattern.test(email.value.trim())) { email.classList.add('is-error'); emailErr.style.display = 'flex'; valid = false; }
+        if (phone.value.trim().length < 7) { phone.classList.add('is-error'); phoneErr.style.display = 'flex'; valid = false; }
+        return valid;
+      }
+
+      function buildReview() {
+        document.getElementById('reviewSummary').innerHTML = `
+          <div class="review-block">
+            <h5>Business</h5>
+            <dl>
+              <dt>Name</dt><dd>${document.getElementById('bizName').value || '—'}</dd>
+              <dt>Category</dt><dd>${selectedCategory}</dd>
+              <dt>Description</dt><dd>${document.getElementById('bizDesc').value || '—'}</dd>
+            </dl>
+          </div>
+          <div class="review-block">
+            <h5>Location &amp; contact</h5>
+            <dl>
+              <dt>Address</dt><dd>${document.getElementById('address').value || '—'}</dd>
+              <dt>Region</dt><dd>${document.getElementById('region').value}</dd>
+              <dt>Phone</dt><dd>${document.getElementById('phone').value || '—'}</dd>
+              <dt>Email</dt><dd>${document.getElementById('email').value || '—'}</dd>
+            </dl>
+          </div>
+          <div class="review-block">
+            <h5>Photos</h5>
+            <dl><dt>Uploaded</dt><dd>${uploadedPhotos.length} photo${uploadedPhotos.length === 1 ? '' : 's'}</dd></dl>
+          </div>
+        `;
+      }
+
+      function goStep(delta) {
+        if (delta > 0) {
+          if (currentStep === 1 && !validateStep1()) return;
+          if (currentStep === 2 && !validateStep2()) return;
+          if (currentStep === 4) return;
+        }
+        const next = currentStep + delta;
+        if (next < 1 || next > 4) return;
+
+        document.querySelector(`.step-panel[data-panel="${currentStep}"]`).classList.remove('is-active');
+        document.querySelector(`.step-panel[data-panel="${next}"]`).classList.add('is-active');
+
+        document.querySelectorAll('.step-item').forEach(item => {
+          const s = Number(item.dataset.step);
+          item.classList.toggle('is-active', s === next);
+          item.classList.toggle('is-done', s < next);
+        });
+        document.querySelectorAll('.step-line').forEach((line, i) => {
+          line.classList.toggle('is-done', i < next - 1);
+        });
+
+        currentStep = next;
+        document.getElementById('backBtn').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+        document.getElementById('nextBtn').style.display = currentStep === 4 ? 'none' : 'inline-flex';
+        document.getElementById('submitBtn').style.display = currentStep === 4 ? 'inline-flex' : 'none';
+        if (currentStep === 4) buildReview();
+      }
+
+      async function submitListing() {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+
+        const ref = 'MY-B-' + Math.floor(100000 + Math.random() * 899999);
+
+        const { error } = await supabaseClient.from('business_listings').insert({
+          reference: ref,
+          business_name: document.getElementById('bizName').value.trim(),
+          category: selectedCategory,
+          description: document.getElementById('bizDesc').value.trim(),
+          address: document.getElementById('address').value.trim(),
+          region: document.getElementById('region').value,
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          website: document.getElementById('website').value.trim()
+        });
+
+        if (error) {
+          console.error('Listing save failed:', error.message, error);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit for review';
+          alert('Tatizo: ' + (error.message || JSON.stringify(error)));
+          return;
+        }
+
+        document.getElementById('onboardLayout').style.display = 'none';
+        document.getElementById('stepper').style.display = 'none';
+        document.getElementById('confirmPanel').style.display = 'block';
+        document.getElementById('confirmRef').textContent = ref;
+      }
+    </script>
+  </body>
+</html>

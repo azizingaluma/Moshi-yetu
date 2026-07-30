@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moshi Yetu — Hotels & Lodges</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --kilimanjaro-900: #0f2a2e;
+        --kilimanjaro-700: #1b4b4f;
+        --kilimanjaro-500: #2e7d6b;
+        --savanna-500: #e0a939;
+        --savanna-700: #b98320;
+        --sunrise-500: #e8703a;
+        --earth-500: #8a5a3b;
+        --sky-500: #4fa5d8;
+        --stone-50: #faf8f5;
+        --stone-100: #f3efe9;
+        --stone-200: #e7e1d8;
+        --stone-400: #a79c8c;
+        --stone-600: #6b6055;
+        --stone-800: #332c24;
+        --stone-950: #1a1611;
+        --success-500: #3f9142;
+        --warning-500: #d6963b;
+        --error-500: #c4483a;
+        --info-500: #4a7fbf;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+        --radius-full: 999px;
+        --shadow-xs: 0 1px 2px rgba(26, 22, 17, 0.04);
+        --shadow-sm: 0 2px 8px rgba(26, 22, 17, 0.06);
+        --shadow-md: 0 8px 24px rgba(26, 22, 17, 0.08);
+        --shadow-lg: 0 16px 48px rgba(26, 22, 17, 0.12);
+        --shadow-xl: 0 24px 64px rgba(26, 22, 17, 0.16);
+        --shadow-glow-gold: 0 0 32px rgba(224, 169, 57, 0.25);
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-6: 24px;
+        --space-8: 32px;
+        --space-12: 48px;
+        --space-16: 64px;
+        --space-24: 96px;
+        --space-32: 128px;
+        --icon-sm: 16px;
+        --icon-md: 20px;
+        --icon-lg: 24px;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        color: var(--stone-800);
+        background: var(--stone-50);
+        line-height: 1.5;
+      }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; text-decoration: none; }
+
+      /* Accessible focus ring — visible everywhere, not just inputs */
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      .card:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 2px solid var(--savanna-500);
+        outline-offset: 3px;
+        border-radius: var(--radius-sm);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      .icon {
+        width: var(--icon-md);
+        height: var(--icon-md);
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .icon-sm { width: var(--icon-sm); height: var(--icon-sm); }
+      .icon-lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+      .container {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+      .section {
+        padding: var(--space-24) 0;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--savanna-500);
+        margin-bottom: var(--space-3);
+      }
+      h1, h2, h3, .display {
+        font-family: Fraunces, Georgia, serif;
+        letter-spacing: -0.01em;
+      }
+      .display-xl { font-size: clamp(2.75rem, 5vw, 5.5rem); line-height: 0.95; }
+      .display-l { font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.05; }
+      .display-m { font-size: clamp(1.6rem, 2.3vw, 2.2rem); line-height: 1.15; }
+      .heading-m { font-size: 1.5rem; line-height: 1.2; }
+      .text-body { font-size: 1rem; color: var(--stone-600); }
+      .muted { color: var(--stone-600); }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(250, 248, 245, 0.86);
+        backdrop-filter: blur(20px) saturate(140%);
+        border-bottom: 1px solid rgba(231, 225, 216, 0.8);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 88px;
+        gap: var(--space-4);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--savanna-500), var(--kilimanjaro-500));
+        position: relative;
+      }
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 2px solid white;
+        border-radius: 50%;
+        border-top-color: transparent;
+        transform: rotate(25deg);
+      }
+      .nav-links { display: flex; gap: var(--space-6); color: var(--stone-800); }
+      .nav-links a:hover { color: var(--savanna-500); }
+      .nav-actions { display: flex; gap: var(--space-3); align-items: center; }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        border: 0;
+        border-radius: var(--radius-md);
+        padding: 0 16px;
+        height: 44px;
+        font-weight: 600;
+        font-family: inherit;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, opacity 180ms ease;
+      }
+      .button:hover { transform: translateY(-1px); }
+      .button:active { transform: translateY(0); filter: brightness(0.96); }
+      .button:disabled,
+      .button.is-disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        transform: none;
+        box-shadow: none;
+      }
+      .button-primary {
+        background: var(--savanna-500);
+        color: var(--stone-950);
+        box-shadow: var(--shadow-sm);
+      }
+      .button-primary:hover { box-shadow: var(--shadow-glow-gold); }
+      .button-secondary {
+        background: var(--kilimanjaro-700);
+        color: white;
+      }
+      .button-secondary:hover { background: var(--kilimanjaro-900); }
+      .button-outline {
+        background: transparent;
+        color: var(--stone-800);
+        border: 1.5px solid var(--stone-800);
+      }
+      .button-outline:hover { background: var(--stone-800); color: white; }
+      .button-ghost {
+        background: transparent;
+        color: var(--stone-800);
+        padding: 0;
+        height: auto;
+      }
+      .button-ghost:hover { color: var(--savanna-700); transform: none; }
+      .button-ghost:active { transform: none; }
+
+      .hero {
+        min-height: 90vh;
+        display: grid;
+        align-items: end;
+        position: relative;
+        color: white;
+        background:
+          linear-gradient(180deg, rgba(15, 42, 46, 0.14) 0%, rgba(15, 42, 46, 0.82) 100%),
+          url("https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&w=1600&q=80") center/cover;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(15,42,46,0.5) 0%, rgba(15,42,46,0.12) 100%);
+        pointer-events: none;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 7rem 0 5rem;
+      }
+      .hero-search {
+        margin-top: var(--space-8);
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: var(--radius-full);
+        padding: var(--space-3);
+        display: flex;
+        gap: var(--space-2);
+        align-items: center;
+        box-shadow: var(--shadow-md);
+      }
+      .hero-search .field {
+        background: rgba(255,255,255,0.9);
+        color: var(--stone-800);
+        border-radius: var(--radius-full);
+        padding: 0 16px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+      }
+      .hero-search .field + .field { border-left: 1px solid var(--stone-200); margin-left: var(--space-2); }
+
+      .pill-row {
+        display: flex;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+        margin-top: var(--space-6);
+      }
+      .pill {
+        padding: 10px 14px;
+        border-radius: var(--radius-full);
+        background: rgba(255,255,255,0.18);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .grid-2, .grid-3, .grid-4 {
+        display: grid;
+        gap: var(--space-6);
+      }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+      .panel {
+        background: white;
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        box-shadow: var(--shadow-sm);
+      }
+      .panel.alt { background: var(--stone-100); }
+      .swatches { display: grid; gap: var(--space-4); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .swatch { border-radius: var(--radius-lg); padding: var(--space-4); min-height: 110px; color: white; box-shadow: var(--shadow-xs); }
+      .swatch.light { color: var(--stone-800); }
+      .swatch small { display: block; margin-top: var(--space-2); opacity: 0.85; }
+
+      .type-sample { padding: var(--space-4) 0; border-bottom: 1px solid var(--stone-200); }
+      .type-sample:last-child { border-bottom: 0; }
+
+      .card {
+        background: white;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--stone-200);
+        box-shadow: var(--shadow-sm);
+        transition: transform 250ms ease, box-shadow 250ms ease;
+      }
+      .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+      .card-media {
+        aspect-ratio: 4 / 3;
+        background-size: cover;
+        background-position: center;
+      }
+      .card-body { padding: var(--space-6); }
+      .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--stone-600);
+        font-size: 0.9rem;
+        margin-top: var(--space-3);
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .badge-green { background: rgba(46, 125, 107, 0.14); color: var(--kilimanjaro-500); }
+      .badge-gold { background: rgba(224, 169, 57, 0.18); color: var(--savanna-500); }
+      .badge-orange { background: rgba(232, 112, 58, 0.16); color: var(--sunrise-500); }
+      .list-card { display: flex; gap: var(--space-4); align-items: center; }
+      .list-card .thumb { width: 92px; height: 92px; border-radius: var(--radius-lg); background-size: cover; background-position: center; flex-shrink: 0; }
+      .stat-card { text-align: center; padding: var(--space-8); }
+      .stat-card strong { display: block; font-size: 2rem; font-family: Fraunces, Georgia, serif; margin-bottom: var(--space-2); }
+
+      .form-stack { display: grid; gap: var(--space-4); }
+      .field-label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: var(--space-2); }
+      .input {
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-md);
+        padding: 0 14px;
+        height: 48px;
+        width: 100%;
+        background: var(--stone-50);
+      }
+      .input:focus { outline: 2px solid var(--savanna-500); outline-offset: 2px; border-color: var(--kilimanjaro-500); }
+      .input::placeholder { color: var(--stone-400); }
+      .input:disabled {
+        background: var(--stone-100);
+        color: var(--stone-400);
+        cursor: not-allowed;
+        border-color: var(--stone-200);
+      }
+      .input.is-success { border-color: var(--success-500); background: rgba(63, 145, 66, 0.05); }
+      .input.is-success:focus { outline-color: var(--success-500); }
+      .input.is-error { border-color: var(--error-500); background: rgba(196, 72, 58, 0.05); }
+      .input.is-error:focus { outline-color: var(--error-500); }
+      .field-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        margin-top: var(--space-2);
+        color: var(--stone-600);
+      }
+      .field-hint.is-success { color: var(--success-500); }
+      .field-hint.is-error { color: var(--error-500); }
+      .footer {
+        background: var(--kilimanjaro-900);
+        color: white;
+        padding: var(--space-24) 0 var(--space-8);
+      }
+      .footer-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: var(--space-8); }
+      .footer a { color: rgba(255,255,255,0.8); }
+      .footer a:hover { color: white; }
+      .footer .newsletter { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+      .footer .newsletter input { flex: 1; height: 44px; border-radius: var(--radius-full); border: 0; padding: 0 14px; }
+
+      .nav-toggle {
+        display: none;
+        background: transparent;
+        border: 0;
+        padding: 8px;
+        cursor: pointer;
+        color: var(--stone-800);
+      }
+      .nav-toggle .icon { width: 24px; height: 24px; }
+      .nav-drawer {
+        display: none;
+        position: fixed;
+        inset: 88px 0 0 0;
+        background: var(--stone-50);
+        z-index: 19;
+        padding: var(--space-6) 0;
+        overflow-y: auto;
+      }
+      .nav-drawer.is-open { display: block; }
+      .nav-drawer-links { display: flex; flex-direction: column; gap: var(--space-1); }
+      .nav-drawer-links a {
+        padding: 14px 4px;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.3rem;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .nav-drawer-actions { display: flex; gap: var(--space-3); margin-top: var(--space-6); }
+      .nav-drawer-actions .button { flex: 1; }
+
+      .icon-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-lg);
+        background: white;
+      }
+      .icon-tile .icon { width: var(--icon-lg); height: var(--icon-lg); color: var(--kilimanjaro-500); }
+      .icon-tile span { font-size: 0.8rem; color: var(--stone-600); text-align: center; }
+      .icon-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-3); }
+
+      .state-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-4) 0;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .state-row:last-child { border-bottom: 0; }
+      .state-row .state-label {
+        width: 90px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--stone-600);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 900px) {
+        .nav-links { display: none; }
+        .nav-actions .button-outline { display: none; }
+        .nav-toggle { display: inline-flex; }
+        .grid-3, .grid-4, .footer-grid { grid-template-columns: 1fr 1fr; }
+        .icon-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      }
+      @media (max-width: 640px) {
+        .grid-2, .grid-3, .grid-4, .footer-grid, .swatches { grid-template-columns: 1fr; }
+        .icon-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .hero-search { flex-direction: column; align-items: stretch; border-radius: var(--radius-xl); }
+        .hero-search .field + .field { border-left: 0; border-top: 1px solid var(--stone-200); margin-left: 0; padding-top: var(--space-2); }
+        .hero-content { padding: 4.5rem 0 3.5rem; }
+        .nav-inner { height: 72px; }
+        .nav-drawer { inset: 72px 0 0 0; }
+        .state-row { flex-direction: column; align-items: flex-start; }
+      }
+      /* ---------- Destinations page ---------- */
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--stone-600);
+        padding: var(--space-6) 0 0;
+      }
+      .breadcrumb a:hover { color: var(--savanna-700); }
+      .breadcrumb .sep { color: var(--stone-400); }
+      .breadcrumb .current { color: var(--stone-800); font-weight: 600; }
+
+      .page-header { padding: var(--space-6) 0 var(--space-8); }
+      .page-header .display-l { margin-top: 10px; max-width: 720px; }
+      .page-header .text-body { max-width: 620px; margin-top: 10px; font-size: 1.05rem; }
+
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+        padding: var(--space-4) 0;
+        border-top: 1px solid var(--stone-200);
+        border-bottom: 1px solid var(--stone-200);
+        margin-bottom: var(--space-8);
+      }
+      .filter-chips { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+      .filter-chip {
+        border: 1.5px solid var(--stone-200);
+        background: white;
+        color: var(--stone-600);
+        padding: 9px 16px;
+        border-radius: var(--radius-full);
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 160ms ease;
+      }
+      .filter-chip:hover { border-color: var(--kilimanjaro-500); color: var(--kilimanjaro-500); }
+      .filter-chip.is-active {
+        background: var(--kilimanjaro-700);
+        border-color: var(--kilimanjaro-700);
+        color: white;
+      }
+      .sort-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.88rem;
+        color: var(--stone-600);
+        flex-shrink: 0;
+      }
+      .sort-control select {
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-md);
+        padding: 8px 12px;
+        font-family: inherit;
+        font-size: 0.88rem;
+        color: var(--stone-800);
+        background: white;
+      }
+
+      .featured-banner {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        border-radius: var(--radius-2xl);
+        overflow: hidden;
+        background: var(--kilimanjaro-900);
+        box-shadow: var(--shadow-lg);
+        margin-bottom: var(--space-16);
+      }
+      .featured-media {
+        background-size: cover;
+        background-position: center;
+        min-height: 340px;
+        position: relative;
+      }
+      .featured-media::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(15,42,46,0) 40%, rgba(15,42,46,0.35) 100%);
+      }
+      .featured-body {
+        padding: var(--space-12);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .featured-body .eyebrow { color: var(--savanna-500); }
+      .featured-body p.muted { color: rgba(255,255,255,0.78); margin-top: 10px; }
+      .featured-stats {
+        display: flex;
+        gap: var(--space-8);
+        margin: var(--space-6) 0;
+      }
+      .featured-stats div strong { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.4rem; }
+      .featured-stats div span { font-size: 0.8rem; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em; }
+
+      .dest-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+      .dest-card { display: flex; flex-direction: column; }
+      .dest-card .card-media { position: relative; }
+      .dest-card .badge { position: absolute; top: 14px; left: 14px; background: rgba(250,248,245,0.94); backdrop-filter: blur(6px); }
+      .dest-card .badge.badge-green { color: var(--kilimanjaro-500); }
+      .badge-blue { background: rgba(79, 165, 216, 0.16); color: var(--sky-500); }
+      .badge-earth { background: rgba(138, 90, 59, 0.16); color: var(--earth-500); }
+      .dest-card .location-tag {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.8rem;
+        color: var(--stone-600);
+        margin-top: 4px;
+      }
+      .dest-card p.muted { margin: 8px 0 0; font-size: 0.92rem; }
+
+      .elevation-strip { margin-top: var(--space-4); }
+      .elevation-strip .elevation-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: var(--stone-600);
+        margin-top: 4px;
+      }
+      .difficulty-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--stone-600);
+        margin-top: var(--space-3);
+      }
+      .difficulty-dots { display: inline-flex; gap: 3px; }
+      .difficulty-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--stone-200); }
+      .difficulty-dots span.is-filled { background: var(--sunrise-500); }
+
+      .load-more-row { display: flex; justify-content: center; margin-top: var(--space-12); }
+
+      @media (max-width: 900px) {
+        .dest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .featured-banner { grid-template-columns: 1fr; }
+        .featured-media { min-height: 220px; }
+        .featured-body { padding: var(--space-8); }
+      }
+      @media (max-width: 640px) {
+        .dest-grid { grid-template-columns: 1fr; }
+        .filter-bar { flex-direction: column; align-items: flex-start; }
+        .featured-stats { gap: var(--space-6); flex-wrap: wrap; }
+      }
+
+
+      .mini-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-3); }
+      .mini-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--stone-600); }
+      .mini-tag .icon { color: var(--stone-400); }
+      .date-block {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        width: 56px; height: 56px; border-radius: var(--radius-md);
+        background: var(--kilimanjaro-700); color: white; flex-shrink: 0;
+      }
+      .date-block strong { font-size: 1.2rem; font-family: Fraunces, Georgia, serif; line-height: 1; }
+      .date-block span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
+      .event-row {
+        display: flex; gap: var(--space-4); align-items: center;
+        border: 1px solid var(--stone-200); border-radius: var(--radius-lg);
+        padding: var(--space-4); background: white; margin-bottom: var(--space-3);
+        cursor: pointer; transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+      .event-row:hover { border-color: var(--kilimanjaro-500); box-shadow: var(--shadow-sm); }
+      .event-row .event-media { width: 96px; height: 72px; border-radius: var(--radius-md); background-size: cover; background-position: center; flex-shrink: 0; }
+      .event-row .event-body { flex: 1; }
+      .event-row .event-body h4 { margin: 0 0 4px; font-family: Fraunces, Georgia, serif; font-size: 1.05rem; }
+
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-mark"></span>
+          <span>Moshi Yetu</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="moshi-yetu-destinations.html">Destinations</a>
+          <a href="moshi-yetu-culture.html">Culture</a>
+          <a href="moshi-yetu-hotels.html" aria-current="page" style="color: var(--kilimanjaro-500);">Hotels</a>
+          <a href="moshi-yetu-coffee.html">Coffee</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="button button-outline">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/><path d="M3 12h18"/></svg>
+            EN / SW
+          </button>
+          <a href="moshi-yetu-booking.html" class="button button-primary">Book Now</a>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer" onclick="toggleNavDrawer()">
+            <svg class="icon" id="navToggleIcon" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <nav id="navDrawer" class="nav-drawer" aria-label="Mobile">
+        <div class="container">
+          <div class="nav-drawer-links">
+            <a href="index.html">Home</a>
+            <a href="moshi-yetu-destinations.html">Destinations</a>
+            <a href="moshi-yetu-culture.html">Culture</a>
+            <a href="moshi-yetu-hotels.html">Hotels</a>
+            <a href="moshi-yetu-coffee.html">Coffee</a>
+          </div>
+          <div class="nav-drawer-actions">
+            <button class="button button-outline">EN / SW</button>
+            <a href="moshi-yetu-booking.html" class="button button-primary">Book Now</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <script>
+      function toggleNavDrawer() {
+        const drawer = document.getElementById('navDrawer');
+        const toggle = document.querySelector('.nav-toggle');
+        const isOpen = drawer.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        document.getElementById('navToggleIcon').innerHTML = isOpen
+          ? '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'
+          : '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>';
+      }
+    </script>
+
+    <main>
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="sep">/</span>
+          <span class="current">Hotels &amp; Lodges</span>
+        </nav>
+
+        <div class="page-header">
+          <p class="eyebrow">Where to stay</p>
+          <h1 class="display-l">A bed for every budget, from summit huts to garden villas</h1>
+          <p class="text-body">Every stay listed here has been visited by our local team — real photos, real prices, no surprise fees at check-in.</p>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-chips" role="group" aria-label="Filter stays by category">
+            <button class="filter-chip is-active" data-filter="all">All stays</button>
+            <button class="filter-chip" data-filter="lodge">Mountain lodges</button>
+            <button class="filter-chip" data-filter="boutique">Boutique hotels</button>
+            <button class="filter-chip" data-filter="guesthouse">Guesthouses</button>
+            <button class="filter-chip" data-filter="ecocamp">Eco-camps</button>
+          </div>
+          <div class="sort-control">
+            <label for="sort">Sort by</label>
+            <select id="sort">
+              <option>Most popular</option>
+              <option>Price: low to high</option>
+              <option>Highest rated</option>
+            </select>
+          </div>
+        </div>
+
+        <a href="moshi-yetu-booking.html" class="featured-banner">
+          <div class="featured-media" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80');"></div>
+          <div class="featured-body">
+            <p class="eyebrow">Guest favorite</p>
+            <h2 class="display-m">Kilimanjaro Wonders Lodge</h2>
+            <p class="muted">Floor-to-ceiling views of the summit from every room, a wood-fired breakfast, and a garden that supplies the kitchen.</p>
+            <div class="featured-stats">
+              <div><strong>$180</strong><span>Per night</span></div>
+              <div><strong>12 min</strong><span>From Machame Gate</span></div>
+              <div><strong>4.9 ★</strong><span>210 reviews</span></div>
+            </div>
+            <span class="button button-primary" style="width: fit-content;">
+              Check availability
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <div class="dest-grid" id="destGrid">
+          <article class="card dest-card" data-category="lodge" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80');">
+              <span class="badge badge-green">Mountain lodge</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">Kilimanjaro Wonders Lodge</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Machame Gate Road, Moshi
+              </p>
+              <p class="muted">Summit-facing rooms with a wood-fired breakfast included.</p>
+              <div class="mini-tags">
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20a9 9 0 0 0 9-9"/><path d="M12 20a9 9 0 0 1-9-9"/><path d="M12 4v4"/><path d="M8 8l4-4 4 4"/></svg>Free WiFi</span>
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 9V3.5"/><path d="M10 9V3.5"/><path d="M5 9h11a1 1 0 0 1 1 1c0 5-3.5 8-6.5 8S4 15 4 10a1 1 0 0 1 1-1Z"/></svg>Breakfast included</span>
+              </div>
+              <div class="card-meta">
+                <span>4.9 ★ · 210 reviews</span>
+                <strong style="color: var(--stone-800);">$180/night</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="card dest-card" data-category="boutique" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=80');">
+              <span class="badge badge-gold">Boutique</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">Moshi Boutique Villa</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Shantytown, Moshi Town
+              </p>
+              <p class="muted">A five-room villa with a coffee-shaded courtyard, five minutes from town.</p>
+              <div class="mini-tags">
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>Airport pickup</span>
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>Pool</span>
+              </div>
+              <div class="card-meta">
+                <span>4.8 ★ · 96 reviews</span>
+                <strong style="color: var(--stone-800);">$95/night</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="card dest-card" data-category="guesthouse" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80');">
+              <span class="badge badge-blue">Guesthouse</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">Marangu Guesthouse</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Marangu Village
+              </p>
+              <p class="muted">Family-run rooms next to the Marangu Gate, popular with early starters.</p>
+              <div class="mini-tags">
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 9V3.5"/><path d="M10 9V3.5"/><path d="M5 9h11a1 1 0 0 1 1 1c0 5-3.5 8-6.5 8S4 15 4 10a1 1 0 0 1 1-1Z"/></svg>Home-cooked meals</span>
+              </div>
+              <div class="card-meta">
+                <span>4.5 ★ · 64 reviews</span>
+                <strong style="color: var(--stone-800);">$28/night</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="card dest-card" data-category="ecocamp" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=80');">
+              <span class="badge badge-earth">Eco-camp</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">Materuni Eco-Camp</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Materuni Village
+              </p>
+              <p class="muted">Solar-powered tented camp beside the waterfall trailhead.</p>
+              <div class="mini-tags">
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>Solar power</span>
+              </div>
+              <div class="card-meta">
+                <span>4.7 ★ · 41 reviews</span>
+                <strong style="color: var(--stone-800);">$60/night</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="card dest-card" data-category="lodge" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=900&q=80');">
+              <span class="badge badge-green">Mountain lodge</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">Machame Gate Lodge</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Machame Village
+              </p>
+              <p class="muted">The last stop before the trailhead — hot showers and a gear rental desk.</p>
+              <div class="mini-tags">
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>Gear rental</span>
+              </div>
+              <div class="card-meta">
+                <span>4.6 ★ · 133 reviews</span>
+                <strong style="color: var(--stone-800);">$140/night</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="card dest-card" data-category="guesthouse" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80');">
+              <span class="badge badge-blue">Guesthouse</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">Chagga Homestay</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Uru, Moshi Rural
+              </p>
+              <p class="muted">Sleep in a working coffee homestead and join the morning harvest.</p>
+              <div class="mini-tags">
+                <span class="mini-tag"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 9V3.5"/><path d="M10 9V3.5"/><path d="M5 9h11a1 1 0 0 1 1 1c0 5-3.5 8-6.5 8S4 15 4 10a1 1 0 0 1 1-1Z"/></svg>Coffee tour included</span>
+              </div>
+              <div class="card-meta">
+                <span>4.9 ★ · 58 reviews</span>
+                <strong style="color: var(--stone-800);">$22/night</strong>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="load-more-row">
+          <button class="button button-outline">
+            Load more stays
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12l7 7 7-7"/></svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="color: white; margin-bottom: var(--space-4);">
+              <span class="brand-mark"></span>
+              <span>Moshi Yetu</span>
+            </div>
+            <p class="muted" style="color: rgba(255,255,255,0.75);">A premium digital home for Tanzania's Kilimanjaro region, pairing editorial storytelling with seamless booking experiences.</p>
+            <div class="newsletter">
+              <input type="email" placeholder="Your email" />
+              <button class="button button-primary">Join</button>
+            </div>
+          </div>
+          <div>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Explore</h3>
+            <p><a href="moshi-yetu-destinations.html">Destinations</a></p>
+            <p><a href="moshi-yetu-culture.html">Culture</a></p>
+            <p><a href="moshi-yetu-events.html">Events</a></p>
+            <p><a href="moshi-yetu-destinations.html">Travel Guides</a></p>
+          </div>
+          <div>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Stay &amp; Eat</h3>
+            <p><a href="moshi-yetu-hotels.html">Hotels</a></p>
+            <p><a href="moshi-yetu-hotels.html">Restaurants</a></p>
+            <p><a href="moshi-yetu-coffee.html">Coffee Experiences</a></p>
+            <p><a href="moshi-yetu-list-business.html">Local Businesses</a></p>
+          </div>
+          <div>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Company</h3>
+            <p><a href="index.html">About</a></p>
+            <p><a href="moshi-yetu-list-business.html">List Your Business</a></p>
+            <p><a href="#">Contact</a></p>
+            <p><a href="moshi-yetu-design-system-preview.html">Design System</a></p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const chips = document.querySelectorAll('.filter-chip');
+      const cards = document.querySelectorAll('.dest-card');
+      function applyFilter(filter) {
+        chips.forEach(c => c.classList.toggle('is-active', c.dataset.filter === filter));
+        cards.forEach(card => {
+          const cats = card.dataset.category.split(' ');
+          card.style.display = (filter === 'all' || cats.includes(filter)) ? '' : 'none';
+        });
+      }
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => applyFilter(chip.dataset.filter));
+      });
+      const urlFilter = new URLSearchParams(window.location.search).get('filter');
+      if (urlFilter && [...chips].some(c => c.dataset.filter === urlFilter)) {
+        applyFilter(urlFilter);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Moshi Yetu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+      :root {
+        --kilimanjaro-900: #0f2a2e;
+        --kilimanjaro-700: #1b4b4f;
+        --kilimanjaro-500: #2e7d6b;
+        --savanna-500: #e0a939;
+        --savanna-700: #b98320;
+        --sunrise-500: #e8703a;
+        --stone-50: #faf8f5;
+        --stone-100: #f3efe9;
+        --stone-200: #e7e1d8;
+        --stone-400: #a79c8c;
+        --stone-600: #6b6055;
+        --stone-800: #332c24;
+        --stone-950: #1a1611;
+        --success-500: #3f9142;
+        --warning-500: #d6963b;
+        --error-500: #c4483a;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-full: 999px;
+        --shadow-sm: 0 2px 8px rgba(26, 22, 17, 0.06);
+        --shadow-md: 0 8px 24px rgba(26, 22, 17, 0.08);
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-6: 24px;
+        --space-8: 32px;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        color: var(--stone-800);
+        background: var(--stone-50);
+        line-height: 1.5;
+      }
+      .container { width: min(1200px, calc(100% - 32px)); margin: 0 auto; }
+      h1, h2, .display { font-family: Fraunces, Georgia, serif; letter-spacing: -0.01em; }
+
+      /* ---- Login screen ---- */
+      #loginScreen {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-4);
+      }
+      .login-card {
+        background: white;
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-md);
+        padding: var(--space-8);
+        width: 100%;
+        max-width: 380px;
+      }
+      .brand { display: flex; align-items: center; gap: var(--space-3); font-family: Fraunces, Georgia, serif; font-size: 1.2rem; font-weight: 600; margin-bottom: var(--space-6); }
+      .brand-mark { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--savanna-500), var(--kilimanjaro-500)); }
+      .field-label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: var(--space-2); }
+      .input {
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-md);
+        padding: 0 14px;
+        height: 46px;
+        width: 100%;
+        background: var(--stone-50);
+        font: inherit;
+        margin-bottom: var(--space-4);
+      }
+      .input:focus { outline: 2px solid var(--savanna-500); outline-offset: 2px; border-color: var(--kilimanjaro-500); }
+      .button {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border: 0; border-radius: var(--radius-md); padding: 0 16px; height: 46px;
+        font-weight: 600; font-family: inherit; font-size: 0.95rem; cursor: pointer; width: 100%;
+      }
+      .button-primary { background: var(--savanna-500); color: var(--stone-950); }
+      .button-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+      .login-error { color: var(--error-500); font-size: 0.85rem; margin-top: var(--space-3); display: none; }
+
+      /* ---- Dashboard ---- */
+      #dashboard { display: none; }
+      .admin-nav {
+        background: var(--kilimanjaro-900); color: white;
+        padding: var(--space-4) 0;
+      }
+      .admin-nav-inner { display: flex; justify-content: space-between; align-items: center; }
+      .logout-btn { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: var(--radius-full); padding: 8px 16px; font: inherit; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+
+      .tabs { display: flex; gap: var(--space-2); margin: var(--space-6) 0; }
+      .tab-btn {
+        border: 1.5px solid var(--stone-200); background: white; color: var(--stone-600);
+        border-radius: var(--radius-full); padding: 10px 18px; font: inherit; font-weight: 600;
+        cursor: pointer; font-size: 0.9rem;
+      }
+      .tab-btn.is-active { background: var(--kilimanjaro-700); color: white; border-color: var(--kilimanjaro-700); }
+
+      .panel { background: white; border: 1px solid var(--stone-200); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: var(--space-8); }
+      table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+      th { text-align: left; background: var(--stone-100); padding: 12px 16px; font-weight: 700; color: var(--stone-600); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.04em; }
+      td { padding: 14px 16px; border-top: 1px solid var(--stone-200); vertical-align: top; }
+      tr:hover td { background: var(--stone-50); }
+      .empty-state { padding: var(--space-8); text-align: center; color: var(--stone-600); }
+
+      .status-badge { display: inline-block; padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+      .status-pending, .status-pending_review { background: rgba(214,150,59,0.15); color: var(--warning-500); }
+      .status-confirmed, .status-approved { background: rgba(63,145,66,0.15); color: var(--success-500); }
+      .status-cancelled, .status-rejected { background: rgba(196,72,58,0.15); color: var(--error-500); }
+
+      .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+      .action-btn { border: 1px solid var(--stone-200); background: white; border-radius: var(--radius-sm); padding: 6px 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+      .action-btn.approve { color: var(--success-500); border-color: var(--success-500); }
+      .action-btn.reject { color: var(--error-500); border-color: var(--error-500); }
+      .action-btn:hover { opacity: 0.8; }
+
+      .loading-row { text-align: center; padding: var(--space-8); color: var(--stone-600); }
+    </style>
+  </head>
+  <body>
+
+    <!-- ===== Login ===== -->
+    <div id="loginScreen">
+      <div class="login-card">
+        <div class="brand"><span class="brand-mark"></span><span>Moshi Yetu Admin</span></div>
+        <label class="field-label" for="loginEmail">Email</label>
+        <input class="input" id="loginEmail" type="email" placeholder="admin@moshiyetu.co.tz" />
+        <label class="field-label" for="loginPassword">Password</label>
+        <input class="input" id="loginPassword" type="password" placeholder="••••••••" />
+        <button class="button button-primary" id="loginBtn" onclick="login()">Log in</button>
+        <p class="login-error" id="loginError"></p>
+      </div>
+    </div>
+
+    <!-- ===== Dashboard ===== -->
+    <div id="dashboard">
+      <div class="admin-nav">
+        <div class="container admin-nav-inner">
+          <div class="brand" style="color:white; margin:0;"><span class="brand-mark"></span><span>Moshi Yetu Admin</span></div>
+          <button class="logout-btn" onclick="logout()">Log out</button>
+        </div>
+      </div>
+
+      <div class="container" style="padding: var(--space-8) 0;">
+        <h1 style="font-size:1.8rem;">Dashboard</h1>
+
+        <div class="tabs">
+          <button class="tab-btn is-active" id="tabBookingsBtn" onclick="showTab('bookings')">Bookings</button>
+          <button class="tab-btn" id="tabListingsBtn" onclick="showTab('listings')">Business listings</button>
+        </div>
+
+        <div id="bookingsPanel" class="panel">
+          <table>
+            <thead>
+              <tr><th>Ref</th><th>Experience</th><th>Traveler</th><th>Contact</th><th>Date</th><th>Guests</th><th>Total</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="bookingsBody">
+              <tr><td colspan="9" class="loading-row">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="listingsPanel" class="panel" style="display:none;">
+          <table>
+            <thead>
+              <tr><th>Ref</th><th>Business</th><th>Category</th><th>Contact</th><th>Region</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="listingsBody">
+              <tr><td colspan="7" class="loading-row">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      // ---- Auth ----
+      async function login() {
+        const btn = document.getElementById('loginBtn');
+        const errEl = document.getElementById('loginError');
+        errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Logging in…';
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+        btn.disabled = false;
+        btn.textContent = 'Log in';
+
+        if (error) {
+          errEl.textContent = error.message;
+          errEl.style.display = 'block';
+          return;
+        }
+        showDashboard();
+      }
+
+      async function logout() {
+        await supabaseClient.auth.signOut();
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+      }
+
+      async function checkSession() {
+        const { data } = await supabaseClient.auth.getSession();
+        if (data.session) {
+          showDashboard();
+        }
+      }
+
+      function showDashboard() {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadBookings();
+        loadListings();
+      }
+
+      // ---- Tabs ----
+      function showTab(tab) {
+        document.getElementById('bookingsPanel').style.display = tab === 'bookings' ? 'block' : 'none';
+        document.getElementById('listingsPanel').style.display = tab === 'listings' ? 'block' : 'none';
+        document.getElementById('tabBookingsBtn').classList.toggle('is-active', tab === 'bookings');
+        document.getElementById('tabListingsBtn').classList.toggle('is-active', tab === 'listings');
+      }
+
+      // ---- Bookings ----
+      async function loadBookings() {
+        const body = document.getElementById('bookingsBody');
+        body.innerHTML = '<tr><td colspan="9" class="loading-row">Loading…</td></tr>';
+
+        const { data, error } = await supabaseClient
+          .from('bookings')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          body.innerHTML = `<tr><td colspan="9" class="empty-state">Error: ${error.message}</td></tr>`;
+          return;
+        }
+        if (!data.length) {
+          body.innerHTML = '<tr><td colspan="9" class="empty-state">Hakuna bookings bado.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = data.map(b => `
+          <tr>
+            <td><strong>${b.reference}</strong></td>
+            <td>${b.experience_name}</td>
+            <td>${b.full_name}</td>
+            <td>${b.email}<br><span style="color:var(--stone-600);">${b.phone}</span></td>
+            <td>${b.start_date || '—'}</td>
+            <td>${b.guests}</td>
+            <td>$${b.total_amount}</td>
+            <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+            <td>
+              <div class="row-actions">
+                ${b.status !== 'confirmed' ? `<button class="action-btn approve" onclick="updateBookingStatus('${b.id}','confirmed')">Confirm</button>` : ''}
+                ${b.status !== 'cancelled' ? `<button class="action-btn reject" onclick="updateBookingStatus('${b.id}','cancelled')">Cancel</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      async function updateBookingStatus(id, status) {
+        const { error } = await supabaseClient.from('bookings').update({ status }).eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+        loadBookings();
+      }
+
+      // ---- Business listings ----
+      async function loadListings() {
+        const body = document.getElementById('listingsBody');
+        body.innerHTML = '<tr><td colspan="7" class="loading-row">Loading…</td></tr>';
+
+        const { data, error } = await supabaseClient
+          .from('business_listings')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          body.innerHTML = `<tr><td colspan="7" class="empty-state">Error: ${error.message}</td></tr>`;
+          return;
+        }
+        if (!data.length) {
+          body.innerHTML = '<tr><td colspan="7" class="empty-state">Hakuna business listings bado.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = data.map(l => `
+          <tr>
+            <td><strong>${l.reference}</strong></td>
+            <td>${l.business_name}<br><span style="color:var(--stone-600); font-size:0.82rem;">${l.description || ''}</span></td>
+            <td>${l.category}</td>
+            <td>${l.email}<br><span style="color:var(--stone-600);">${l.phone}</span></td>
+            <td>${l.region || '—'}</td>
+            <td><span class="status-badge status-${l.status}">${l.status.replace('_',' ')}</span></td>
+            <td>
+              <div class="row-actions">
+                ${l.status !== 'approved' ? `<button class="action-btn approve" onclick="updateListingStatus('${l.id}','approved')">Approve</button>` : ''}
+                ${l.status !== 'rejected' ? `<button class="action-btn reject" onclick="updateListingStatus('${l.id}','rejected')">Reject</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      async function updateListingStatus(id, status) {
+        const { error } = await supabaseClient.from('business_listings').update({ status }).eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+        loadListings();
+      }
+
+      checkSession();
+    </script>
+  </body>
+</html>

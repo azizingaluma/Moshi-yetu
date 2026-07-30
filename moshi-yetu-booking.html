@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moshi Yetu — Book Your Trip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --kilimanjaro-900: #0f2a2e;
+        --kilimanjaro-700: #1b4b4f;
+        --kilimanjaro-500: #2e7d6b;
+        --savanna-500: #e0a939;
+        --savanna-700: #b98320;
+        --sunrise-500: #e8703a;
+        --earth-500: #8a5a3b;
+        --sky-500: #4fa5d8;
+        --stone-50: #faf8f5;
+        --stone-100: #f3efe9;
+        --stone-200: #e7e1d8;
+        --stone-400: #a79c8c;
+        --stone-600: #6b6055;
+        --stone-800: #332c24;
+        --stone-950: #1a1611;
+        --success-500: #3f9142;
+        --warning-500: #d6963b;
+        --error-500: #c4483a;
+        --info-500: #4a7fbf;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+        --radius-full: 999px;
+        --shadow-xs: 0 1px 2px rgba(26, 22, 17, 0.04);
+        --shadow-sm: 0 2px 8px rgba(26, 22, 17, 0.06);
+        --shadow-md: 0 8px 24px rgba(26, 22, 17, 0.08);
+        --shadow-lg: 0 16px 48px rgba(26, 22, 17, 0.12);
+        --shadow-xl: 0 24px 64px rgba(26, 22, 17, 0.16);
+        --shadow-glow-gold: 0 0 32px rgba(224, 169, 57, 0.25);
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-6: 24px;
+        --space-8: 32px;
+        --space-12: 48px;
+        --space-16: 64px;
+        --space-24: 96px;
+        --space-32: 128px;
+        --icon-sm: 16px;
+        --icon-md: 20px;
+        --icon-lg: 24px;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        color: var(--stone-800);
+        background: var(--stone-50);
+        line-height: 1.5;
+      }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; text-decoration: none; }
+
+      /* Accessible focus ring — visible everywhere, not just inputs */
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      .card:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 2px solid var(--savanna-500);
+        outline-offset: 3px;
+        border-radius: var(--radius-sm);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      .icon {
+        width: var(--icon-md);
+        height: var(--icon-md);
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .icon-sm { width: var(--icon-sm); height: var(--icon-sm); }
+      .icon-lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+      .container {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+      .section {
+        padding: var(--space-24) 0;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--savanna-500);
+        margin-bottom: var(--space-3);
+      }
+      h1, h2, h3, .display {
+        font-family: Fraunces, Georgia, serif;
+        letter-spacing: -0.01em;
+      }
+      .display-xl { font-size: clamp(2.75rem, 5vw, 5.5rem); line-height: 0.95; }
+      .display-l { font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.05; }
+      .display-m { font-size: clamp(1.6rem, 2.3vw, 2.2rem); line-height: 1.15; }
+      .heading-m { font-size: 1.5rem; line-height: 1.2; }
+      .text-body { font-size: 1rem; color: var(--stone-600); }
+      .muted { color: var(--stone-600); }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(250, 248, 245, 0.86);
+        backdrop-filter: blur(20px) saturate(140%);
+        border-bottom: 1px solid rgba(231, 225, 216, 0.8);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 88px;
+        gap: var(--space-4);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--savanna-500), var(--kilimanjaro-500));
+        position: relative;
+      }
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 2px solid white;
+        border-radius: 50%;
+        border-top-color: transparent;
+        transform: rotate(25deg);
+      }
+      .nav-links { display: flex; gap: var(--space-6); color: var(--stone-800); }
+      .nav-links a:hover { color: var(--savanna-500); }
+      .nav-actions { display: flex; gap: var(--space-3); align-items: center; }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        border: 0;
+        border-radius: var(--radius-md);
+        padding: 0 16px;
+        height: 44px;
+        font-weight: 600;
+        font-family: inherit;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, opacity 180ms ease;
+      }
+      .button:hover { transform: translateY(-1px); }
+      .button:active { transform: translateY(0); filter: brightness(0.96); }
+      .button:disabled,
+      .button.is-disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        transform: none;
+        box-shadow: none;
+      }
+      .button-primary {
+        background: var(--savanna-500);
+        color: var(--stone-950);
+        box-shadow: var(--shadow-sm);
+      }
+      .button-primary:hover { box-shadow: var(--shadow-glow-gold); }
+      .button-secondary {
+        background: var(--kilimanjaro-700);
+        color: white;
+      }
+      .button-secondary:hover { background: var(--kilimanjaro-900); }
+      .button-outline {
+        background: transparent;
+        color: var(--stone-800);
+        border: 1.5px solid var(--stone-800);
+      }
+      .button-outline:hover { background: var(--stone-800); color: white; }
+      .button-ghost {
+        background: transparent;
+        color: var(--stone-800);
+        padding: 0;
+        height: auto;
+      }
+      .button-ghost:hover { color: var(--savanna-700); transform: none; }
+      .button-ghost:active { transform: none; }
+
+      .hero {
+        min-height: 90vh;
+        display: grid;
+        align-items: end;
+        position: relative;
+        color: white;
+        background:
+          linear-gradient(180deg, rgba(15, 42, 46, 0.14) 0%, rgba(15, 42, 46, 0.82) 100%),
+          url("https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&w=1600&q=80") center/cover;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(15,42,46,0.5) 0%, rgba(15,42,46,0.12) 100%);
+        pointer-events: none;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 7rem 0 5rem;
+      }
+      .hero-search {
+        margin-top: var(--space-8);
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: var(--radius-full);
+        padding: var(--space-3);
+        display: flex;
+        gap: var(--space-2);
+        align-items: center;
+        box-shadow: var(--shadow-md);
+      }
+      .hero-search .field {
+        background: rgba(255,255,255,0.9);
+        color: var(--stone-800);
+        border-radius: var(--radius-full);
+        padding: 0 16px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+      }
+      .hero-search .field + .field { border-left: 1px solid var(--stone-200); margin-left: var(--space-2); }
+
+      .pill-row {
+        display: flex;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+        margin-top: var(--space-6);
+      }
+      .pill {
+        padding: 10px 14px;
+        border-radius: var(--radius-full);
+        background: rgba(255,255,255,0.18);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .grid-2, .grid-3, .grid-4 {
+        display: grid;
+        gap: var(--space-6);
+      }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+      .panel {
+        background: white;
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        box-shadow: var(--shadow-sm);
+      }
+      .panel.alt { background: var(--stone-100); }
+      .swatches { display: grid; gap: var(--space-4); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .swatch { border-radius: var(--radius-lg); padding: var(--space-4); min-height: 110px; color: white; box-shadow: var(--shadow-xs); }
+      .swatch.light { color: var(--stone-800); }
+      .swatch small { display: block; margin-top: var(--space-2); opacity: 0.85; }
+
+      .type-sample { padding: var(--space-4) 0; border-bottom: 1px solid var(--stone-200); }
+      .type-sample:last-child { border-bottom: 0; }
+
+      .card {
+        background: white;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--stone-200);
+        box-shadow: var(--shadow-sm);
+        transition: transform 250ms ease, box-shadow 250ms ease;
+      }
+      .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+      .card-media {
+        aspect-ratio: 4 / 3;
+        background-size: cover;
+        background-position: center;
+      }
+      .card-body { padding: var(--space-6); }
+      .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--stone-600);
+        font-size: 0.9rem;
+        margin-top: var(--space-3);
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .badge-green { background: rgba(46, 125, 107, 0.14); color: var(--kilimanjaro-500); }
+      .badge-gold { background: rgba(224, 169, 57, 0.18); color: var(--savanna-500); }
+      .badge-orange { background: rgba(232, 112, 58, 0.16); color: var(--sunrise-500); }
+      .list-card { display: flex; gap: var(--space-4); align-items: center; }
+      .list-card .thumb { width: 92px; height: 92px; border-radius: var(--radius-lg); background-size: cover; background-position: center; flex-shrink: 0; }
+      .stat-card { text-align: center; padding: var(--space-8); }
+      .stat-card strong { display: block; font-size: 2rem; font-family: Fraunces, Georgia, serif; margin-bottom: var(--space-2); }
+
+      .form-stack { display: grid; gap: var(--space-4); }
+      .field-label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: var(--space-2); }
+      .input {
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-md);
+        padding: 0 14px;
+        height: 48px;
+        width: 100%;
+        background: var(--stone-50);
+      }
+      .input:focus { outline: 2px solid var(--savanna-500); outline-offset: 2px; border-color: var(--kilimanjaro-500); }
+      .input::placeholder { color: var(--stone-400); }
+      .input:disabled {
+        background: var(--stone-100);
+        color: var(--stone-400);
+        cursor: not-allowed;
+        border-color: var(--stone-200);
+      }
+      .input.is-success { border-color: var(--success-500); background: rgba(63, 145, 66, 0.05); }
+      .input.is-success:focus { outline-color: var(--success-500); }
+      .input.is-error { border-color: var(--error-500); background: rgba(196, 72, 58, 0.05); }
+      .input.is-error:focus { outline-color: var(--error-500); }
+      .field-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        margin-top: var(--space-2);
+        color: var(--stone-600);
+      }
+      .field-hint.is-success { color: var(--success-500); }
+      .field-hint.is-error { color: var(--error-500); }
+      .footer {
+        background: var(--kilimanjaro-900);
+        color: white;
+        padding: var(--space-24) 0 var(--space-8);
+      }
+      .footer-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: var(--space-8); }
+      .footer a { color: rgba(255,255,255,0.8); }
+      .footer a:hover { color: white; }
+      .footer .newsletter { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+      .footer .newsletter input { flex: 1; height: 44px; border-radius: var(--radius-full); border: 0; padding: 0 14px; }
+
+      .nav-toggle {
+        display: none;
+        background: transparent;
+        border: 0;
+        padding: 8px;
+        cursor: pointer;
+        color: var(--stone-800);
+      }
+      .nav-toggle .icon { width: 24px; height: 24px; }
+      .nav-drawer {
+        display: none;
+        position: fixed;
+        inset: 88px 0 0 0;
+        background: var(--stone-50);
+        z-index: 19;
+        padding: var(--space-6) 0;
+        overflow-y: auto;
+      }
+      .nav-drawer.is-open { display: block; }
+      .nav-drawer-links { display: flex; flex-direction: column; gap: var(--space-1); }
+      .nav-drawer-links a {
+        padding: 14px 4px;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.3rem;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .nav-drawer-actions { display: flex; gap: var(--space-3); margin-top: var(--space-6); }
+      .nav-drawer-actions .button { flex: 1; }
+
+      .icon-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-lg);
+        background: white;
+      }
+      .icon-tile .icon { width: var(--icon-lg); height: var(--icon-lg); color: var(--kilimanjaro-500); }
+      .icon-tile span { font-size: 0.8rem; color: var(--stone-600); text-align: center; }
+      .icon-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-3); }
+
+      .state-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-4) 0;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .state-row:last-child { border-bottom: 0; }
+      .state-row .state-label {
+        width: 90px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--stone-600);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 900px) {
+        .nav-links { display: none; }
+        .nav-actions .button-outline { display: none; }
+        .nav-toggle { display: inline-flex; }
+        .grid-3, .grid-4, .footer-grid { grid-template-columns: 1fr 1fr; }
+        .icon-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      }
+      @media (max-width: 640px) {
+        .grid-2, .grid-3, .grid-4, .footer-grid, .swatches { grid-template-columns: 1fr; }
+        .icon-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .hero-search { flex-direction: column; align-items: stretch; border-radius: var(--radius-xl); }
+        .hero-search .field + .field { border-left: 0; border-top: 1px solid var(--stone-200); margin-left: 0; padding-top: var(--space-2); }
+        .hero-content { padding: 4.5rem 0 3.5rem; }
+        .nav-inner { height: 72px; }
+        .nav-drawer { inset: 72px 0 0 0; }
+        .state-row { flex-direction: column; align-items: flex-start; }
+      }
+
+      /* ---------- Booking flow ---------- */
+      .booking-shell { padding: var(--space-8) 0 var(--space-24); }
+      .booking-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: var(--space-8);
+        align-items: start;
+      }
+
+      .stepper { display: flex; align-items: center; margin-bottom: var(--space-8); }
+      .step-item { display: flex; align-items: center; gap: 10px; color: var(--stone-400); }
+      .step-item .step-dot {
+        width: 30px; height: 30px; border-radius: 50%;
+        border: 1.5px solid var(--stone-200);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+        background: white; color: var(--stone-400);
+        transition: all 200ms ease;
+      }
+      .step-item .step-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
+      .step-item.is-active { color: var(--stone-800); }
+      .step-item.is-active .step-dot { border-color: var(--kilimanjaro-500); background: var(--kilimanjaro-500); color: white; }
+      .step-item.is-done .step-dot { border-color: var(--kilimanjaro-500); background: white; color: var(--kilimanjaro-500); }
+      .step-line { flex: 1; height: 1.5px; background: var(--stone-200); margin: 0 12px; }
+      .step-line.is-done { background: var(--kilimanjaro-500); }
+
+      .step-panel { display: none; }
+      .step-panel.is-active { display: block; }
+
+      .experience-option {
+        display: flex;
+        gap: var(--space-4);
+        align-items: center;
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        margin-bottom: var(--space-3);
+        cursor: pointer;
+        background: white;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+      .experience-option:hover { border-color: var(--kilimanjaro-500); }
+      .experience-option input[type="radio"] { width: 18px; height: 18px; accent-color: var(--kilimanjaro-500); flex-shrink: 0; }
+      .experience-option .thumb { width: 72px; height: 72px; border-radius: var(--radius-md); background-size: cover; background-position: center; flex-shrink: 0; }
+      .experience-option .opt-body { flex: 1; }
+      .experience-option .opt-body h4 { margin: 0 0 4px; font-family: Fraunces, Georgia, serif; font-size: 1.05rem; }
+      .experience-option .opt-meta { font-size: 0.82rem; color: var(--stone-600); }
+      .experience-option .opt-price { font-weight: 700; white-space: nowrap; }
+      .experience-option.is-selected { border-color: var(--kilimanjaro-500); box-shadow: 0 0 0 3px rgba(46,125,107,0.12); }
+
+      .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
+      .guest-stepper { display: flex; align-items: center; gap: var(--space-4); border: 1.5px solid var(--stone-200); border-radius: var(--radius-md); padding: 0 var(--space-4); height: 48px; width: fit-content; }
+      .guest-stepper button {
+        width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--stone-200);
+        background: white; font-size: 1.1rem; cursor: pointer; color: var(--stone-800);
+        display: flex; align-items: center; justify-content: center; line-height: 1;
+      }
+      .guest-stepper button:hover { border-color: var(--kilimanjaro-500); color: var(--kilimanjaro-500); }
+      .guest-stepper span { min-width: 20px; text-align: center; font-weight: 600; }
+
+      .summary-panel { position: sticky; top: 24px; }
+      .summary-line { display: flex; justify-content: space-between; font-size: 0.92rem; padding: 8px 0; color: var(--stone-600); }
+      .summary-line.total { border-top: 1px solid var(--stone-200); margin-top: 8px; padding-top: 14px; font-weight: 700; color: var(--stone-800); font-size: 1.05rem; }
+
+      .step-actions { display: flex; justify-content: space-between; margin-top: var(--space-8); }
+
+      .confirm-hero { text-align: center; padding: var(--space-16) 0 var(--space-8); }
+      .confirm-check {
+        width: 72px; height: 72px; border-radius: 50%;
+        background: rgba(46,125,107,0.12); color: var(--kilimanjaro-500);
+        display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-6);
+      }
+      .confirm-ref {
+        display: inline-block; margin-top: var(--space-4);
+        border: 1.5px dashed var(--stone-200); border-radius: var(--radius-md);
+        padding: 10px 18px; font-family: Fraunces, Georgia, serif; letter-spacing: 0.05em;
+      }
+
+      @media (max-width: 900px) {
+        .booking-layout { grid-template-columns: 1fr; }
+        .summary-panel { position: static; }
+        .step-item .step-name { display: none; }
+        .field-row { grid-template-columns: 1fr; }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-mark"></span>
+          <span>Moshi Yetu</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="moshi-yetu-destinations.html">Destinations</a>
+          <a href="moshi-yetu-culture.html">Culture</a>
+          <a href="moshi-yetu-hotels.html">Hotels</a>
+          <a href="moshi-yetu-coffee.html">Coffee</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="button button-outline">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/><path d="M3 12h18"/></svg>
+            EN / SW
+          </button>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer" onclick="toggleNavDrawer()">
+            <svg class="icon" id="navToggleIcon" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <nav id="navDrawer" class="nav-drawer" aria-label="Mobile">
+        <div class="container">
+          <div class="nav-drawer-links">
+            <a href="index.html">Home</a>
+            <a href="moshi-yetu-destinations.html">Destinations</a>
+            <a href="moshi-yetu-culture.html">Culture</a>
+            <a href="moshi-yetu-hotels.html">Hotels</a>
+            <a href="moshi-yetu-coffee.html">Coffee</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <script>
+      function toggleNavDrawer() {
+        const drawer = document.getElementById('navDrawer');
+        const toggle = document.querySelector('.nav-toggle');
+        const isOpen = drawer.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        document.getElementById('navToggleIcon').innerHTML = isOpen
+          ? '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'
+          : '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>';
+      }
+    </script>
+
+    <main class="booking-shell">
+      <div class="container">
+        <p class="eyebrow">Book your trip</p>
+        <h1 class="display-l" style="margin-bottom: var(--space-8);">Reserve your Kilimanjaro experience</h1>
+
+        <div id="stepper" class="stepper">
+          <div class="step-item is-active" data-step="1"><span class="step-dot">1</span><span class="step-name">Experience</span></div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="2"><span class="step-dot">2</span><span class="step-name">Dates &amp; guests</span></div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="3"><span class="step-dot">3</span><span class="step-name">Your details</span></div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="4"><span class="step-dot">4</span><span class="step-name">Review &amp; pay</span></div>
+        </div>
+
+        <div id="bookingLayout" class="booking-layout">
+          <div>
+            <!-- Step 1: Experience -->
+            <div class="step-panel is-active" data-panel="1">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Choose your experience</h3>
+                <div id="experienceList" style="margin-top: var(--space-4);">
+                  <label class="experience-option is-selected" data-price="420" data-name="Machame Route — 7 days" data-img="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=200&q=80">
+                    <input type="radio" name="experience" checked />
+                    <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=200&q=80');"></div>
+                    <div class="opt-body">
+                      <h4>Machame Route</h4>
+                      <p class="opt-meta">7 days · Challenging · 1,800m → 5,895m</p>
+                    </div>
+                    <div class="opt-price">$420 / person</div>
+                  </label>
+                  <label class="experience-option" data-price="380" data-name="Marangu Route — 5 days" data-img="https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=200&q=80">
+                    <input type="radio" name="experience" />
+                    <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=200&q=80');"></div>
+                    <div class="opt-body">
+                      <h4>Marangu Route</h4>
+                      <p class="opt-meta">5 days · Moderate · 1,860m → 5,895m</p>
+                    </div>
+                    <div class="opt-price">$380 / person</div>
+                  </label>
+                  <label class="experience-option" data-price="45" data-name="Materuni Waterfalls &amp; Coffee — half day" data-img="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=200&q=80">
+                    <input type="radio" name="experience" />
+                    <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=200&q=80');"></div>
+                    <div class="opt-body">
+                      <h4>Materuni Waterfalls &amp; Coffee</h4>
+                      <p class="opt-meta">Half day · Easy</p>
+                    </div>
+                    <div class="opt-price">$45 / person</div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Dates & guests -->
+            <div class="step-panel" data-panel="2">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Dates &amp; travelers</h3>
+                <div class="form-stack" style="margin-top: var(--space-4);">
+                  <div class="field-row">
+                    <div>
+                      <label class="field-label" for="startDate">Start date</label>
+                      <input class="input" type="date" id="startDate" />
+                    </div>
+                    <div>
+                      <label class="field-label">Number of travelers</label>
+                      <div class="guest-stepper">
+                        <button type="button" onclick="changeGuests(-1)" aria-label="Decrease travelers">–</button>
+                        <span id="guestCount">2</span>
+                        <button type="button" onclick="changeGuests(1)" aria-label="Increase travelers">+</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="field-label" for="lodgeLevel">Preferred comfort level</label>
+                    <select id="lodgeLevel" class="input" style="padding-top:0; padding-bottom:0;">
+                      <option>Standard camping</option>
+                      <option>Private tents &amp; cook crew</option>
+                      <option>Luxury mountain huts</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Traveler details -->
+            <div class="step-panel" data-panel="3">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Your details</h3>
+                <div class="form-stack" style="margin-top: var(--space-4);">
+                  <div class="field-row">
+                    <div>
+                      <label class="field-label" for="fullName">Full name</label>
+                      <input class="input" id="fullName" placeholder="Asha Mjema" />
+                      <p class="field-hint is-error" id="nameError" style="display:none;">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                        Enter your full name
+                      </p>
+                    </div>
+                    <div>
+                      <label class="field-label" for="email">Email</label>
+                      <input class="input" id="email" type="email" placeholder="asha@example.com" />
+                      <p class="field-hint is-error" id="emailError" style="display:none;">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                        Enter a valid email address
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="field-label" for="phone">Phone number</label>
+                    <input class="input" id="phone" placeholder="+255 7XX XXX XXX" />
+                    <p class="field-hint is-error" id="phoneError" style="display:none;">
+                      <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                      Enter a phone number so your guide can reach you
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Review -->
+            <div class="step-panel" data-panel="4">
+              <div class="panel">
+                <h3 class="heading-l" style="margin-top:0;">Review &amp; confirm</h3>
+                <div id="reviewSummary" style="margin-top: var(--space-4);"></div>
+                <label style="display:flex; gap:10px; align-items:flex-start; margin-top: var(--space-6); font-size:0.9rem; color: var(--stone-600);">
+                  <input type="checkbox" id="terms" style="margin-top:3px; accent-color: var(--kilimanjaro-500);" onchange="document.getElementById('confirmBtn').disabled = !this.checked" />
+                  I agree to the cancellation policy and understand payment is processed securely at checkout.
+                </label>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button type="button" class="button button-outline" id="backBtn" onclick="goStep(-1)" style="visibility:hidden;">Back</button>
+              <button type="button" class="button button-primary" id="nextBtn" onclick="goStep(1)">Continue</button>
+              <button type="button" class="button button-primary" id="confirmBtn" onclick="confirmBooking()" style="display:none;" disabled>Confirm booking</button>
+            </div>
+          </div>
+
+          <aside class="panel summary-panel">
+            <h4 class="heading-m" style="margin-top:0;">Trip summary</h4>
+            <div id="summaryImg" style="background-image:url('https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=400&q=80'); height:120px; border-radius: var(--radius-md); background-size:cover; background-position:center; margin-bottom: var(--space-4);"></div>
+            <div class="summary-line"><span id="summaryName">Machame Route — 7 days</span></div>
+            <div class="summary-line"><span>Travelers</span><span id="summaryGuests">2</span></div>
+            <div class="summary-line"><span>Price per person</span><span id="summaryPerPerson">$420</span></div>
+            <div class="summary-line total"><span>Estimated total</span><span id="summaryTotal">$840</span></div>
+            <p class="muted" style="font-size:0.78rem; margin-top: var(--space-4);">Final price confirmed by your local guide based on comfort level and park fees.</p>
+          </aside>
+        </div>
+
+        <!-- Confirmation state -->
+        <div id="confirmPanel" style="display:none;">
+          <div class="confirm-hero">
+            <div class="confirm-check">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <h2 class="display-m">Booking request received</h2>
+            <p class="text-body">We've sent the details to your local guide team — they'll confirm availability by email within 24 hours.</p>
+            <div class="confirm-ref" id="confirmRef">MY-000000</div>
+            <div style="margin-top: var(--space-8);">
+              <a href="index.html" class="button button-outline">Back to home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // ---- Supabase config ----
+      const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      let currentStep = 1;
+      let guests = 2;
+      let selected = { price: 420, name: 'Machame Route — 7 days', img: document.querySelector('.experience-option').dataset.img };
+
+      document.querySelectorAll('.experience-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.experience-option').forEach(o => o.classList.remove('is-selected'));
+          opt.classList.add('is-selected');
+          opt.querySelector('input').checked = true;
+          selected = { price: Number(opt.dataset.price), name: opt.dataset.name, img: opt.dataset.img };
+          updateSummary();
+        });
+      });
+
+      function changeGuests(delta) {
+        guests = Math.min(10, Math.max(1, guests + delta));
+        document.getElementById('guestCount').textContent = guests;
+        updateSummary();
+      }
+
+      function updateSummary() {
+        document.getElementById('summaryName').textContent = selected.name;
+        document.getElementById('summaryGuests').textContent = guests;
+        document.getElementById('summaryPerPerson').textContent = '$' + selected.price;
+        document.getElementById('summaryTotal').textContent = '$' + (selected.price * guests);
+        document.getElementById('summaryImg').style.backgroundImage = `url('${selected.img}')`;
+      }
+
+      function validateStep3() {
+        let valid = true;
+        const name = document.getElementById('fullName');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const nameErr = document.getElementById('nameError');
+        const emailErr = document.getElementById('emailError');
+        const phoneErr = document.getElementById('phoneError');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        [name, email, phone].forEach(f => f.classList.remove('is-error'));
+        [nameErr, emailErr, phoneErr].forEach(e => e.style.display = 'none');
+
+        if (name.value.trim().length < 2) { name.classList.add('is-error'); nameErr.style.display = 'flex'; valid = false; }
+        if (!emailPattern.test(email.value.trim())) { email.classList.add('is-error'); emailErr.style.display = 'flex'; valid = false; }
+        if (phone.value.trim().length < 7) { phone.classList.add('is-error'); phoneErr.style.display = 'flex'; valid = false; }
+        return valid;
+      }
+
+      function buildReview() {
+        document.getElementById('reviewSummary').innerHTML = `
+          <div class="summary-line"><span>Experience</span><span>${selected.name}</span></div>
+          <div class="summary-line"><span>Date</span><span>${document.getElementById('startDate').value || 'Not set'}</span></div>
+          <div class="summary-line"><span>Travelers</span><span>${guests}</span></div>
+          <div class="summary-line"><span>Comfort level</span><span>${document.getElementById('lodgeLevel').value}</span></div>
+          <div class="summary-line"><span>Traveler</span><span>${document.getElementById('fullName').value}</span></div>
+          <div class="summary-line"><span>Contact</span><span>${document.getElementById('email').value}</span></div>
+          <div class="summary-line total"><span>Estimated total</span><span>$${selected.price * guests}</span></div>
+        `;
+      }
+
+      function goStep(delta) {
+        if (delta > 0) {
+          if (currentStep === 3 && !validateStep3()) return;
+          if (currentStep === 4) return;
+        }
+        const next = currentStep + delta;
+        if (next < 1 || next > 4) return;
+
+        document.querySelector(`.step-panel[data-panel="${currentStep}"]`).classList.remove('is-active');
+        document.querySelector(`.step-panel[data-panel="${next}"]`).classList.add('is-active');
+
+        document.querySelectorAll('.step-item').forEach(item => {
+          const s = Number(item.dataset.step);
+          item.classList.toggle('is-active', s === next);
+          item.classList.toggle('is-done', s < next);
+        });
+        document.querySelectorAll('.step-line').forEach((line, i) => {
+          line.classList.toggle('is-done', i < next - 1);
+        });
+
+        currentStep = next;
+        document.getElementById('backBtn').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+        document.getElementById('nextBtn').style.display = currentStep === 4 ? 'none' : 'inline-flex';
+        document.getElementById('confirmBtn').style.display = currentStep === 4 ? 'inline-flex' : 'none';
+        if (currentStep === 4) buildReview();
+      }
+
+      async function confirmBooking() {
+        const confirmBtn = document.getElementById('confirmBtn');
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Saving booking…';
+
+        const ref = 'MY-' + Math.floor(100000 + Math.random() * 899999);
+
+        const { error } = await supabaseClient.from('bookings').insert({
+          reference: ref,
+          experience_name: selected.name,
+          price_per_person: selected.price,
+          guests: guests,
+          start_date: document.getElementById('startDate').value || null,
+          lodge_level: document.getElementById('lodgeLevel').value,
+          full_name: document.getElementById('fullName').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          total_amount: selected.price * guests
+        });
+
+        if (error) {
+          console.error('Booking save failed:', error.message, error);
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Confirm booking';
+          alert('Tatizo: ' + (error.message || JSON.stringify(error)));
+          return;
+        }
+
+        document.getElementById('bookingLayout').style.display = 'none';
+        document.getElementById('stepper').style.display = 'none';
+        document.getElementById('confirmPanel').style.display = 'block';
+        document.getElementById('confirmRef').textContent = ref;
+      }
+    </script>
+  </body>
+</html>
