@@ -681,6 +681,8 @@
             <a href="moshi-yetu-culture.html">Culture</a>
             <a href="moshi-yetu-hotels.html">Hotels</a>
             <a href="moshi-yetu-coffee.html">Coffee</a>
+            <a href="moshi-yetu-restaurants.html">Restaurants</a>
+            <a href="moshi-yetu-transport.html">Transport</a>
           </div>
           <div class="nav-drawer-actions">
             <button class="button button-outline">EN / SW</button>
@@ -867,8 +869,61 @@
             <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12l7 7 7-7"/></svg>
           </button>
         </div>
+
+        <div class="page-header" style="margin-top: var(--space-8);">
+          <p class="eyebrow">Newly joined</p>
+          <h2 class="display-m">Verified cultural experiences</h2>
+          <p class="text-body">Villages and guides that registered directly with Moshi Yetu and passed our verification review.</p>
+        </div>
+
+        <div class="dest-grid" id="verifiedGrid">
+          <p class="muted" id="verifiedEmpty" style="display:none;">No verified experiences yet — check back soon.</p>
+        </div>
       </div>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (async function loadVerifiedListings() {
+        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const grid = document.getElementById('verifiedGrid');
+        const emptyMsg = document.getElementById('verifiedEmpty');
+
+        const { data, error } = await supabaseClient
+          .from('business_listings')
+          .select('*')
+          .eq('category', 'Cultural Site')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false });
+
+        if (error) { console.error('Could not load verified listings:', error.message); return; }
+        if (!data || !data.length) { emptyMsg.style.display = 'block'; return; }
+
+        emptyMsg.style.display = 'none';
+        grid.innerHTML = data.map(biz => `
+          <article class="card dest-card">
+            <div class="card-media" style="background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900)); display:flex; align-items:center; justify-content:center;">
+              <span class="badge badge-green">✓ Verified</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">${biz.business_name}</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                ${biz.address ? biz.address + ', ' : ''}${biz.region || ''}
+              </p>
+              <p class="muted">${biz.description || 'No description provided.'}</p>
+              <div class="card-meta">
+                <span>${biz.phone}</span>
+                <strong style="color: var(--stone-800);">${biz.website ? `<a href="${biz.website}" target="_blank" rel="noopener">Website</a>` : biz.email}</strong>
+              </div>
+            </div>
+          </article>
+        `).join('');
+      })();
+    </script>
 
     <footer class="footer">
       <div class="container">

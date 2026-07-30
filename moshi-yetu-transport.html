@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moshi Yetu — Design System Preview</title>
+    <title>Moshi Yetu — Transport</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -467,6 +467,185 @@
         .nav-drawer { inset: 72px 0 0 0; }
         .state-row { flex-direction: column; align-items: flex-start; }
       }
+      /* ---------- Destinations page ---------- */
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--stone-600);
+        padding: var(--space-6) 0 0;
+      }
+      .breadcrumb a:hover { color: var(--savanna-700); }
+      .breadcrumb .sep { color: var(--stone-400); }
+      .breadcrumb .current { color: var(--stone-800); font-weight: 600; }
+
+      .page-header { padding: var(--space-6) 0 var(--space-8); }
+      .page-header .display-l { margin-top: 10px; max-width: 720px; }
+      .page-header .text-body { max-width: 620px; margin-top: 10px; font-size: 1.05rem; }
+
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+        padding: var(--space-4) 0;
+        border-top: 1px solid var(--stone-200);
+        border-bottom: 1px solid var(--stone-200);
+        margin-bottom: var(--space-8);
+      }
+      .filter-chips { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+      .filter-chip {
+        border: 1.5px solid var(--stone-200);
+        background: white;
+        color: var(--stone-600);
+        padding: 9px 16px;
+        border-radius: var(--radius-full);
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 160ms ease;
+      }
+      .filter-chip:hover { border-color: var(--kilimanjaro-500); color: var(--kilimanjaro-500); }
+      .filter-chip.is-active {
+        background: var(--kilimanjaro-700);
+        border-color: var(--kilimanjaro-700);
+        color: white;
+      }
+      .sort-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.88rem;
+        color: var(--stone-600);
+        flex-shrink: 0;
+      }
+      .sort-control select {
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-md);
+        padding: 8px 12px;
+        font-family: inherit;
+        font-size: 0.88rem;
+        color: var(--stone-800);
+        background: white;
+      }
+
+      .featured-banner {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        border-radius: var(--radius-2xl);
+        overflow: hidden;
+        background: var(--kilimanjaro-900);
+        box-shadow: var(--shadow-lg);
+        margin-bottom: var(--space-16);
+      }
+      .featured-media {
+        background-size: cover;
+        background-position: center;
+        min-height: 340px;
+        position: relative;
+      }
+      .featured-media::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(15,42,46,0) 40%, rgba(15,42,46,0.35) 100%);
+      }
+      .featured-body {
+        padding: var(--space-12);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .featured-body .eyebrow { color: var(--savanna-500); }
+      .featured-body p.muted { color: rgba(255,255,255,0.78); margin-top: 10px; }
+      .featured-stats {
+        display: flex;
+        gap: var(--space-8);
+        margin: var(--space-6) 0;
+      }
+      .featured-stats div strong { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.4rem; }
+      .featured-stats div span { font-size: 0.8rem; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em; }
+
+      .dest-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+      .dest-card { display: flex; flex-direction: column; }
+      .dest-card .card-media { position: relative; }
+      .dest-card .badge { position: absolute; top: 14px; left: 14px; background: rgba(250,248,245,0.94); backdrop-filter: blur(6px); }
+      .dest-card .badge.badge-green { color: var(--kilimanjaro-500); }
+      .badge-blue { background: rgba(79, 165, 216, 0.16); color: var(--sky-500); }
+      .badge-earth { background: rgba(138, 90, 59, 0.16); color: var(--earth-500); }
+      .dest-card .location-tag {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.8rem;
+        color: var(--stone-600);
+        margin-top: 4px;
+      }
+      .dest-card p.muted { margin: 8px 0 0; font-size: 0.92rem; }
+
+      .elevation-strip { margin-top: var(--space-4); }
+      .elevation-strip .elevation-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: var(--stone-600);
+        margin-top: 4px;
+      }
+      .difficulty-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--stone-600);
+        margin-top: var(--space-3);
+      }
+      .difficulty-dots { display: inline-flex; gap: 3px; }
+      .difficulty-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--stone-200); }
+      .difficulty-dots span.is-filled { background: var(--sunrise-500); }
+
+      .load-more-row { display: flex; justify-content: center; margin-top: var(--space-12); }
+
+      @media (max-width: 900px) {
+        .dest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .featured-banner { grid-template-columns: 1fr; }
+        .featured-media { min-height: 220px; }
+        .featured-body { padding: var(--space-8); }
+      }
+      @media (max-width: 640px) {
+        .dest-grid { grid-template-columns: 1fr; }
+        .filter-bar { flex-direction: column; align-items: flex-start; }
+        .featured-stats { gap: var(--space-6); flex-wrap: wrap; }
+      }
+
+
+      .mini-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-3); }
+      .mini-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--stone-600); }
+      .mini-tag .icon { color: var(--stone-400); }
+      .date-block {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        width: 56px; height: 56px; border-radius: var(--radius-md);
+        background: var(--kilimanjaro-700); color: white; flex-shrink: 0;
+      }
+      .date-block strong { font-size: 1.2rem; font-family: Fraunces, Georgia, serif; line-height: 1; }
+      .date-block span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
+      .event-row {
+        display: flex; gap: var(--space-4); align-items: center;
+        border: 1px solid var(--stone-200); border-radius: var(--radius-lg);
+        padding: var(--space-4); background: white; margin-bottom: var(--space-3);
+        cursor: pointer; transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+      .event-row:hover { border-color: var(--kilimanjaro-500); box-shadow: var(--shadow-sm); }
+      .event-row .event-media { width: 96px; height: 72px; border-radius: var(--radius-md); background-size: cover; background-position: center; flex-shrink: 0; }
+      .event-row .event-body { flex: 1; }
+      .event-row .event-body h4 { margin: 0 0 4px; font-family: Fraunces, Georgia, serif; font-size: 1.05rem; }
+
     </style>
   </head>
   <body>
@@ -480,7 +659,7 @@
           <a href="index.html">Home</a>
           <a href="moshi-yetu-destinations.html">Destinations</a>
           <a href="moshi-yetu-culture.html">Culture</a>
-          <a href="moshi-yetu-hotels.html">Hotels</a>
+          <a href="moshi-yetu-hotels.html" aria-current="page" style="color: var(--kilimanjaro-500);">Hotels</a>
           <a href="moshi-yetu-coffee.html">Coffee</a>
         </nav>
         <div class="nav-actions">
@@ -525,231 +704,67 @@
     </script>
 
     <main>
-      <section class="hero">
-        <div class="container hero-content">
-          <p class="eyebrow">TANZANIA · KILIMANJARO REGION</p>
-          <h1 class="display-xl">Where the Roof of Africa Meets the Heart of Tanzania</h1>
-          <p class="text-body" style="max-width: 640px; color: rgba(255,255,255,0.86); font-size: 1.1rem; margin-top: 1rem;">
-            Discover cinematic trails, heritage-rich culture, and premium stays shaped by the mountain’s rhythm.
-          </p>
-          <div class="hero-search">
-            <div class="field">
-              <svg class="icon icon-sm" style="margin-right:8px; color: var(--stone-400);" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              Where would you like to go?
-            </div>
-            <div class="field">
-              <svg class="icon icon-sm" style="margin-right:8px; color: var(--stone-400);" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
-              When
-            </div>
-            <div class="field">
-              <svg class="icon icon-sm" style="margin-right:8px; color: var(--stone-400);" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-              What are you seeking?
-            </div>
-            <button class="button button-primary">
-              Explore
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-            </button>
-          </div>
-          <div class="pill-row">
-            <span class="pill">Destinations</span>
-            <span class="pill">Coffee Experiences</span>
-            <span class="pill">Cultural Trails</span>
-            <span class="pill">Luxury Stays</span>
-          </div>
-        </div>
-      </section>
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="sep">/</span>
+          <span class="current">Transport</span>
+        </nav>
 
-      <section class="section">
-        <div class="container">
-          <div class="grid-4">
-            <div class="panel stat-card">
-              <strong>6</strong>
-              <span>Districts</span>
-            </div>
-            <div class="panel stat-card">
-              <strong>200+</strong>
-              <span>Verified Businesses</span>
-            </div>
-            <div class="panel stat-card">
-              <strong>50+</strong>
-              <span>Destinations</span>
-            </div>
-            <div class="panel stat-card">
-              <strong>4.8★</strong>
-              <span>Traveler Rating</span>
-            </div>
-          </div>
+        <div class="page-header">
+          <p class="eyebrow">Getting around</p>
+          <h1 class="display-l">Airport transfers, taxis, and 4x4 hire around Kilimanjaro</h1>
+          <p class="text-body">This directory is brand new — every listing below has registered directly and been reviewed by our team.</p>
         </div>
-      </section>
 
-      <section class="section">
-        <div class="container">
-          <div class="eyebrow">Foundations</div>
-          <h2 class="display-l">Color system inspired by Kilimanjaro’s changing landscapes</h2>
-          <div class="swatches" style="margin-top: 2rem;">
-            <div class="swatch" style="background: var(--kilimanjaro-900);">Kilimanjaro 900<small>#0F2A2E</small></div>
-            <div class="swatch" style="background: var(--kilimanjaro-500);">Kilimanjaro 500<small>#2E7D6B</small></div>
-            <div class="swatch" style="background: var(--savanna-500); color: var(--stone-950);">Savanna 500<small>#E0A939</small></div>
-            <div class="swatch" style="background: var(--earth-500);">Earth 500<small>#8A5A3B</small></div>
-          </div>
+        <div class="page-header" style="margin-top: var(--space-4);">
+          <h2 class="display-m">Verified transport providers</h2>
         </div>
-      </section>
 
-      <section class="section">
-        <div class="container grid-2" style="gap: var(--space-8); align-items: start;">
-          <div class="panel">
-            <div class="eyebrow">Typography</div>
-            <div class="type-sample">
-              <div class="display-m">Display / Editorial</div>
-              <p class="muted">Fraunces brings narrative weight to hero statements and section titles.</p>
-            </div>
-            <div class="type-sample">
-              <h3 class="heading-m">UI / Interface</h3>
-              <p class="muted">Inter keeps navigation, forms, and actions precise and legible.</p>
-            </div>
-            <div class="type-sample">
-              <p class="eyebrow" style="margin-top: 0;">OVERLINE LABELS</p>
-              <p class="muted">Uppercase, letter-spaced, and restrained for category cues.</p>
-            </div>
-          </div>
-          <div class="panel alt">
-            <div class="eyebrow">Components</div>
-            <div style="display:flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-6);">
-              <button class="button button-primary">Primary CTA</button>
-              <button class="button button-secondary">Secondary</button>
-              <button class="button button-outline">Outline</button>
-              <button class="button button-ghost">Ghost</button>
-            </div>
-            <div class="form-stack">
-              <div>
-                <label class="field-label" for="name">Full name</label>
-                <input id="name" class="input" placeholder="Asha Mjema" />
-              </div>
-              <div>
-                <label class="field-label" for="email">Email</label>
-                <input id="email" class="input" placeholder="hello@example.com" />
-              </div>
-            </div>
-          </div>
+        <div class="dest-grid" id="verifiedGrid">
+          <p class="muted" id="verifiedEmpty" style="display:none;">No verified transport providers yet — check back soon, or <a href="moshi-yetu-list-business.html">list yours</a>.</p>
         </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="eyebrow">Foundations</div>
-          <h2 class="display-l">Icons</h2>
-          <p class="text-body" style="max-width: 560px; margin-top: 6px;">A restrained line set at 1.75px stroke — legible at 20px, echoing the same geometry as the wordmark.</p>
-          <div class="icon-grid" style="margin-top: 2rem;">
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg><span>Location</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg><span>Calendar</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span>Search</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7-5.4-4.7 7.1-.6L12 2Z"/></svg><span>Rating</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21l2-11a2 2 0 0 1 2-1.6h10a2 2 0 0 1 2 1.6l2 11"/><path d="M12 2v6"/><path d="M8 5l4 3 4-3"/></svg><span>Kilimanjaro</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><path d="M6 9V3.5"/><path d="M10 9V3.5"/><path d="M5 9h11a1 1 0 0 1 1 1c0 5-3.5 8-6.5 8S4 15 4 10a1 1 0 0 1 1-1Z"/><path d="M16.5 10.5c2 0 3.5 1.2 3.5 3s-1.5 2.5-3 2"/><path d="M8 20.5h5"/></svg><span>Coffee</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15l2.5-6.5L17 6l-2.5 6.5L8 15Z"/></svg><span>Compass</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M8 16l3.5-5 3 3L19 8"/></svg><span>Trending</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16v13H7l-3 3V4Z"/></svg><span>Reviews</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M3.5 8l8.5 6 8.5-6"/></svg><span>Contact</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Verified</span></div>
-            <div class="icon-tile"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg><span>Duration</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="eyebrow">Foundations</div>
-          <h2 class="display-l">Component states</h2>
-          <p class="text-body" style="max-width: 560px; margin-top: 6px;">Every interactive element defines default, hover, active/focus, and disabled so booking flows never feel ambiguous.</p>
-
-          <div class="panel" style="margin-top: 2rem;">
-            <div class="state-row">
-              <span class="state-label">Buttons</span>
-              <button class="button button-primary">Default</button>
-              <button class="button button-primary" style="box-shadow: var(--shadow-glow-gold);">Hover</button>
-              <button class="button button-primary" style="filter: brightness(0.96);">Active</button>
-              <button class="button button-primary" disabled>Disabled</button>
-            </div>
-            <div class="state-row">
-              <span class="state-label">Outline</span>
-              <button class="button button-outline">Default</button>
-              <button class="button button-outline" style="background: var(--stone-800); color: white;">Hover</button>
-              <button class="button button-outline" disabled>Disabled</button>
-            </div>
-            <div class="state-row">
-              <span class="state-label">Text field</span>
-              <div style="width: 220px;">
-                <input class="input" placeholder="Default" />
-              </div>
-              <div style="width: 220px;">
-                <input class="input is-success" value="Asha Mjema" />
-                <p class="field-hint is-success">
-                  <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                  Looks good
-                </p>
-              </div>
-              <div style="width: 220px;">
-                <input class="input is-error" value="invalid@" />
-                <p class="field-hint is-error">
-                  <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
-                  Enter a valid email
-                </p>
-              </div>
-              <div style="width: 220px;">
-                <input class="input" placeholder="Disabled" disabled />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="eyebrow">Page patterns</div>
-          <h2 class="display-l">Cards and editorial surfaces for destinations, stays, and stories</h2>
-          <div class="grid-3" style="margin-top: 2rem;">
-            <article class="card">
-              <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="card-body">
-                <span class="badge badge-green">Adventure</span>
-                <h3 class="heading-m" style="margin: 10px 0 6px;">Machame Route</h3>
-                <p class="muted">A classic trek revealing rainforest, moorland, and alpine highlands.</p>
-                <div class="card-meta">
-                  <span>4.9 ★ · 128 reviews</span>
-                  <strong style="color: var(--stone-800);">From $420</strong>
-                </div>
-              </div>
-            </article>
-            <article class="card">
-              <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="card-body">
-                <span class="badge badge-gold">Culture</span>
-                <h3 class="heading-m" style="margin: 10px 0 6px;">Coffee Farm Story</h3>
-                <p class="muted">Follow the bean from hillside farms to the cup with local guides.</p>
-                <div class="card-meta">
-                  <span>Editorial feature</span>
-                  <strong style="color: var(--stone-800);">Read now</strong>
-                </div>
-              </div>
-            </article>
-            <article class="card">
-              <div class="card-body">
-                <span class="badge badge-orange">Highlights</span>
-                <h3 class="heading-m" style="margin: 10px 0 6px;">Fast facts</h3>
-                <div class="list-card" style="margin-top: 14px;">
-                  <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=500&q=80');"></div>
-                  <div>
-                    <strong>2,847m elevation</strong>
-                    <p class="muted" style="margin: 4px 0 0;">A high-impact destination with a dramatic arrival experience.</p>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
+      </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (async function loadVerifiedListings() {
+        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const grid = document.getElementById('verifiedGrid');
+        const emptyMsg = document.getElementById('verifiedEmpty');
+        const { data, error } = await supabaseClient
+          .from('business_listings')
+          .select('*')
+          .eq('category', 'Transport')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false });
+        if (error) { console.error('Could not load verified listings:', error.message); return; }
+        if (!data || !data.length) { emptyMsg.style.display = 'block'; return; }
+        emptyMsg.style.display = 'none';
+        grid.innerHTML = data.map(biz => `
+          <article class="card dest-card">
+            <div class="card-media" style="background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900)); display:flex; align-items:center; justify-content:center;">
+              <span class="badge badge-green">✓ Verified</span>
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">${biz.business_name}</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                ${biz.address ? biz.address + ', ' : ''}${biz.region || ''}
+              </p>
+              <p class="muted">${biz.description || 'No description provided.'}</p>
+              <div class="card-meta">
+                <span>${biz.phone}</span>
+                <strong style="color: var(--stone-800);">${biz.website ? `<a href="${biz.website}" target="_blank" rel="noopener">Website</a>` : biz.email}</strong>
+              </div>
+            </div>
+          </article>
+        `).join('');
+      })();
+    </script>
     <footer class="footer">
       <div class="container">
         <div class="footer-grid">
@@ -758,7 +773,7 @@
               <span class="brand-mark"></span>
               <span>Moshi Yetu</span>
             </div>
-            <p class="muted" style="color: rgba(255,255,255,0.75);">A premium digital home for Tanzania’s Kilimanjaro region, pairing editorial storytelling with seamless booking experiences.</p>
+            <p class="muted" style="color: rgba(255,255,255,0.75);">A premium digital home for Tanzania's Kilimanjaro region, pairing editorial storytelling with seamless booking experiences.</p>
             <div class="newsletter">
               <input type="email" placeholder="Your email" />
               <button class="button button-primary">Join</button>
@@ -772,9 +787,9 @@
             <p><a href="moshi-yetu-destinations.html">Travel Guides</a></p>
           </div>
           <div>
-            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Stay & Eat</h3>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Stay &amp; Eat</h3>
             <p><a href="moshi-yetu-hotels.html">Hotels</a></p>
-            <p><a href="moshi-yetu-destinations.html">Restaurants</a></p>
+            <p><a href="moshi-yetu-hotels.html">Restaurants</a></p>
             <p><a href="moshi-yetu-coffee.html">Coffee Experiences</a></p>
             <p><a href="moshi-yetu-list-business.html">Local Businesses</a></p>
           </div>
@@ -783,10 +798,29 @@
             <p><a href="index.html">About</a></p>
             <p><a href="moshi-yetu-list-business.html">List Your Business</a></p>
             <p><a href="#">Contact</a></p>
-            <p><a href="index.html">Home</a></p>
+            <p><a href="moshi-yetu-design-system-preview.html">Design System</a></p>
           </div>
         </div>
       </div>
     </footer>
+
+    <script>
+      const chips = document.querySelectorAll('.filter-chip');
+      const cards = document.querySelectorAll('.dest-card');
+      function applyFilter(filter) {
+        chips.forEach(c => c.classList.toggle('is-active', c.dataset.filter === filter));
+        cards.forEach(card => {
+          const cats = card.dataset.category.split(' ');
+          card.style.display = (filter === 'all' || cats.includes(filter)) ? '' : 'none';
+        });
+      }
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => applyFilter(chip.dataset.filter));
+      });
+      const urlFilter = new URLSearchParams(window.location.search).get('filter');
+      if (urlFilter && [...chips].some(c => c.dataset.filter === urlFilter)) {
+        applyFilter(urlFilter);
+      }
+    </script>
   </body>
 </html>
