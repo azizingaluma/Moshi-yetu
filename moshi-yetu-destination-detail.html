@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moshi Yetu — Destinations</title>
+    <title>Moshi Yetu — Destination</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -467,7 +467,6 @@
         .nav-drawer { inset: 72px 0 0 0; }
         .state-row { flex-direction: column; align-items: flex-start; }
       }
-
       /* ---------- Destinations page ---------- */
       .breadcrumb {
         display: flex;
@@ -624,6 +623,29 @@
         .filter-bar { flex-direction: column; align-items: flex-start; }
         .featured-stats { gap: var(--space-6); flex-wrap: wrap; }
       }
+
+
+      .mini-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-3); }
+      .mini-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--stone-600); }
+      .mini-tag .icon { color: var(--stone-400); }
+      .date-block {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        width: 56px; height: 56px; border-radius: var(--radius-md);
+        background: var(--kilimanjaro-700); color: white; flex-shrink: 0;
+      }
+      .date-block strong { font-size: 1.2rem; font-family: Fraunces, Georgia, serif; line-height: 1; }
+      .date-block span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
+      .event-row {
+        display: flex; gap: var(--space-4); align-items: center;
+        border: 1px solid var(--stone-200); border-radius: var(--radius-lg);
+        padding: var(--space-4); background: white; margin-bottom: var(--space-3);
+        cursor: pointer; transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+      .event-row:hover { border-color: var(--kilimanjaro-500); box-shadow: var(--shadow-sm); }
+      .event-row .event-media { width: 96px; height: 72px; border-radius: var(--radius-md); background-size: cover; background-position: center; flex-shrink: 0; }
+      .event-row .event-body { flex: 1; }
+      .event-row .event-body h4 { margin: 0 0 4px; font-family: Fraunces, Georgia, serif; font-size: 1.05rem; }
+
     </style>
   </head>
   <body>
@@ -635,9 +657,9 @@
         </a>
         <nav class="nav-links" aria-label="Primary">
           <a href="index.html">Home</a>
-          <a href="moshi-yetu-destinations.html" aria-current="page" style="color: var(--kilimanjaro-500);">Destinations</a>
+          <a href="moshi-yetu-destinations.html">Destinations</a>
           <a href="moshi-yetu-culture.html">Culture</a>
-          <a href="moshi-yetu-hotels.html">Hotels</a>
+          <a href="moshi-yetu-hotels.html" aria-current="page" style="color: var(--kilimanjaro-500);">Hotels</a>
           <a href="moshi-yetu-coffee.html">Coffee</a>
         </nav>
         <div class="nav-actions">
@@ -679,328 +701,139 @@
           ? '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'
           : '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>';
       }
-    </script>
-
     <main>
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="index.html">Home</a>
           <span class="sep">/</span>
-          <span class="current">Destinations</span>
+          <a href="moshi-yetu-destinations.html">Destinations</a>
+          <span class="sep">/</span>
+          <span class="current" id="crumbName">Loading…</span>
         </nav>
 
-        <div class="page-header">
-          <p class="eyebrow">50+ places, one mountain</p>
-          <h1 class="display-l">Every trail, waterfall, and village worth the detour</h1>
-          <p class="text-body">From the summit routes to the coffee hillsides at its foot, these are the places that define the Kilimanjaro region — verified by local guides, not algorithms.</p>
+        <div id="loadingState" class="page-header">
+          <p class="text-body">Loading destination…</p>
         </div>
 
-        <div class="filter-bar">
-          <div class="filter-chips" role="group" aria-label="Filter destinations by category">
-            <button class="filter-chip is-active" data-filter="all">All destinations</button>
-            <button class="filter-chip" data-filter="trekking">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 21l2-11a2 2 0 0 1 2-1.6h10a2 2 0 0 1 2 1.6l2 11"/><path d="M12 2v6"/><path d="M8 5l4 3 4-3"/></svg>
-              Trekking
-            </button>
-            <button class="filter-chip" data-filter="nature">Nature & waterfalls</button>
-            <button class="filter-chip" data-filter="culture">Culture & villages</button>
-            <button class="filter-chip" data-filter="coffee">Coffee</button>
+        <div id="notFoundState" style="display:none;" class="page-header">
+          <h1 class="display-l">Destination not found</h1>
+          <p class="text-body">This destination may not be published yet. <a href="moshi-yetu-destinations.html">Back to all destinations</a></p>
+        </div>
+
+        <div id="destContent" style="display:none;">
+          <div class="page-header">
+            <p class="eyebrow" id="destDistrict"></p>
+            <h1 class="display-l" id="destName"></h1>
+            <p class="text-body" id="destShort"></p>
           </div>
-          <div class="sort-control">
-            <label for="sort">Sort by</label>
-            <select id="sort">
-              <option>Most popular</option>
-              <option>Highest rated</option>
-              <option>Duration: short to long</option>
-            </select>
+
+          <div class="card-media" id="destCover" style="width:100%; height:420px; border-radius: var(--radius-xl); background-size: cover; background-position: center; margin-bottom: var(--space-8);"></div>
+
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap: var(--space-8); align-items:start;">
+            <div>
+              <h2 class="heading-m">About this destination</h2>
+              <p class="text-body" id="destFull" style="white-space:pre-line; margin-top:10px;"></p>
+
+              <div id="destHistoryBlock" style="margin-top: var(--space-6);">
+                <h2 class="heading-m">History</h2>
+                <p class="text-body" id="destHistory" style="white-space:pre-line; margin-top:10px;"></p>
+              </div>
+
+              <div id="destGalleryBlock" style="margin-top: var(--space-8);">
+                <h2 class="heading-m">Gallery</h2>
+                <div id="destGalleryGrid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:10px;"></div>
+              </div>
+            </div>
+
+            <aside class="panel" style="background:white; border:1px solid var(--stone-200); border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm);">
+              <h3 class="heading-s" style="margin-bottom:12px;">Good to know</h3>
+              <div id="destFactsList" style="display:flex; flex-direction:column; gap:10px; font-size:0.92rem;"></div>
+              <a id="destMapLink" href="#" target="_blank" rel="noopener" class="button button-outline" style="width:100%; margin-top:16px; display:none;">Open in Google Maps</a>
+            </aside>
           </div>
-        </div>
-
-        <a href="moshi-yetu-booking.html" class="featured-banner">
-          <div class="featured-media" style="background-image: url('https://images.unsplash.com/photo-1589553416260-f586c8f1514f?auto=format&fit=crop&w=1200&q=80');"></div>
-          <div class="featured-body">
-            <p class="eyebrow">Route of the month</p>
-            <h2 class="display-m">Lemosho Route</h2>
-            <p class="muted">The longest approach to Uhuru Peak, crossing the Shira Plateau before joining the summit push — favored for its acclimatization profile and low crowds.</p>
-            <div class="featured-stats">
-              <div><strong>2,100m → 5,895m</strong><span>Elevation gain</span></div>
-              <div><strong>7–8 days</strong><span>Duration</span></div>
-              <div><strong>96%</strong><span>Summit success</span></div>
-            </div>
-            <span class="button button-primary" style="width: fit-content;">
-              View route details
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-            </span>
-          </div>
-        </a>
-
-        <div class="page-header" style="margin-top: var(--space-4);">
-          <p class="eyebrow">From our official guide</p>
-          <h2 class="display-m">Kilimanjaro's landmark destinations</h2>
-        </div>
-        <div class="dest-grid" id="officialDestGrid" style="margin-bottom: var(--space-8);">
-          <p class="muted" id="officialDestEmpty" style="display:none;">More landmark guides are on the way — check back soon.</p>
-        </div>
-
-        <div class="dest-grid" id="destGrid">
-          <article class="card dest-card" data-category="trekking" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=900&q=80');">
-              <span class="badge badge-green">Trekking</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">Machame Route</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                Kilimanjaro National Park, South
-              </p>
-              <p class="muted">The "Whiskey Route" — rainforest, moorland, and alpine desert in one classic ascent.</p>
-              <div class="elevation-strip">
-                <svg viewBox="0 0 240 40" style="width:100%; height:36px;" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="elev1" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stop-color="#2e7d6b"/>
-                      <stop offset="100%" stop-color="#e0a939"/>
-                    </linearGradient>
-                  </defs>
-                  <polyline points="4,32 60,26 110,20 160,12 236,5" fill="none" stroke="url(#elev1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="4" cy="32" r="3.5" fill="#2e7d6b"/>
-                  <circle cx="236" cy="5" r="3.5" fill="#e0a939"/>
-                </svg>
-                <div class="elevation-labels"><span>1,800m</span><span>5,895m summit</span></div>
-              </div>
-              <div class="card-meta">
-                <span>4.9 ★ · 128 reviews</span>
-                <strong style="color: var(--stone-800);">From $420</strong>
-              </div>
-              <div class="difficulty-tag">
-                Challenging
-                <span class="difficulty-dots"><span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="card dest-card" data-category="trekking" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=900&q=80');">
-              <span class="badge badge-green">Trekking</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">Marangu Route</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                Kilimanjaro National Park, East
-              </p>
-              <p class="muted">Known as the "Coca-Cola Route" for its sleeping huts — the gentlest gradient to Uhuru Peak.</p>
-              <div class="elevation-strip">
-                <svg viewBox="0 0 240 40" style="width:100%; height:36px;" preserveAspectRatio="none">
-                  <polyline points="4,30 60,25 110,19 160,13 236,6" fill="none" stroke="url(#elev1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="4" cy="30" r="3.5" fill="#2e7d6b"/>
-                  <circle cx="236" cy="6" r="3.5" fill="#e0a939"/>
-                </svg>
-                <div class="elevation-labels"><span>1,860m</span><span>5,895m summit</span></div>
-              </div>
-              <div class="card-meta">
-                <span>4.7 ★ · 96 reviews</span>
-                <strong style="color: var(--stone-800);">From $380</strong>
-              </div>
-              <div class="difficulty-tag">
-                Moderate
-                <span class="difficulty-dots"><span class="is-filled"></span><span class="is-filled"></span><span></span></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="card dest-card" data-category="nature coffee" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=900&q=80');">
-              <span class="badge badge-blue">Nature</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">Materuni Waterfalls & Coffee Farm</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                Materuni Village, Moshi
-              </p>
-              <p class="muted">A half-day hike to a 90m waterfall, paired with a hands-on Chagga coffee roasting demo.</p>
-              <div class="card-meta" style="margin-top: var(--space-4);">
-                <span>4.8 ★ · 340 reviews · 4 hrs</span>
-                <strong style="color: var(--stone-800);">From $45</strong>
-              </div>
-              <div class="difficulty-tag">
-                Easy
-                <span class="difficulty-dots"><span class="is-filled"></span><span></span><span></span></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="card dest-card" data-category="culture" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?auto=format&fit=crop&w=900&q=80');">
-              <span class="badge badge-gold">Culture</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">Chagga Live Museum</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                Marangu, Kilimanjaro Region
-              </p>
-              <p class="muted">Underground defense tunnels, a traditional homestead, and banana-beer brewing with Chagga elders.</p>
-              <div class="card-meta" style="margin-top: var(--space-4);">
-                <span>4.6 ★ · 210 reviews · 2 hrs</span>
-                <strong style="color: var(--stone-800);">From $25</strong>
-              </div>
-              <div class="difficulty-tag">
-                Easy
-                <span class="difficulty-dots"><span class="is-filled"></span><span></span><span></span></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="card dest-card" data-category="nature" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1439405326854-014607f694d7?auto=format&fit=crop&w=900&q=80');">
-              <span class="badge badge-blue">Nature</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">Lake Chala</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                Tanzania–Kenya border
-              </p>
-              <p class="muted">A crater lake with sheer volcanic walls and impossibly turquoise water, best reached by canoe.</p>
-              <div class="card-meta" style="margin-top: var(--space-4);">
-                <span>4.7 ★ · 88 reviews · Half day</span>
-                <strong style="color: var(--stone-800);">From $60</strong>
-              </div>
-              <div class="difficulty-tag">
-                Easy
-                <span class="difficulty-dots"><span class="is-filled"></span><span></span><span></span></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="card dest-card" data-category="nature" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80');">
-              <span class="badge badge-blue">Nature</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">Kikuletwa Hot Springs</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                Kikuletwa, near Moshi
-              </p>
-              <p class="muted">Warm spring-fed pools shaded by giant fig trees — the region's favorite afternoon cool-down.</p>
-              <div class="card-meta" style="margin-top: var(--space-4);">
-                <span>4.5 ★ · 152 reviews · 3 hrs</span>
-                <strong style="color: var(--stone-800);">From $35</strong>
-              </div>
-              <div class="difficulty-tag">
-                Easy
-                <span class="difficulty-dots"><span class="is-filled"></span><span></span><span></span></span>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div class="load-more-row">
-          <button class="button button-outline">
-            Load more destinations
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12l7 7 7-7"/></svg>
-          </button>
-        </div>
-
-        <div class="page-header" style="margin-top: var(--space-8);">
-          <p class="eyebrow">Newly joined</p>
-          <h2 class="display-m">Verified tour operators</h2>
-          <p class="text-body">Guides and operators that registered directly with Moshi Yetu and passed our verification review.</p>
-        </div>
-
-        <div class="dest-grid" id="verifiedGrid">
-          <p class="muted" id="verifiedEmpty" style="display:none;">No verified operators yet — check back soon.</p>
         </div>
       </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      (async function loadOfficialDestinations() {
+      (async function loadDestinationDetail() {
         const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const grid = document.getElementById('officialDestGrid');
-        const emptyMsg = document.getElementById('officialDestEmpty');
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('slug');
 
-        const { data, error } = await supabaseClient
+        const showNotFound = () => {
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('notFoundState').style.display = 'block';
+        };
+
+        if (!slug) { showNotFound(); return; }
+
+        const { data: d, error } = await supabaseClient
           .from('destinations')
           .select('*')
+          .eq('slug', slug)
           .eq('status', 'published')
-          .order('featured', { ascending: false })
-          .order('created_at', { ascending: false });
+          .single();
 
-        if (error) { console.error('Could not load destinations:', error.message); return; }
-        if (!data || !data.length) { emptyMsg.style.display = 'block'; return; }
+        if (error || !d) { showNotFound(); return; }
 
-        emptyMsg.style.display = 'none';
-        grid.innerHTML = data.map(d => `
-          <article class="card dest-card" style="cursor:pointer" onclick="window.location.href='moshi-yetu-destination-detail.html?slug=${d.slug}'">
-            <div class="card-media" style="${d.cover_image ? `background-image: url('${d.cover_image}');` : `background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900));`}">
-              ${d.featured ? '<span class="badge badge-green">Featured</span>' : ''}
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">${d.name}</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                ${d.district || ''}
-              </p>
-              <p class="muted">${d.short_description || ''}</p>
-              <div class="card-meta">
-                ${d.entry_fee ? `<span>${d.entry_fee}</span>` : '<span></span>'}
-                ${d.difficulty ? `<strong style="color: var(--stone-800); text-transform:capitalize;">${d.difficulty}</strong>` : ''}
+        document.title = `Moshi Yetu — ${d.name}`;
+        document.getElementById('crumbName').textContent = d.name;
+        document.getElementById('destDistrict').textContent = d.district || '';
+        document.getElementById('destName').textContent = d.name;
+        document.getElementById('destShort').textContent = d.short_description || '';
+        document.getElementById('destFull').textContent = d.full_description || d.short_description || '';
+
+        const cover = document.getElementById('destCover');
+        cover.style.backgroundImage = d.cover_image
+          ? `url('${d.cover_image}')`
+          : `linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900))`;
+
+        if (d.history) {
+          document.getElementById('destHistory').textContent = d.history;
+        } else {
+          document.getElementById('destHistoryBlock').style.display = 'none';
+        }
+
+        const gallery = d.gallery || [];
+        const galleryBlock = document.getElementById('destGalleryBlock');
+        const galleryGrid = document.getElementById('destGalleryGrid');
+        if (gallery.length) {
+          galleryGrid.innerHTML = gallery.map(url => `
+            <div style="aspect-ratio:1; border-radius: var(--radius-md); overflow:hidden; background-size:cover; background-position:center; background-image:url('${url}');"></div>
+          `).join('');
+        } else {
+          galleryBlock.style.display = 'none';
+        }
+
+        const facts = [];
+        if (d.entry_fee) facts.push(['Entry fee', d.entry_fee]);
+        if (d.best_time) facts.push(['Best time to visit', d.best_time]);
+        if (d.opening_hours) facts.push(['Opening hours', d.opening_hours]);
+        if (d.difficulty) facts.push(['Difficulty', d.difficulty]);
+        const factsList = document.getElementById('destFactsList');
+        factsList.innerHTML = facts.length
+          ? facts.map(([label, value]) => `
+              <div style="display:flex; justify-content:space-between; gap:12px; padding-bottom:10px; border-bottom:1px solid var(--stone-100);">
+                <span class="muted">${label}</span><strong style="text-align:right; text-transform:capitalize;">${value}</strong>
               </div>
-            </div>
-          </article>
-        `).join('');
+            `).join('')
+          : '<p class="muted">No additional details yet.</p>';
+
+        if (d.google_maps_url) {
+          const mapLink = document.getElementById('destMapLink');
+          mapLink.href = d.google_maps_url;
+          mapLink.style.display = 'block';
+        }
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('destContent').style.display = 'block';
       })();
     </script>
-    <script>
-      (async function loadVerifiedListings() {
-        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        const grid = document.getElementById('verifiedGrid');
-        const emptyMsg = document.getElementById('verifiedEmpty');
-
-        const { data, error } = await supabaseClient
-          .from('business_listings')
-          .select('*')
-          .eq('category', 'Tour Operator')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false });
-
-        if (error) { console.error('Could not load verified listings:', error.message); return; }
-        if (!data || !data.length) { emptyMsg.style.display = 'block'; return; }
-
-        emptyMsg.style.display = 'none';
-        grid.innerHTML = data.map(biz => `
-          <article class="card dest-card">
-            <div class="card-media" style="background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900)); display:flex; align-items:center; justify-content:center;">
-              <span class="badge badge-green">✓ Verified</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">${biz.business_name}</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                ${biz.address ? biz.address + ', ' : ''}${biz.region || ''}
-              </p>
-              <p class="muted">${biz.description || 'No description provided.'}</p>
-              <div class="card-meta">
-                <span>${biz.phone}</span>
-                <strong style="color: var(--stone-800);">${biz.website ? `<a href="${biz.website}" target="_blank" rel="noopener">Website</a>` : biz.email}</strong>
-              </div>
-            </div>
-          </article>
-        `).join('');
-      })();
-    </script>
-
     <footer class="footer">
       <div class="container">
         <div class="footer-grid">
@@ -1009,7 +842,7 @@
               <span class="brand-mark"></span>
               <span>Moshi Yetu</span>
             </div>
-            <p class="muted" style="color: rgba(255,255,255,0.75);">A premium digital home for Tanzania’s Kilimanjaro region, pairing editorial storytelling with seamless booking experiences.</p>
+            <p class="muted" style="color: rgba(255,255,255,0.75);">A premium digital home for Tanzania's Kilimanjaro region, pairing editorial storytelling with seamless booking experiences.</p>
             <div class="newsletter">
               <input type="email" placeholder="Your email" />
               <button class="button button-primary">Join</button>
@@ -1023,9 +856,9 @@
             <p><a href="moshi-yetu-destinations.html">Travel Guides</a></p>
           </div>
           <div>
-            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Stay & Eat</h3>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Stay &amp; Eat</h3>
             <p><a href="moshi-yetu-hotels.html">Hotels</a></p>
-            <p><a href="moshi-yetu-destinations.html">Restaurants</a></p>
+            <p><a href="moshi-yetu-hotels.html">Restaurants</a></p>
             <p><a href="moshi-yetu-coffee.html">Coffee Experiences</a></p>
             <p><a href="moshi-yetu-list-business.html">Local Businesses</a></p>
           </div>
@@ -1053,7 +886,6 @@
       chips.forEach(chip => {
         chip.addEventListener('click', () => applyFilter(chip.dataset.filter));
       });
-      // Honor ?filter= from the homepage search or category tiles
       const urlFilter = new URLSearchParams(window.location.search).get('filter');
       if (urlFilter && [...chips].some(c => c.dataset.filter === urlFilter)) {
         applyFilter(urlFilter);
