@@ -129,6 +129,16 @@
       .action-btn:hover { opacity: 0.8; }
 
       .loading-row { text-align: center; padding: var(--space-8); color: var(--stone-600); }
+      .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-bottom: var(--space-3); }
+      .thumb { width: 56px; height: 56px; border-radius: var(--radius-sm); object-fit: cover; background: var(--stone-100); }
+      .gallery-thumb-wrap { position: relative; }
+      .gallery-thumb { width: 80px; height: 80px; border-radius: var(--radius-sm); object-fit: cover; background: var(--stone-100); }
+      .gallery-thumb-remove {
+        position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%;
+        background: var(--error-500); color: white; border: 2px solid white; font-size: 0.7rem;
+        display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 700;
+      }
+      @media (max-width: 720px) { .form-grid { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
@@ -161,6 +171,8 @@
         <div class="tabs">
           <button class="tab-btn is-active" id="tabBookingsBtn" onclick="showTab('bookings')">Bookings</button>
           <button class="tab-btn" id="tabListingsBtn" onclick="showTab('listings')">Business listings</button>
+          <button class="tab-btn" id="tabContentBtn" onclick="showTab('content')">Manage content</button>
+          <button class="tab-btn" id="tabDestinationsBtn" onclick="showTab('destinations')">Destinations</button>
         </div>
 
         <div id="bookingsPanel" class="panel">
@@ -183,6 +195,185 @@
               <tr><td colspan="7" class="loading-row">Loading…</td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div id="contentPanel" style="display:none;">
+          <div class="panel" style="padding: var(--space-6);">
+            <h2 style="margin-top:0; font-size:1.2rem;" id="contentFormTitle">Add new listing</h2>
+            <input type="hidden" id="cId" />
+            <div class="form-grid">
+              <div>
+                <label class="field-label">Category</label>
+                <select class="input" id="cCategory">
+                  <option>Destinations</option>
+                  <option>Hotels</option>
+                  <option>Coffee</option>
+                  <option>Culture</option>
+                  <option>Events</option>
+                  <option>Restaurants</option>
+                  <option>Transport</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Title</label>
+                <input class="input" id="cTitle" placeholder="e.g. Kilimanjaro Wonders Lodge" />
+              </div>
+              <div>
+                <label class="field-label">Location</label>
+                <input class="input" id="cLocation" placeholder="e.g. Machame Gate Road, Moshi" />
+              </div>
+              <div>
+                <label class="field-label">Price (text)</label>
+                <input class="input" id="cPrice" placeholder="e.g. $180/night" />
+              </div>
+              <div>
+                <label class="field-label">Rating (0-5)</label>
+                <input class="input" id="cRating" type="number" step="0.1" min="0" max="5" placeholder="4.9" />
+              </div>
+              <div>
+                <label class="field-label">Reviews count</label>
+                <input class="input" id="cReviews" type="number" min="0" placeholder="210" />
+              </div>
+            </div>
+            <label class="field-label">Description</label>
+            <textarea class="input" id="cDescription" style="height:80px; padding-top:10px;" placeholder="Short description shown on the card"></textarea>
+
+            <label class="field-label">Image — upload a file</label>
+            <input class="input" id="cImageFile" type="file" accept="image/*" style="padding-top:10px;" />
+            <label class="field-label">…or paste an image URL instead</label>
+            <input class="input" id="cImageUrl" placeholder="https://images.unsplash.com/..." />
+
+            <div style="display:flex; gap: var(--space-4); align-items:center; margin: var(--space-3) 0 var(--space-4);">
+              <label style="display:flex; align-items:center; gap:6px; font-size:0.9rem;"><input type="checkbox" id="cFeatured" /> Featured</label>
+              <label style="display:flex; align-items:center; gap:6px; font-size:0.9rem;"><input type="checkbox" id="cPublished" checked /> Published (visible to public)</label>
+            </div>
+
+            <div style="display:flex; gap: var(--space-3);">
+              <button class="button button-primary" style="width:auto; padding:0 24px;" id="cSaveBtn" onclick="saveContentItem()">Save listing</button>
+              <button class="button" style="width:auto; padding:0 24px; background:var(--stone-100);" onclick="resetContentForm()">Clear</button>
+            </div>
+
+            <div id="gallerySection" style="display:none; margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--stone-200);">
+              <label class="field-label">Gallery — extra photos for this listing</label>
+              <div id="galleryThumbs" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: var(--space-3);"></div>
+              <input class="input" id="cGalleryFiles" type="file" accept="image/*" multiple style="padding-top:10px;" />
+              <button class="button button-primary" style="width:auto; padding:0 20px; margin-top:10px;" id="cGalleryBtn" onclick="uploadGalleryImages()">Add to gallery</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <table>
+              <thead>
+                <tr><th>Image</th><th>Title</th><th>Category</th><th>Featured</th><th>Status</th><th>Action</th></tr>
+              </thead>
+              <tbody id="contentBody">
+                <tr><td colspan="6" class="loading-row">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="destinationsPanel" style="display:none;">
+          <div class="panel" style="padding: var(--space-6); margin-bottom: var(--space-6);">
+            <h2 style="margin-top:0; font-size:1.2rem;" id="destFormTitle">Add new destination</h2>
+            <input type="hidden" id="dId" />
+
+            <label class="field-label" for="dName">Name</label>
+            <input class="input" id="dName" placeholder="e.g. Materuni Waterfalls" oninput="autoSlug()" />
+
+            <label class="field-label" for="dSlug">Slug (URL-friendly, auto-generated)</label>
+            <input class="input" id="dSlug" placeholder="materuni-waterfalls" />
+
+            <label class="field-label" for="dDistrict">District</label>
+            <input class="input" id="dDistrict" placeholder="e.g. Moshi Rural" />
+
+            <label class="field-label" for="dShortDesc">Short description (shown on cards)</label>
+            <input class="input" id="dShortDesc" placeholder="One sentence summary" />
+
+            <label class="field-label" for="dFullDesc">Full description</label>
+            <textarea class="input" id="dFullDesc" style="height:90px; padding-top:10px;"></textarea>
+
+            <label class="field-label" for="dHistory">History / background (optional)</label>
+            <textarea class="input" id="dHistory" style="height:70px; padding-top:10px;"></textarea>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap: var(--space-4);">
+              <div>
+                <label class="field-label" for="dLat">Latitude</label>
+                <input class="input" id="dLat" type="number" step="any" placeholder="-3.0674" />
+              </div>
+              <div>
+                <label class="field-label" for="dLng">Longitude</label>
+                <input class="input" id="dLng" type="number" step="any" placeholder="37.3556" />
+              </div>
+            </div>
+
+            <label class="field-label" for="dMapsUrl">Google Maps link (optional)</label>
+            <input class="input" id="dMapsUrl" placeholder="https://maps.google.com/..." />
+
+            <label class="field-label">Cover photo</label>
+            <input class="input" id="dCoverFile" type="file" accept="image/*" style="padding-top:10px;" />
+            <input class="input" id="dCoverUrl" placeholder="…or paste an image URL instead" />
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap: var(--space-4);">
+              <div>
+                <label class="field-label" for="dEntryFee">Entry fee</label>
+                <input class="input" id="dEntryFee" placeholder="e.g. $10 / free" />
+              </div>
+              <div>
+                <label class="field-label" for="dBestTime">Best time to visit</label>
+                <input class="input" id="dBestTime" placeholder="e.g. June - October" />
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap: var(--space-4);">
+              <div>
+                <label class="field-label" for="dHours">Opening hours</label>
+                <input class="input" id="dHours" placeholder="e.g. 8:00 - 17:00" />
+              </div>
+              <div>
+                <label class="field-label" for="dDifficulty">Difficulty</label>
+                <select class="input" id="dDifficulty">
+                  <option value="">—</option>
+                  <option value="easy">Easy</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+            </div>
+
+            <label style="display:flex; align-items:center; gap:8px; margin: var(--space-3) 0;">
+              <input type="checkbox" id="dFeatured" /> Featured on homepage
+            </label>
+
+            <label class="field-label" for="dStatus">Status</label>
+            <select class="input" id="dStatus" style="margin-bottom: var(--space-4);">
+              <option value="draft">Draft (hidden from public)</option>
+              <option value="published">Published (visible to public)</option>
+            </select>
+
+            <div style="display:flex; gap: var(--space-3);">
+              <button class="button button-primary" style="width:auto; padding:0 24px;" id="dSaveBtn" onclick="saveDestination()">Save destination</button>
+              <button class="button" style="width:auto; padding:0 24px; background:var(--stone-100);" onclick="resetDestinationForm()">Clear</button>
+            </div>
+
+            <div id="destGallerySection" style="display:none; margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--stone-200);">
+              <label class="field-label">Gallery — extra photos for this destination</label>
+              <div id="destGalleryThumbs" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: var(--space-3);"></div>
+              <input class="input" id="dGalleryFiles" type="file" accept="image/*" multiple style="padding-top:10px;" />
+              <button class="button button-primary" style="width:auto; padding:0 20px; margin-top:10px;" onclick="uploadDestinationGallery()">Add to gallery</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <table>
+              <thead>
+                <tr><th>Image</th><th>Name</th><th>District</th><th>Featured</th><th>Status</th><th>Action</th></tr>
+              </thead>
+              <tbody id="destinationsBody">
+                <tr><td colspan="6" class="loading-row">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -242,8 +433,14 @@
       function showTab(tab) {
         document.getElementById('bookingsPanel').style.display = tab === 'bookings' ? 'block' : 'none';
         document.getElementById('listingsPanel').style.display = tab === 'listings' ? 'block' : 'none';
+        document.getElementById('contentPanel').style.display = tab === 'content' ? 'block' : 'none';
+        document.getElementById('destinationsPanel').style.display = tab === 'destinations' ? 'block' : 'none';
         document.getElementById('tabBookingsBtn').classList.toggle('is-active', tab === 'bookings');
         document.getElementById('tabListingsBtn').classList.toggle('is-active', tab === 'listings');
+        document.getElementById('tabContentBtn').classList.toggle('is-active', tab === 'content');
+        document.getElementById('tabDestinationsBtn').classList.toggle('is-active', tab === 'destinations');
+        if (tab === 'content') loadContentItems();
+        if (tab === 'destinations') loadDestinations();
       }
 
       // ---- Bookings ----
@@ -332,6 +529,356 @@
         const { error } = await supabaseClient.from('business_listings').update({ status }).eq('id', id);
         if (error) { alert('Tatizo: ' + error.message); return; }
         loadListings();
+      }
+
+      // ---- Content management (listings) ----
+      async function loadContentItems() {
+        const body = document.getElementById('contentBody');
+        body.innerHTML = '<tr><td colspan="6" class="loading-row">Loading…</td></tr>';
+
+        const { data, error } = await supabaseClient
+          .from('listings')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          body.innerHTML = `<tr><td colspan="6" class="empty-state">Error: ${error.message}</td></tr>`;
+          return;
+        }
+        if (!data.length) {
+          body.innerHTML = '<tr><td colspan="6" class="empty-state">Hakuna listings bado. Tumia fomu hapo juu kuongeza ya kwanza.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = data.map(item => `
+          <tr>
+            <td>${item.image_url ? `<img class="thumb" src="${item.image_url}" alt="" />` : '—'}</td>
+            <td><strong>${item.title}</strong><br><span style="color:var(--stone-600); font-size:0.82rem;">${item.location || ''}</span></td>
+            <td>${item.category}</td>
+            <td>${item.featured ? '⭐ Yes' : 'No'}</td>
+            <td><span class="status-badge ${item.published ? 'status-approved' : 'status-pending'}">${item.published ? 'Published' : 'Draft'}</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="action-btn" onclick='editContentItem(${JSON.stringify(item).replace(/'/g, "&apos;")})'>Edit</button>
+                <button class="action-btn reject" onclick="deleteContentItem('${item.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function editContentItem(item) {
+        document.getElementById('contentFormTitle').textContent = 'Edit listing';
+        document.getElementById('cId').value = item.id;
+        document.getElementById('cCategory').value = item.category;
+        document.getElementById('cTitle').value = item.title || '';
+        document.getElementById('cLocation').value = item.location || '';
+        document.getElementById('cPrice').value = item.price || '';
+        document.getElementById('cRating').value = item.rating || '';
+        document.getElementById('cReviews').value = item.reviews_count || '';
+        document.getElementById('cDescription').value = item.description || '';
+        document.getElementById('cImageUrl').value = item.image_url || '';
+        document.getElementById('cFeatured').checked = !!item.featured;
+        document.getElementById('cPublished').checked = !!item.published;
+        document.getElementById('gallerySection').style.display = 'block';
+        loadGalleryImages(item.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function resetContentForm() {
+        document.getElementById('contentFormTitle').textContent = 'Add new listing';
+        document.getElementById('cId').value = '';
+        document.getElementById('cCategory').selectedIndex = 0;
+        document.getElementById('cTitle').value = '';
+        document.getElementById('cLocation').value = '';
+        document.getElementById('cPrice').value = '';
+        document.getElementById('cRating').value = '';
+        document.getElementById('cReviews').value = '';
+        document.getElementById('cDescription').value = '';
+        document.getElementById('cImageFile').value = '';
+        document.getElementById('cImageUrl').value = '';
+        document.getElementById('cFeatured').checked = false;
+        document.getElementById('cPublished').checked = true;
+      }
+
+      async function saveContentItem() {
+        const saveBtn = document.getElementById('cSaveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving…';
+
+        const id = document.getElementById('cId').value;
+        const file = document.getElementById('cImageFile').files[0];
+        let imageUrl = document.getElementById('cImageUrl').value.trim();
+
+        // If a file was chosen, upload it to Storage and use that URL instead
+        if (file) {
+          const path = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+          const { error: uploadError } = await supabaseClient.storage
+            .from('listing-images')
+            .upload(path, file);
+
+          if (uploadError) {
+            alert('Tatizo la kupakia picha: ' + uploadError.message);
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save listing';
+            return;
+          }
+          const { data: publicUrlData } = supabaseClient.storage
+            .from('listing-images')
+            .getPublicUrl(path);
+          imageUrl = publicUrlData.publicUrl;
+        }
+
+        const payload = {
+          category: document.getElementById('cCategory').value,
+          title: document.getElementById('cTitle').value.trim(),
+          location: document.getElementById('cLocation').value.trim(),
+          price: document.getElementById('cPrice').value.trim(),
+          rating: document.getElementById('cRating').value ? parseFloat(document.getElementById('cRating').value) : null,
+          reviews_count: document.getElementById('cReviews').value ? parseInt(document.getElementById('cReviews').value) : null,
+          description: document.getElementById('cDescription').value.trim(),
+          image_url: imageUrl || null,
+          featured: document.getElementById('cFeatured').checked,
+          published: document.getElementById('cPublished').checked,
+          updated_at: new Date().toISOString()
+        };
+
+        let error;
+        if (id) {
+          ({ error } = await supabaseClient.from('listings').update(payload).eq('id', id));
+        } else {
+          ({ error } = await supabaseClient.from('listings').insert(payload));
+        }
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save listing';
+
+        if (error) {
+          alert('Tatizo: ' + error.message);
+          return;
+        }
+
+        resetContentForm();
+        loadContentItems();
+      }
+
+      async function deleteContentItem(id) {
+        if (!confirm('Una uhakika unataka kufuta listing hii?')) return;
+        const { error } = await supabaseClient.from('listings').delete().eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+        loadContentItems();
+      }
+
+      // ---- Destinations ----
+      function autoSlug() {
+        const name = document.getElementById('dName').value;
+        const slugField = document.getElementById('dSlug');
+        if (!document.getElementById('dId').value) {
+          slugField.value = name.toLowerCase().trim()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+        }
+      }
+
+      async function loadDestinations() {
+        const body = document.getElementById('destinationsBody');
+        body.innerHTML = '<tr><td colspan="6" class="loading-row">Loading…</td></tr>';
+
+        const { data, error } = await supabaseClient
+          .from('destinations')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          body.innerHTML = `<tr><td colspan="6" class="empty-state">Error: ${error.message}</td></tr>`;
+          return;
+        }
+        if (!data.length) {
+          body.innerHTML = '<tr><td colspan="6" class="empty-state">Hakuna destinations bado.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = data.map(d => `
+          <tr>
+            <td>${d.cover_image ? `<img class="thumb" src="${d.cover_image}" alt="" />` : '—'}</td>
+            <td><strong>${d.name}</strong><br><span style="color:var(--stone-600); font-size:0.82rem;">${d.slug}</span></td>
+            <td>${d.district || '—'}</td>
+            <td>${d.featured ? '⭐ Yes' : 'No'}</td>
+            <td><span class="status-badge ${d.status === 'published' ? 'status-approved' : 'status-pending'}">${d.status}</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="action-btn" onclick='editDestination(${JSON.stringify(d).replace(/'/g, "&apos;")})'>Edit</button>
+                <button class="action-btn reject" onclick="deleteDestination('${d.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function editDestination(d) {
+        document.getElementById('destFormTitle').textContent = 'Edit destination';
+        document.getElementById('dId').value = d.id;
+        document.getElementById('dName').value = d.name || '';
+        document.getElementById('dSlug').value = d.slug || '';
+        document.getElementById('dDistrict').value = d.district || '';
+        document.getElementById('dShortDesc').value = d.short_description || '';
+        document.getElementById('dFullDesc').value = d.full_description || '';
+        document.getElementById('dHistory').value = d.history || '';
+        document.getElementById('dLat').value = d.latitude || '';
+        document.getElementById('dLng').value = d.longitude || '';
+        document.getElementById('dMapsUrl').value = d.google_maps_url || '';
+        document.getElementById('dCoverUrl').value = d.cover_image || '';
+        document.getElementById('dEntryFee').value = d.entry_fee || '';
+        document.getElementById('dBestTime').value = d.best_time || '';
+        document.getElementById('dHours').value = d.opening_hours || '';
+        document.getElementById('dDifficulty').value = d.difficulty || '';
+        document.getElementById('dFeatured').checked = !!d.featured;
+        document.getElementById('dStatus').value = d.status || 'draft';
+        document.getElementById('destGallerySection').style.display = 'block';
+        renderDestGalleryThumbs(d.gallery || []);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function resetDestinationForm() {
+        document.getElementById('destFormTitle').textContent = 'Add new destination';
+        document.getElementById('dId').value = '';
+        document.getElementById('dName').value = '';
+        document.getElementById('dSlug').value = '';
+        document.getElementById('dDistrict').value = '';
+        document.getElementById('dShortDesc').value = '';
+        document.getElementById('dFullDesc').value = '';
+        document.getElementById('dHistory').value = '';
+        document.getElementById('dLat').value = '';
+        document.getElementById('dLng').value = '';
+        document.getElementById('dMapsUrl').value = '';
+        document.getElementById('dCoverFile').value = '';
+        document.getElementById('dCoverUrl').value = '';
+        document.getElementById('dEntryFee').value = '';
+        document.getElementById('dBestTime').value = '';
+        document.getElementById('dHours').value = '';
+        document.getElementById('dDifficulty').value = '';
+        document.getElementById('dFeatured').checked = false;
+        document.getElementById('dStatus').value = 'draft';
+        document.getElementById('destGallerySection').style.display = 'none';
+      }
+
+      async function saveDestination() {
+        const saveBtn = document.getElementById('dSaveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving…';
+
+        const id = document.getElementById('dId').value;
+        const file = document.getElementById('dCoverFile').files[0];
+        let coverUrl = document.getElementById('dCoverUrl').value.trim();
+
+        if (file) {
+          const path = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+          const { error: uploadError } = await supabaseClient.storage.from('destinations').upload(path, file);
+          if (uploadError) {
+            alert('Tatizo la kupakia picha: ' + uploadError.message);
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save destination';
+            return;
+          }
+          const { data: publicUrlData } = supabaseClient.storage.from('destinations').getPublicUrl(path);
+          coverUrl = publicUrlData.publicUrl;
+        }
+
+        const payload = {
+          name: document.getElementById('dName').value.trim(),
+          slug: document.getElementById('dSlug').value.trim(),
+          district: document.getElementById('dDistrict').value.trim(),
+          short_description: document.getElementById('dShortDesc').value.trim(),
+          full_description: document.getElementById('dFullDesc').value.trim(),
+          history: document.getElementById('dHistory').value.trim(),
+          latitude: document.getElementById('dLat').value ? parseFloat(document.getElementById('dLat').value) : null,
+          longitude: document.getElementById('dLng').value ? parseFloat(document.getElementById('dLng').value) : null,
+          google_maps_url: document.getElementById('dMapsUrl').value.trim(),
+          cover_image: coverUrl || null,
+          entry_fee: document.getElementById('dEntryFee').value.trim(),
+          best_time: document.getElementById('dBestTime').value.trim(),
+          opening_hours: document.getElementById('dHours').value.trim(),
+          difficulty: document.getElementById('dDifficulty').value || null,
+          featured: document.getElementById('dFeatured').checked,
+          status: document.getElementById('dStatus').value,
+          updated_at: new Date().toISOString()
+        };
+
+        let error, savedId = id;
+        if (id) {
+          ({ error } = await supabaseClient.from('destinations').update(payload).eq('id', id));
+        } else {
+          const { data, error: insertError } = await supabaseClient.from('destinations').insert(payload).select().single();
+          error = insertError;
+          if (data) savedId = data.id;
+        }
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save destination';
+
+        if (error) {
+          alert('Tatizo: ' + error.message);
+          return;
+        }
+
+        document.getElementById('dId').value = savedId;
+        document.getElementById('destGallerySection').style.display = 'block';
+        loadDestinations();
+      }
+
+      async function deleteDestination(id) {
+        if (!confirm('Una uhakika unataka kufuta destination hii?')) return;
+        const { error } = await supabaseClient.from('destinations').delete().eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+        loadDestinations();
+      }
+
+      // ---- Destination gallery (stored as text[] on the row itself) ----
+      function renderDestGalleryThumbs(urls) {
+        const wrap = document.getElementById('destGalleryThumbs');
+        if (!urls.length) { wrap.innerHTML = '<span style="color:var(--stone-600); font-size:0.85rem;">No extra photos yet.</span>'; return; }
+        wrap.innerHTML = urls.map((url, i) => `
+          <div class="gallery-thumb-wrap">
+            <img class="gallery-thumb" src="${url}" alt="" />
+            <div class="gallery-thumb-remove" onclick="removeDestGalleryImage(${i})">×</div>
+          </div>
+        `).join('');
+      }
+
+      async function uploadDestinationGallery() {
+        const id = document.getElementById('dId').value;
+        if (!id) { alert('Kwanza hifadhi destination (Save), kisha ongeza gallery.'); return; }
+        const files = document.getElementById('dGalleryFiles').files;
+        if (!files.length) { alert('Chagua picha kwanza.'); return; }
+
+        const { data: current } = await supabaseClient.from('destinations').select('gallery').eq('id', id).single();
+        let urls = (current && current.gallery) || [];
+
+        for (const file of files) {
+          const path = `gallery-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+          const { error: uploadError } = await supabaseClient.storage.from('destinations').upload(path, file);
+          if (uploadError) { alert('Tatizo la kupakia: ' + uploadError.message); continue; }
+          const { data: publicUrlData } = supabaseClient.storage.from('destinations').getPublicUrl(path);
+          urls.push(publicUrlData.publicUrl);
+        }
+
+        const { error } = await supabaseClient.from('destinations').update({ gallery: urls }).eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+
+        document.getElementById('dGalleryFiles').value = '';
+        renderDestGalleryThumbs(urls);
+        loadDestinations();
+      }
+
+      async function removeDestGalleryImage(index) {
+        const id = document.getElementById('dId').value;
+        const { data: current } = await supabaseClient.from('destinations').select('gallery').eq('id', id).single();
+        let urls = (current && current.gallery) || [];
+        urls.splice(index, 1);
+        const { error } = await supabaseClient.from('destinations').update({ gallery: urls }).eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+        renderDestGalleryThumbs(urls);
       }
 
       checkSession();

@@ -734,6 +734,14 @@
           </div>
         </a>
 
+        <div class="page-header" style="margin-top: var(--space-4);">
+          <p class="eyebrow">From our official guide</p>
+          <h2 class="display-m">Kilimanjaro's landmark destinations</h2>
+        </div>
+        <div class="dest-grid" id="officialDestGrid" style="margin-bottom: var(--space-8);">
+          <p class="muted" id="officialDestEmpty" style="display:none;">More landmark guides are on the way — check back soon.</p>
+        </div>
+
         <div class="dest-grid" id="destGrid">
           <article class="card dest-card" data-category="trekking" style="cursor:pointer" onclick="window.location.href='moshi-yetu-booking.html'">
             <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=900&q=80');">
@@ -910,6 +918,47 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (async function loadOfficialDestinations() {
+        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const grid = document.getElementById('officialDestGrid');
+        const emptyMsg = document.getElementById('officialDestEmpty');
+
+        const { data, error } = await supabaseClient
+          .from('destinations')
+          .select('*')
+          .eq('status', 'published')
+          .order('featured', { ascending: false })
+          .order('created_at', { ascending: false });
+
+        if (error) { console.error('Could not load destinations:', error.message); return; }
+        if (!data || !data.length) { emptyMsg.style.display = 'block'; return; }
+
+        emptyMsg.style.display = 'none';
+        grid.innerHTML = data.map(d => `
+          <article class="card dest-card" style="cursor:pointer" onclick="window.location.href='moshi-yetu-destination-detail.html?slug=${d.slug}'">
+            <div class="card-media" style="${d.cover_image ? `background-image: url('${d.cover_image}');` : `background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900));`}">
+              ${d.featured ? '<span class="badge badge-green">Featured</span>' : ''}
+            </div>
+            <div class="card-body">
+              <h3 class="heading-m">${d.name}</h3>
+              <p class="location-tag">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                ${d.district || ''}
+              </p>
+              <p class="muted">${d.short_description || ''}</p>
+              <div class="card-meta">
+                ${d.entry_fee ? `<span>${d.entry_fee}</span>` : '<span></span>'}
+                ${d.difficulty ? `<strong style="color: var(--stone-800); text-transform:capitalize;">${d.difficulty}</strong>` : ''}
+              </div>
+            </div>
+          </article>
+        `).join('');
+      })();
+    </script>
     <script>
       (async function loadVerifiedListings() {
         const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
