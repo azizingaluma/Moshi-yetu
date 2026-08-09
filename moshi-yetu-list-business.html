@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moshi Yetu — List Your Business</title>
+    <title>List Your Business | Moshi Yetu</title>
+    <meta name="description" content="List your business on Moshi Yetu and help customers discover your hotel, restaurant, café, tour company, shop or local experience in Moshi." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -593,8 +594,6 @@
             <a href="moshi-yetu-culture.html">Culture</a>
             <a href="moshi-yetu-hotels.html">Hotels</a>
             <a href="moshi-yetu-coffee.html">Coffee</a>
-            <a href="moshi-yetu-restaurants.html">Restaurants</a>
-            <a href="moshi-yetu-transport.html">Transport</a>
           </div>
         </div>
       </nav>
@@ -718,8 +717,32 @@
                       </p>
                     </div>
                     <div>
-                      <label class="field-label" for="website">Website or Instagram (optional)</label>
-                      <input class="input" id="website" placeholder="instagram.com/yourbusiness" />
+                      <label class="field-label" for="website">Website (optional)</label>
+                      <input class="input" id="website" placeholder="yourbusiness.co.tz" />
+                    </div>
+                  </div>
+                  <div class="field-row">
+                    <div>
+                      <label class="field-label" for="whatsapp">WhatsApp number (optional)</label>
+                      <input class="input" id="whatsapp" placeholder="+255 7XX XXX XXX" />
+                    </div>
+                    <div>
+                      <label class="field-label" for="instagram">Instagram (optional)</label>
+                      <input class="input" id="instagram" placeholder="@yourbusiness" />
+                    </div>
+                  </div>
+                  <div class="field-row">
+                    <div>
+                      <label class="field-label" for="openingHours">Opening hours (optional)</label>
+                      <input class="input" id="openingHours" placeholder="e.g. Mon–Sun, 8:00 AM – 8:00 PM" />
+                    </div>
+                    <div>
+                      <label class="field-label" for="contactPerson">Business owner / contact person</label>
+                      <input class="input" id="contactPerson" placeholder="Full name" />
+                      <p class="field-hint is-error" id="contactPersonError" style="display:none;">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                        Enter the contact person's name
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -789,8 +812,8 @@
             <div class="confirm-check">
               <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
             </div>
-            <h2 class="display-m">Listing submitted for review</h2>
-            <p class="text-body">Our local team will visit or call to verify your business, usually within 3 business days. You'll get an email once you're live.</p>
+            <h2 class="display-m">Thank you!</h2>
+            <p class="text-body">Your business listing has been submitted to Moshi Yetu. Our team will review the information before publishing it.</p>
             <div class="confirm-ref" id="confirmRef">MY-B-000000</div>
             <div style="margin-top: var(--space-8);">
               <a href="index.html" class="button button-outline">Back to home</a>
@@ -801,7 +824,7 @@
     </main>
 
     <script>
-      // ---- Supabase config ----
+    <script>
       const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
       const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
       const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -947,14 +970,18 @@
           region: document.getElementById('region').value,
           phone: document.getElementById('phone').value.trim(),
           email: document.getElementById('email').value.trim(),
-          website: document.getElementById('website').value.trim()
+          website: document.getElementById('website').value.trim(),
+          whatsapp: document.getElementById('whatsapp').value.trim(),
+          instagram: document.getElementById('instagram').value.trim(),
+          opening_hours: document.getElementById('openingHours').value.trim(),
+          contact_person: document.getElementById('contactPerson').value.trim()
         });
 
         if (error) {
           console.error('Listing save failed:', error.message, error);
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Submit for review';
-          alert('Tatizo: ' + (error.message || JSON.stringify(error)));
+          submitBtn.textContent = 'Submit Business';
+          alert('Sorry, something went wrong submitting your business. Please try again.');
           return;
         }
 
