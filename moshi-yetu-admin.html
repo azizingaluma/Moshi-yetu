@@ -139,7 +139,44 @@
         display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 700;
       }
       @media (max-width: 720px) { .form-grid { grid-template-columns: 1fr; } }
+
+      /* ===== Dark mode ===== */
+      [data-theme="dark"] {
+        --stone-50: #15120e;
+        --stone-100: #1e1a15;
+        --stone-200: #332c22;
+        --stone-400: #9a8f7d;
+        --stone-600: #c9c0b0;
+        --stone-800: #f5f1ea;
+      }
+      [data-theme="dark"] body { background: var(--stone-50); color: var(--stone-800); }
+      [data-theme="dark"] .panel,
+      [data-theme="dark"] .login-card,
+      [data-theme="dark"] .action-btn,
+      [data-theme="dark"] input.input,
+      [data-theme="dark"] textarea.input,
+      [data-theme="dark"] select.input,
+      [data-theme="dark"] th,
+      [data-theme="dark"] td,
+      [data-theme="dark"] .tab-btn {
+        background: var(--stone-100) !important;
+        border-color: var(--stone-200) !important;
+        color: var(--stone-800) !important;
+      }
+      [data-theme="dark"] .tab-btn.is-active { background: var(--kilimanjaro-700) !important; color: white !important; }
+      [data-theme="dark"] .muted, [data-theme="dark"] p { color: var(--stone-600); }
+      [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 { color: var(--stone-800); }
+      [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+      [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+      .theme-toggle .icon-sun { display: none; }
     </style>
+    <script>
+      (function() {
+        if (localStorage.getItem('moshiyetu-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
   </head>
   <body>
 
@@ -161,7 +198,13 @@
       <div class="admin-nav">
         <div class="container admin-nav-inner">
           <div class="brand" style="color:white; margin:0;"><span class="brand-mark"></span><span>Moshi Yetu Admin</span></div>
-          <button class="logout-btn" onclick="logout()">Log out</button>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button class="logout-btn theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+              <svg class="icon icon-sm icon-moon" viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+              <svg class="icon icon-sm icon-sun" viewBox="0 0 24 24" style="width:16px;height:16px;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </button>
+            <button class="logout-btn" onclick="logout()">Log out</button>
+          </div>
         </div>
       </div>
 
@@ -379,6 +422,17 @@
     </div>
 
     <script>
+      function toggleTheme() {
+        var html = document.documentElement;
+        if (html.getAttribute('data-theme') === 'dark') {
+          html.removeAttribute('data-theme');
+          localStorage.setItem('moshiyetu-theme', 'light');
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          localStorage.setItem('moshiyetu-theme', 'dark');
+        }
+      }
+
       const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
       const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
       const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
