@@ -467,7 +467,72 @@
         .nav-drawer { inset: 72px 0 0 0; }
         .state-row { flex-direction: column; align-items: flex-start; }
       }
+    
+      /* ===== Dark mode ===== */
+      [data-theme="dark"] {
+        --stone-50: #15120e;
+        --stone-100: #1e1a15;
+        --stone-200: #332c22;
+        --stone-400: #9a8f7d;
+        --stone-600: #c9c0b0;
+        --stone-800: #f5f1ea;
+      }
+      [data-theme="dark"] body { background: var(--stone-50); color: var(--stone-800); }
+      [data-theme="dark"] .panel,
+      [data-theme="dark"] .card,
+      [data-theme="dark"] .icon-tile,
+      [data-theme="dark"] .filter-chip,
+      [data-theme="dark"] .sort-control select,
+      [data-theme="dark"] .event-row,
+      [data-theme="dark"] .dropzone,
+      [data-theme="dark"] .category-option,
+      [data-theme="dark"] .login-card,
+      [data-theme="dark"] input.input,
+      [data-theme="dark"] textarea.input,
+      [data-theme="dark"] select.input,
+      [data-theme="dark"] th,
+      [data-theme="dark"] td,
+      [data-theme="dark"] .tab-btn {
+        background: var(--stone-100) !important;
+        border-color: var(--stone-200) !important;
+        color: var(--stone-800) !important;
+      }
+      [data-theme="dark"] .tab-btn.is-active,
+      [data-theme="dark"] .filter-chip.is-active {
+        background: var(--kilimanjaro-700) !important;
+        color: white !important;
+      }
+      [data-theme="dark"] .muted,
+      [data-theme="dark"] .text-body,
+      [data-theme="dark"] p { color: var(--stone-600); }
+      [data-theme="dark"] .heading-m,
+      [data-theme="dark"] .heading-s,
+      [data-theme="dark"] .heading-l,
+      [data-theme="dark"] .display-l,
+      [data-theme="dark"] .display-m,
+      [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 { color: var(--stone-800); }
+      [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+      [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+      .theme-toggle .icon-sun { display: none; }
     </style>
+      <script>
+
+      function toggleTheme() {
+        var html = document.documentElement;
+        if (html.getAttribute('data-theme') === 'dark') {
+          html.removeAttribute('data-theme');
+          localStorage.setItem('moshiyetu-theme', 'light');
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          localStorage.setItem('moshiyetu-theme', 'dark');
+        }
+      }
+      (function() {
+        if (localStorage.getItem('moshiyetu-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <header class="nav">
@@ -484,6 +549,10 @@
           <a href="moshi-yetu-coffee.html">Coffee</a>
         </nav>
         <div class="nav-actions">
+          <button class="button button-outline theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" style="padding:0 14px;">
+            <svg class="icon icon-sm icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+            <svg class="icon icon-sm icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </button>
           <button class="button button-outline">
             <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/><path d="M3 12h18"/></svg>
             EN / SW
@@ -502,10 +571,13 @@
             <a href="moshi-yetu-culture.html">Culture</a>
             <a href="moshi-yetu-hotels.html">Hotels</a>
             <a href="moshi-yetu-coffee.html">Coffee</a>
-            <a href="moshi-yetu-restaurants.html">Restaurants</a>
-            <a href="moshi-yetu-transport.html">Transport</a>
           </div>
           <div class="nav-drawer-actions">
+            <button class="button button-outline theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+              <svg class="icon icon-sm icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+              <svg class="icon icon-sm icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </button>
+            
             <button class="button button-outline">EN / SW</button>
             <a href="moshi-yetu-booking.html" class="button button-primary">Book Now</a>
           </div>

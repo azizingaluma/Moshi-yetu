@@ -646,7 +646,72 @@
       .event-row .event-body { flex: 1; }
       .event-row .event-body h4 { margin: 0 0 4px; font-family: Fraunces, Georgia, serif; font-size: 1.05rem; }
 
+    
+      /* ===== Dark mode ===== */
+      [data-theme="dark"] {
+        --stone-50: #15120e;
+        --stone-100: #1e1a15;
+        --stone-200: #332c22;
+        --stone-400: #9a8f7d;
+        --stone-600: #c9c0b0;
+        --stone-800: #f5f1ea;
+      }
+      [data-theme="dark"] body { background: var(--stone-50); color: var(--stone-800); }
+      [data-theme="dark"] .panel,
+      [data-theme="dark"] .card,
+      [data-theme="dark"] .icon-tile,
+      [data-theme="dark"] .filter-chip,
+      [data-theme="dark"] .sort-control select,
+      [data-theme="dark"] .event-row,
+      [data-theme="dark"] .dropzone,
+      [data-theme="dark"] .category-option,
+      [data-theme="dark"] .login-card,
+      [data-theme="dark"] input.input,
+      [data-theme="dark"] textarea.input,
+      [data-theme="dark"] select.input,
+      [data-theme="dark"] th,
+      [data-theme="dark"] td,
+      [data-theme="dark"] .tab-btn {
+        background: var(--stone-100) !important;
+        border-color: var(--stone-200) !important;
+        color: var(--stone-800) !important;
+      }
+      [data-theme="dark"] .tab-btn.is-active,
+      [data-theme="dark"] .filter-chip.is-active {
+        background: var(--kilimanjaro-700) !important;
+        color: white !important;
+      }
+      [data-theme="dark"] .muted,
+      [data-theme="dark"] .text-body,
+      [data-theme="dark"] p { color: var(--stone-600); }
+      [data-theme="dark"] .heading-m,
+      [data-theme="dark"] .heading-s,
+      [data-theme="dark"] .heading-l,
+      [data-theme="dark"] .display-l,
+      [data-theme="dark"] .display-m,
+      [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 { color: var(--stone-800); }
+      [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+      [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+      .theme-toggle .icon-sun { display: none; }
     </style>
+      <script>
+
+      function toggleTheme() {
+        var html = document.documentElement;
+        if (html.getAttribute('data-theme') === 'dark') {
+          html.removeAttribute('data-theme');
+          localStorage.setItem('moshiyetu-theme', 'light');
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          localStorage.setItem('moshiyetu-theme', 'dark');
+        }
+      }
+      (function() {
+        if (localStorage.getItem('moshiyetu-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <header class="nav">
@@ -663,6 +728,10 @@
           <a href="moshi-yetu-coffee.html">Coffee</a>
         </nav>
         <div class="nav-actions">
+          <button class="button button-outline theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" style="padding:0 14px;">
+            <svg class="icon icon-sm icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+            <svg class="icon icon-sm icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </button>
           <button class="button button-outline">
             <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/><path d="M3 12h18"/></svg>
             EN / SW
@@ -681,10 +750,13 @@
             <a href="moshi-yetu-culture.html">Culture</a>
             <a href="moshi-yetu-hotels.html">Hotels</a>
             <a href="moshi-yetu-coffee.html">Coffee</a>
-            <a href="moshi-yetu-restaurants.html">Restaurants</a>
-            <a href="moshi-yetu-transport.html">Transport</a>
           </div>
           <div class="nav-drawer-actions">
+            <button class="button button-outline theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+              <svg class="icon icon-sm icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+              <svg class="icon icon-sm icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </button>
+            
             <button class="button button-outline">EN / SW</button>
             <a href="moshi-yetu-booking.html" class="button button-primary">Book Now</a>
           </div>
@@ -889,67 +961,8 @@
             <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12l7 7 7-7"/></svg>
           </button>
         </div>
-
-        <div class="page-header" style="margin-top: var(--space-8);">
-          <p class="eyebrow">Newly joined</p>
-          <h2 class="display-m">Verified local stays</h2>
-          <p class="text-body">Businesses that registered directly with Moshi Yetu and passed our verification review.</p>
-        </div>
-
-        <div class="dest-grid" id="verifiedGrid">
-          <p class="muted" id="verifiedEmpty" style="display:none;">No verified stays yet — check back soon.</p>
-        </div>
       </div>
     </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      (async function loadVerifiedListings() {
-        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        const grid = document.getElementById('verifiedGrid');
-        const emptyMsg = document.getElementById('verifiedEmpty');
-
-        const { data, error } = await supabaseClient
-          .from('business_listings')
-          .select('*')
-          .eq('category', 'Hotel & Lodge')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error('Could not load verified listings:', error.message);
-          return;
-        }
-        if (!data || !data.length) {
-          emptyMsg.style.display = 'block';
-          return;
-        }
-
-        emptyMsg.style.display = 'none';
-        grid.innerHTML = data.map(biz => `
-          <article class="card dest-card">
-            <div class="card-media" style="background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900)); display:flex; align-items:center; justify-content:center;">
-              <span class="badge badge-green">✓ Verified</span>
-            </div>
-            <div class="card-body">
-              <h3 class="heading-m">${biz.business_name}</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                ${biz.address ? biz.address + ', ' : ''}${biz.region || ''}
-              </p>
-              <p class="muted">${biz.description || 'No description provided.'}</p>
-              <div class="card-meta">
-                <span>${biz.phone}</span>
-                <strong style="color: var(--stone-800);">${biz.website ? `<a href="${biz.website}" target="_blank" rel="noopener">Website</a>` : biz.email}</strong>
-              </div>
-            </div>
-          </article>
-        `).join('');
-      })();
-    </script>
 
     <footer class="footer">
       <div class="container">
