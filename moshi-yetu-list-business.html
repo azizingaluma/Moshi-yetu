@@ -820,6 +820,19 @@
                       </p>
                     </div>
                   </div>
+                  <div class="field-row">
+                    <div>
+                      <label class="field-label" for="latitude">Map latitude (optional)</label>
+                      <input class="input" id="latitude" placeholder="-3.3500" />
+                    </div>
+                    <div>
+                      <label class="field-label" for="longitude">Map longitude (optional)</label>
+                      <input class="input" id="longitude" placeholder="37.3333" />
+                    </div>
+                  </div>
+                  <p class="field-hint" style="margin-top:-8px;">
+                    To help travelers find you on the map: open Google Maps, right-click your exact location, and copy the coordinates shown at the top of the menu.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1049,7 +1062,9 @@
           whatsapp: document.getElementById('whatsapp').value.trim(),
           instagram: document.getElementById('instagram').value.trim(),
           opening_hours: document.getElementById('openingHours').value.trim(),
-          contact_person: document.getElementById('contactPerson').value.trim()
+          contact_person: document.getElementById('contactPerson').value.trim(),
+          latitude: document.getElementById('latitude').value ? parseFloat(document.getElementById('latitude').value) : null,
+          longitude: document.getElementById('longitude').value ? parseFloat(document.getElementById('longitude').value) : null
         });
 
         if (error) {
