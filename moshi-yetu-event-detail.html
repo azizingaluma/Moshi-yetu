@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moshi Yetu — Events</title>
+    <title>Moshi Yetu — Event</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -693,6 +694,21 @@
       [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
       [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
       .theme-toggle .icon-sun { display: none; }
+      /* ===== Event detail ===== */
+      .event-hero { height: 360px; border-radius: var(--radius-xl); background-size: cover; background-position: center; margin-bottom: var(--space-6); }
+      .event-info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8); align-items: start; }
+      @media (max-width: 900px) { .event-info-grid { grid-template-columns: 1fr; } }
+      .event-sidebar { background: white; border: 1px solid var(--stone-200); border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); }
+      .event-sidebar-row { display:flex; justify-content:space-between; gap:12px; padding: 10px 0; border-bottom: 1px solid var(--stone-100); font-size:0.92rem; }
+      .event-sidebar-row:last-of-type { border-bottom: none; }
+      .event-actions { display:flex; flex-direction:column; gap:10px; margin-top: var(--space-4); }
+      #eventMiniMap { height: 220px; border-radius: var(--radius-md); overflow:hidden; margin-top: var(--space-4); }
+      .share-row { display:flex; gap:8px; }
+      .share-row button, .share-row a {
+        flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+        border: 1.5px solid var(--stone-200); background: white; border-radius: var(--radius-md);
+        padding: 10px; font: inherit; font-weight:600; font-size:0.82rem; cursor:pointer; color: var(--stone-800); text-decoration:none;
+      }
     </style>
       <script>
 
@@ -724,8 +740,8 @@
           <a href="index.html">Home</a>
           <a href="moshi-yetu-map.html">Explore Map</a>
           <a href="moshi-yetu-destinations.html">Destinations</a>
+          <a href="moshi-yetu-events.html" aria-current="page" style="color: var(--kilimanjaro-500);">Events</a>
           <a href="moshi-yetu-hotels.html">Hotels</a>
-          <a href="moshi-yetu-coffee.html">Coffee</a>
         </nav>
         <div class="nav-actions">
           <button class="button button-outline theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" style="padding:0 14px;">
@@ -763,302 +779,210 @@
         </div>
       </nav>
     </header>
-    <script>
-      function toggleNavDrawer() {
-        const drawer = document.getElementById('navDrawer');
-        const toggle = document.querySelector('.nav-toggle');
-        const isOpen = drawer.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', String(isOpen));
-        document.getElementById('navToggleIcon').innerHTML = isOpen
-          ? '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'
-          : '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>';
-      }
-    </script>
-
     <main>
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="index.html">Home</a>
           <span class="sep">/</span>
-          <span class="current">Events</span>
+          <a href="moshi-yetu-events.html">Events</a>
+          <span class="sep">/</span>
+          <span class="current" id="crumbName">Loading…</span>
         </nav>
 
-        <div class="page-header">
-          <p class="eyebrow">What's on</p>
-          <h1 class="display-l">Festivals, harvests, and races timed to the mountain's seasons</h1>
-          <p class="text-body">From the coffee harvest in June to the marathon in February, these are the dates worth planning your trip around.</p>
+        <div id="loadingState" class="page-header"><p class="text-body">Loading event…</p></div>
+
+        <div id="notFoundState" style="display:none;" class="page-header">
+          <h1 class="display-l">Event not found</h1>
+          <p class="text-body">This event may not be published yet. <a href="moshi-yetu-events.html">Back to all events</a></p>
         </div>
 
-        <div class="filter-bar">
-          <div class="filter-chips" role="group" aria-label="Filter events by type">
-            <button class="filter-chip is-active" data-filter="all">All events</button>
-            <button class="filter-chip" data-filter="festival">Festivals</button>
-            <button class="filter-chip" data-filter="harvest">Coffee harvest</button>
-            <button class="filter-chip" data-filter="sports">Sports</button>
-            <button class="filter-chip" data-filter="cultural">Cultural</button>
-          </div>
-          <div class="sort-control">
-            <label for="sort">Sort by</label>
-            <select id="sort">
-              <option>Soonest first</option>
-              <option>Most popular</option>
-            </select>
-          </div>
-        </div>
+        <div id="eventContent" style="display:none;">
+          <div class="event-hero" id="eventHero"></div>
 
-        <a href="moshi-yetu-booking.html" class="featured-banner">
-          <div class="featured-media" style="background-image: url('https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?auto=format&fit=crop&w=1200&q=80');"></div>
-          <div class="featured-body">
-            <p class="eyebrow">Marking the calendar</p>
-            <h2 class="display-m">Kilimanjaro Marathon</h2>
-            <p class="muted">Full, half, and 5km routes starting and finishing in Moshi town, with the mountain as backdrop — one of East Africa's biggest running events.</p>
-            <div class="featured-stats">
-              <div><strong>Feb 22</strong><span>2027</span></div>
-              <div><strong>8,000+</strong><span>Runners yearly</span></div>
-              <div><strong>3 routes</strong><span>5K / Half / Full</span></div>
+          <div class="page-header" style="padding-top:0;">
+            <p class="eyebrow" id="eventCategory"></p>
+            <h1 class="display-l" id="eventTitle"></h1>
+            <p class="text-body" id="eventDateTime" style="font-weight:600; color:var(--kilimanjaro-700); margin-top:6px;"></p>
+          </div>
+
+          <div class="event-info-grid">
+            <div>
+              <h2 class="heading-m">About this event</h2>
+              <p class="text-body" id="eventDescription" style="white-space:pre-line; margin-top:10px;"></p>
+
+              <div id="eventMapBlock" style="margin-top: var(--space-8);">
+                <h2 class="heading-m">Location</h2>
+                <p class="text-body" id="eventVenueLine" style="margin-top:6px;"></p>
+                <div id="eventMiniMap"></div>
+                <a id="viewOnMapLink" href="moshi-yetu-map.html" class="button button-outline" style="width:auto; padding:0 20px; margin-top:12px; display:inline-flex;">View on Map</a>
+              </div>
             </div>
-            <span class="button button-primary" style="width: fit-content;">
-              Reserve a spot
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-            </span>
+
+            <aside class="event-sidebar">
+              <h3 class="heading-s" style="margin-bottom:10px;">Event details</h3>
+              <div class="event-sidebar-row"><span class="muted">Organizer</span><strong id="eventOrganizer">—</strong></div>
+              <div class="event-sidebar-row"><span class="muted">Contact</span><strong id="eventContact">—</strong></div>
+              <div class="event-sidebar-row"><span class="muted">Tickets</span><strong id="eventTickets">—</strong></div>
+
+              <div class="event-actions">
+                <a id="ticketLink" href="#" target="_blank" rel="noopener" class="button button-primary" style="display:none;">Get Tickets</a>
+                <a id="whatsappLink" href="#" target="_blank" rel="noopener" class="button button-outline" style="display:none;">Chat on WhatsApp</a>
+                <a id="websiteLink" href="#" target="_blank" rel="noopener" class="button button-outline" style="display:none;">Visit Website</a>
+              </div>
+
+              <div style="margin-top: var(--space-6); padding-top: var(--space-6); border-top:1px solid var(--stone-200);">
+                <h3 class="heading-s" style="margin-bottom:10px;">Add to calendar</h3>
+                <div class="event-actions">
+                  <a id="googleCalLink" href="#" target="_blank" rel="noopener" class="button button-outline">Add to Google Calendar</a>
+                  <button class="button button-outline" onclick="downloadIcs()">Download .ics file</button>
+                </div>
+              </div>
+
+              <div style="margin-top: var(--space-6); padding-top: var(--space-6); border-top:1px solid var(--stone-200);">
+                <h3 class="heading-s" style="margin-bottom:10px;">Share this event</h3>
+                <div class="share-row">
+                  <button onclick="shareEvent()">Share</button>
+                  <button onclick="copyEventLink()">Copy link</button>
+                  <a id="shareWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+                </div>
+              </div>
+            </aside>
           </div>
-        </a>
-
-        <div id="eventList">
-          <div class="event-row" data-category="sports" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="date-block"><strong>22</strong><span>Feb</span></div>
-            <div class="event-media" style="background-image: url('https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?auto=format&fit=crop&w=300&q=80');"></div>
-            <div class="event-body">
-              <h4>Kilimanjaro Marathon</h4>
-              <p class="muted" style="margin:0;">Moshi Town · Full, half &amp; 5K routes</p>
-            </div>
-            <strong>Free entry</strong>
-          </div>
-
-          <div class="event-row" data-category="harvest" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="date-block"><strong>10</strong><span>Jun</span></div>
-            <div class="event-media" style="background-image: url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=300&q=80');"></div>
-            <div class="event-body">
-              <h4>Coffee Harvest Festival</h4>
-              <p class="muted" style="margin:0;">Uru Village · Cherry-picking, roasting demos, live music</p>
-            </div>
-            <strong>$15</strong>
-          </div>
-
-          <div class="event-row" data-category="cultural festival" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="date-block"><strong>15</strong><span>Aug</span></div>
-            <div class="event-media" style="background-image: url('https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=300&q=80');"></div>
-            <div class="event-body">
-              <h4>Chagga Cultural Heritage Day</h4>
-              <p class="muted" style="margin:0;">Marangu · Traditional dance, banana beer, storytelling</p>
-            </div>
-            <strong>$10</strong>
-          </div>
-
-          <div class="event-row" data-category="festival" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="date-block"><strong>02</strong><span>Sep</span></div>
-            <div class="event-media" style="background-image: url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=300&q=80');"></div>
-            <div class="event-body">
-              <h4>Moshi Craft &amp; Food Market</h4>
-              <p class="muted" style="margin:0;">Moshi Town Centre · Local makers, street food, live bands</p>
-            </div>
-            <strong>Free entry</strong>
-          </div>
-
-          <div class="event-row" data-category="sports" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="date-block"><strong>18</strong><span>Oct</span></div>
-            <div class="event-media" style="background-image: url('https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=300&q=80');"></div>
-            <div class="event-body">
-              <h4>Kilimanjaro Cycling Challenge</h4>
-              <p class="muted" style="margin:0;">Machame to Moshi · 60km scenic ride, all levels welcome</p>
-            </div>
-            <strong>$25</strong>
-          </div>
-
-          <div class="event-row" data-category="cultural" onclick="window.location.href='moshi-yetu-booking.html'">
-            <div class="date-block"><strong>25</strong><span>Dec</span></div>
-            <div class="event-media" style="background-image: url('https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=300&q=80');"></div>
-            <div class="event-body">
-              <h4>Moshi Christmas Lantern Walk</h4>
-              <p class="muted" style="margin:0;">Moshi Town · Evening procession, carols, street food stalls</p>
-            </div>
-            <strong>Free entry</strong>
-          </div>
-        </div>
-
-        <div class="load-more-row">
-          <button class="button button-outline">
-            Load more events
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12l7 7 7-7"/></svg>
-          </button>
-        </div>
-
-        <!-- ===== Live events from Moshi Yetu (real, admin-managed) ===== -->
-        <div class="page-header" style="margin-top: var(--space-10);">
-          <p class="eyebrow">What's happening in Moshi</p>
-          <h2 class="display-m">Live on Moshi Yetu</h2>
-          <p class="text-body">Events submitted and verified through Moshi Yetu — updated as they're added.</p>
-        </div>
-
-        <div id="liveFeaturedEvent" style="display:none; margin-bottom: var(--space-6);"></div>
-
-        <div class="filter-bar">
-          <div class="filter-chips" role="group" aria-label="Filter live events by category" id="liveCategoryChips">
-            <button class="filter-chip is-active" data-cat="all" onclick="setLiveCategory('all')">All</button>
-            <button class="filter-chip" data-cat="Music" onclick="setLiveCategory('Music')">Music</button>
-            <button class="filter-chip" data-cat="Sports" onclick="setLiveCategory('Sports')">Sports</button>
-            <button class="filter-chip" data-cat="Culture" onclick="setLiveCategory('Culture')">Culture</button>
-            <button class="filter-chip" data-cat="Food & Drinks" onclick="setLiveCategory('Food & Drinks')">Food &amp; Drinks</button>
-            <button class="filter-chip" data-cat="Business" onclick="setLiveCategory('Business')">Business</button>
-            <button class="filter-chip" data-cat="Education" onclick="setLiveCategory('Education')">Education</button>
-            <button class="filter-chip" data-cat="Community" onclick="setLiveCategory('Community')">Community</button>
-            <button class="filter-chip" data-cat="Family" onclick="setLiveCategory('Family')">Family</button>
-            <button class="filter-chip" data-cat="Nightlife" onclick="setLiveCategory('Nightlife')">Nightlife</button>
-          </div>
-          <div class="sort-control">
-            <label for="liveDateFilter">When</label>
-            <select id="liveDateFilter" onchange="setLiveDateFilter(this.value)">
-              <option value="upcoming">Upcoming</option>
-              <option value="today">Today</option>
-              <option value="week">This week</option>
-              <option value="month">This month</option>
-            </select>
-          </div>
-        </div>
-
-        <div id="liveEventList" class="dest-grid">
-          <p class="muted" id="liveEventsEmpty" style="display:none;">No live events yet — check back soon, or explore the calendar above.</p>
         </div>
       </div>
     </main>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
       const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
       const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
       const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      let liveEvents = [];
-      let liveCategory = 'all';
-      let liveDateFilter = 'upcoming';
+      let currentEvent = null;
 
-      function fmtDate(dateStr) {
+      function fmtDateLong(dateStr) {
         if (!dateStr) return '';
         const d = new Date(dateStr + 'T00:00:00');
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
       }
 
-      function inDateRange(ev) {
-        const today = new Date(); today.setHours(0,0,0,0);
-        const start = new Date(ev.start_date + 'T00:00:00');
-        if (liveDateFilter === 'today') {
-          return start.toDateString() === today.toDateString();
-        }
-        if (liveDateFilter === 'week') {
-          const weekEnd = new Date(today); weekEnd.setDate(today.getDate() + 7);
-          return start >= today && start <= weekEnd;
-        }
-        if (liveDateFilter === 'month') {
-          return start.getMonth() === today.getMonth() && start.getFullYear() === today.getFullYear() && start >= today;
-        }
-        return start >= today; // upcoming (default)
+      function icsDate(dateStr, timeStr) {
+        const t = (timeStr || '00:00').replace(':', '') + '00';
+        return dateStr.replace(/-/g, '') + 'T' + t;
       }
 
-      async function loadLiveEvents() {
-        const { data, error } = await supabaseClient
+      (async function loadEvent() {
+        const slug = new URLSearchParams(window.location.search).get('slug');
+        const showNotFound = () => {
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('notFoundState').style.display = 'block';
+        };
+        if (!slug) { showNotFound(); return; }
+
+        const { data: e, error } = await supabaseClient
           .from('events')
           .select('*')
+          .eq('slug', slug)
           .eq('status', 'published')
-          .order('start_date', { ascending: true });
+          .single();
 
-        if (error) { console.error('Could not load events:', error.message); return; }
+        if (error || !e) { showNotFound(); return; }
+        currentEvent = e;
 
-        const today = new Date().toISOString().slice(0, 10);
-        liveEvents = (data || []).filter(e => {
-          const refDate = e.end_date || e.start_date;
-          return refDate && refDate >= today; // auto-hide expired
-        });
+        document.title = `Moshi Yetu — ${e.title}`;
+        document.getElementById('crumbName').textContent = e.title;
+        document.getElementById('eventCategory').textContent = e.category || 'Event';
+        document.getElementById('eventTitle').textContent = e.title;
 
-        renderFeaturedEvent();
-        renderLiveEvents();
-      }
+        let dateLine = fmtDateLong(e.start_date);
+        if (e.start_time) dateLine += ' · ' + e.start_time;
+        if (e.end_date && e.end_date !== e.start_date) dateLine += ' — ' + fmtDateLong(e.end_date);
+        else if (e.end_time) dateLine += ' – ' + e.end_time;
+        document.getElementById('eventDateTime').textContent = dateLine;
 
-      function renderFeaturedEvent() {
-        const featured = liveEvents.find(e => e.featured);
-        const el = document.getElementById('liveFeaturedEvent');
-        if (!featured) { el.style.display = 'none'; return; }
-        el.style.display = 'block';
-        el.innerHTML = `
-          <a href="moshi-yetu-event-detail.html?slug=${featured.slug}" class="featured-banner">
-            <div class="featured-media" style="${featured.cover_image ? `background-image: url('${featured.cover_image}');` : `background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900));`}"></div>
-            <div class="featured-body">
-              <p class="eyebrow">Featured event</p>
-              <h2 class="display-m">${featured.title}</h2>
-              <p class="muted">${featured.description || ''}</p>
-              <div class="featured-stats">
-                <div><strong>${fmtDate(featured.start_date)}</strong><span>${featured.start_time || ''}</span></div>
-                <div><strong>${featured.venue_name || 'Moshi'}</strong><span>Venue</span></div>
-                <div><strong>${featured.is_free === false ? (featured.ticket_price || 'Paid') : 'Free entry'}</strong><span>Tickets</span></div>
-              </div>
-              <span class="button button-primary" style="width: fit-content;">
-                View event
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-              </span>
-            </div>
-          </a>
-        `;
-      }
+        document.getElementById('eventHero').style.backgroundImage = e.cover_image
+          ? `url('${e.cover_image}')`
+          : `linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900))`;
 
-      function setLiveCategory(cat) {
-        liveCategory = cat;
-        document.querySelectorAll('#liveCategoryChips .filter-chip').forEach(c => c.classList.toggle('is-active', c.dataset.cat === cat));
-        renderLiveEvents();
-      }
+        document.getElementById('eventDescription').textContent = e.description || '';
+        document.getElementById('eventVenueLine').textContent = [e.venue_name, e.location].filter(Boolean).join(' — ') || 'Moshi, Kilimanjaro';
+        document.getElementById('eventOrganizer').textContent = e.organizer || '—';
+        document.getElementById('eventContact').textContent = e.contact || '—';
+        document.getElementById('eventTickets').textContent = e.is_free === false ? (e.ticket_price || 'Paid') : 'Free entry';
 
-      function setLiveDateFilter(val) {
-        liveDateFilter = val;
-        renderLiveEvents();
-      }
-
-      function renderLiveEvents() {
-        let filtered = liveEvents.filter(inDateRange);
-        if (liveCategory !== 'all') filtered = filtered.filter(e => e.category === liveCategory);
-
-        const grid = document.getElementById('liveEventList');
-        const empty = document.getElementById('liveEventsEmpty');
-
-        if (!filtered.length) {
-          grid.innerHTML = '';
-          empty.style.display = 'block';
-          return;
+        if (e.ticket_url) {
+          const el = document.getElementById('ticketLink');
+          el.href = e.ticket_url; el.style.display = 'flex';
         }
-        empty.style.display = 'none';
+        if (e.whatsapp) {
+          const el = document.getElementById('whatsappLink');
+          el.href = 'https://wa.me/' + e.whatsapp.replace(/[^0-9]/g, '');
+          el.style.display = 'flex';
+        }
+        if (e.website) {
+          const el = document.getElementById('websiteLink');
+          el.href = e.website; el.style.display = 'flex';
+        }
 
-        grid.innerHTML = filtered.map(e => `
-          <article class="card dest-card" style="cursor:pointer;" onclick="window.location.href='moshi-yetu-event-detail.html?slug=${e.slug}'">
-            <div class="card-media" style="${e.cover_image ? `background-image: url('${e.cover_image}');` : `background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900));`}">
-              ${e.featured ? '<span class="badge badge-green">Featured</span>' : ''}
-            </div>
-            <div class="card-body">
-              <p class="location-tag" style="font-weight:700; color:var(--kilimanjaro-700);">${fmtDate(e.start_date)}${e.start_time ? ' · ' + e.start_time : ''}</p>
-              <h3 class="heading-m">${e.title}</h3>
-              <p class="location-tag">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                ${e.venue_name || ''}
-              </p>
-              <p class="muted">${e.description || ''}</p>
-              <div class="card-meta">
-                <span>${e.category || ''}</span>
-                <strong style="color: var(--stone-800);">${e.is_free === false ? (e.ticket_price || 'Paid') : 'Free'}</strong>
-              </div>
-            </div>
-          </article>
-        `).join('');
+        // Google Calendar link
+        const gStart = icsDate(e.start_date, e.start_time);
+        const gEnd = icsDate(e.end_date || e.start_date, e.end_time || e.start_time);
+        const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(e.title)}&dates=${gStart}/${gEnd}&details=${encodeURIComponent(e.description || '')}&location=${encodeURIComponent(e.venue_name || e.location || 'Moshi, Tanzania')}`;
+        document.getElementById('googleCalLink').href = gcalUrl;
+
+        // WhatsApp share
+        const shareText = encodeURIComponent(`${e.title} — ${fmtDateLong(e.start_date)} at ${e.venue_name || 'Moshi'}. Details: ${window.location.href}`);
+        document.getElementById('shareWhatsapp').href = 'https://wa.me/?text=' + shareText;
+
+        // Mini map
+        if (e.latitude && e.longitude) {
+          const map = L.map('eventMiniMap', { zoomControl: false, dragging: false, scrollWheelZoom: false })
+            .setView([e.latitude, e.longitude], 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+          L.marker([e.latitude, e.longitude]).addTo(map);
+          document.getElementById('viewOnMapLink').href = 'moshi-yetu-map.html';
+        } else {
+          document.getElementById('eventMiniMap').style.display = 'none';
+        }
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('eventContent').style.display = 'block';
+      })();
+
+      function downloadIcs() {
+        const e = currentEvent;
+        if (!e) return;
+        const ics = [
+          'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Moshi Yetu//Events//EN',
+          'BEGIN:VEVENT',
+          'UID:' + e.slug + '@moshiyetu.netlify.app',
+          'DTSTART:' + icsDate(e.start_date, e.start_time),
+          'DTEND:' + icsDate(e.end_date || e.start_date, e.end_time || e.start_time),
+          'SUMMARY:' + e.title,
+          'DESCRIPTION:' + (e.description || '').replace(/\n/g, '\\n'),
+          'LOCATION:' + (e.venue_name || e.location || 'Moshi, Tanzania'),
+          'END:VEVENT', 'END:VCALENDAR'
+        ].join('\r\n');
+        const blob = new Blob([ics], { type: 'text/calendar' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = e.slug + '.ics';
+        link.click();
       }
 
-      loadLiveEvents();
-    </script>
+      function copyEventLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'));
+      }
 
+      function shareEvent() {
+        if (navigator.share) {
+          navigator.share({ title: currentEvent?.title, url: window.location.href }).catch(() => {});
+        } else {
+          copyEventLink();
+        }
+      }
+    </script>
 
     <footer class="footer">
       <div class="container">
@@ -1101,18 +1025,21 @@
 
     <script>
       const chips = document.querySelectorAll('.filter-chip');
-      const rows = document.querySelectorAll('.event-row');
-      chips.forEach(chip => {
-        chip.addEventListener('click', () => {
-          chips.forEach(c => c.classList.remove('is-active'));
-          chip.classList.add('is-active');
-          const filter = chip.dataset.filter;
-          rows.forEach(row => {
-            const cats = row.dataset.category.split(' ');
-            row.style.display = (filter === 'all' || cats.includes(filter)) ? '' : 'none';
-          });
+      const cards = document.querySelectorAll('.dest-card');
+      function applyFilter(filter) {
+        chips.forEach(c => c.classList.toggle('is-active', c.dataset.filter === filter));
+        cards.forEach(card => {
+          const cats = card.dataset.category.split(' ');
+          card.style.display = (filter === 'all' || cats.includes(filter)) ? '' : 'none';
         });
+      }
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => applyFilter(chip.dataset.filter));
       });
+      const urlFilter = new URLSearchParams(window.location.search).get('filter');
+      if (urlFilter && [...chips].some(c => c.dataset.filter === urlFilter)) {
+        applyFilter(urlFilter);
+      }
     </script>
   </body>
 </html>
