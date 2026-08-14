@@ -216,6 +216,7 @@
           <button class="tab-btn" id="tabListingsBtn" onclick="showTab('listings')">Business listings</button>
           <button class="tab-btn" id="tabContentBtn" onclick="showTab('content')">Manage content</button>
           <button class="tab-btn" id="tabDestinationsBtn" onclick="showTab('destinations')">Destinations</button>
+          <button class="tab-btn" id="tabEventsBtn" onclick="showTab('events')">Events</button>
         </div>
 
         <div id="bookingsPanel" class="panel">
@@ -418,6 +419,147 @@
             </table>
           </div>
         </div>
+
+        <div id="eventsPanel" style="display:none;">
+          <div class="panel" style="padding: var(--space-6); margin-bottom: var(--space-6);">
+            <h2 style="margin-top:0; font-size:1.2rem;" id="eventFormTitle">Add new event</h2>
+            <input type="hidden" id="eId" />
+
+            <label class="field-label" for="eTitle">Event name</label>
+            <input class="input" id="eTitle" placeholder="e.g. Kilimanjaro Coffee Festival" oninput="autoEventSlug()" />
+
+            <label class="field-label" for="eSlug">Slug (URL-friendly, auto-generated)</label>
+            <input class="input" id="eSlug" placeholder="kilimanjaro-coffee-festival" />
+
+            <label class="field-label" for="eCategory">Category</label>
+            <select class="input" id="eCategory">
+              <option>Music</option>
+              <option>Sports</option>
+              <option>Culture</option>
+              <option>Food & Drinks</option>
+              <option>Business</option>
+              <option>Education</option>
+              <option>Community</option>
+              <option>Family</option>
+              <option>Nightlife</option>
+            </select>
+
+            <label class="field-label" for="eDescription">Description</label>
+            <textarea class="input" id="eDescription" rows="4" style="height:auto; padding:12px 14px;" placeholder="What is this event about?"></textarea>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div>
+                <label class="field-label" for="eStartDate">Start date</label>
+                <input class="input" id="eStartDate" type="date" />
+              </div>
+              <div>
+                <label class="field-label" for="eStartTime">Start time</label>
+                <input class="input" id="eStartTime" type="time" />
+              </div>
+              <div>
+                <label class="field-label" for="eEndDate">End date (optional)</label>
+                <input class="input" id="eEndDate" type="date" />
+              </div>
+              <div>
+                <label class="field-label" for="eEndTime">End time (optional)</label>
+                <input class="input" id="eEndTime" type="time" />
+              </div>
+            </div>
+
+            <label class="field-label" for="eVenue">Venue name</label>
+            <input class="input" id="eVenue" placeholder="e.g. Moshi Cultural Centre" />
+
+            <label class="field-label" for="eLocation">Address</label>
+            <input class="input" id="eLocation" placeholder="Street / area, Moshi" />
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div>
+                <label class="field-label" for="eLat">Map latitude (optional)</label>
+                <input class="input" id="eLat" placeholder="-3.3500" />
+              </div>
+              <div>
+                <label class="field-label" for="eLng">Map longitude (optional)</label>
+                <input class="input" id="eLng" placeholder="37.3333" />
+              </div>
+            </div>
+
+            <label class="field-label" for="eOrganizer">Organizer name</label>
+            <input class="input" id="eOrganizer" placeholder="Organizer or company name" />
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div>
+                <label class="field-label" for="eContact">Contact phone</label>
+                <input class="input" id="eContact" placeholder="+255 7XX XXX XXX" />
+              </div>
+              <div>
+                <label class="field-label" for="eWhatsapp">WhatsApp (optional)</label>
+                <input class="input" id="eWhatsapp" placeholder="+255 7XX XXX XXX" />
+              </div>
+            </div>
+
+            <label class="field-label" for="eWebsite">Website / social link (optional)</label>
+            <input class="input" id="eWebsite" placeholder="https://..." />
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:end;">
+              <div>
+                <label class="field-label" for="eIsFree">Ticket type</label>
+                <select class="input" id="eIsFree">
+                  <option value="true">Free entry</option>
+                  <option value="false">Paid</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label" for="eTicketPrice">Ticket price (if paid)</label>
+                <input class="input" id="eTicketPrice" placeholder="e.g. TZS 10,000" />
+              </div>
+            </div>
+
+            <label class="field-label" for="eTicketUrl">Ticket link (optional)</label>
+            <input class="input" id="eTicketUrl" placeholder="https://..." />
+
+            <label class="field-label" for="eCoverImage">Cover photo</label>
+            <input class="input" id="eCoverFile" type="file" accept="image/*" style="padding-top:10px;" />
+            <p class="muted" style="font-size:0.82rem; margin:4px 0 12px;">or paste an image URL instead:</p>
+            <input class="input" id="eCoverImage" placeholder="https://..." />
+
+            <label class="field-label" for="eFeatured" style="display:flex; align-items:center; gap:8px; margin-top:14px;">
+              <input type="checkbox" id="eFeatured" style="width:auto;" /> Feature this event
+            </label>
+
+            <label class="field-label" for="eStatus">Status</label>
+            <select class="input" id="eStatus">
+              <option value="draft">Draft</option>
+              <option value="pending_review">Pending review</option>
+              <option value="published">Published (visible to public)</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+
+            <div style="display:flex; gap: var(--space-3);">
+              <button class="button button-primary" style="width:auto; padding:0 24px;" id="eSaveBtn" onclick="saveEvent()">Save event</button>
+              <button class="button" style="width:auto; padding:0 24px; background:var(--stone-100);" onclick="resetEventForm()">Clear</button>
+            </div>
+          </div>
+
+          <div class="tabs" style="margin-top:0;">
+            <button class="tab-btn is-active" data-efilter="all" onclick="setEventFilter('all')">All</button>
+            <button class="tab-btn" data-efilter="draft" onclick="setEventFilter('draft')">Draft</button>
+            <button class="tab-btn" data-efilter="pending_review" onclick="setEventFilter('pending_review')">Pending review</button>
+            <button class="tab-btn" data-efilter="published" onclick="setEventFilter('published')">Published</button>
+            <button class="tab-btn" data-efilter="expired" onclick="setEventFilter('expired')">Expired</button>
+            <button class="tab-btn" data-efilter="cancelled" onclick="setEventFilter('cancelled')">Cancelled</button>
+          </div>
+
+          <div class="panel">
+            <table>
+              <thead>
+                <tr><th>Image</th><th>Event</th><th>Date</th><th>Category</th><th>Status</th><th>Action</th></tr>
+              </thead>
+              <tbody id="eventsBody">
+                <tr><td colspan="6" class="loading-row">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -489,12 +631,15 @@
         document.getElementById('listingsPanel').style.display = tab === 'listings' ? 'block' : 'none';
         document.getElementById('contentPanel').style.display = tab === 'content' ? 'block' : 'none';
         document.getElementById('destinationsPanel').style.display = tab === 'destinations' ? 'block' : 'none';
+        document.getElementById('eventsPanel').style.display = tab === 'events' ? 'block' : 'none';
         document.getElementById('tabBookingsBtn').classList.toggle('is-active', tab === 'bookings');
         document.getElementById('tabListingsBtn').classList.toggle('is-active', tab === 'listings');
         document.getElementById('tabContentBtn').classList.toggle('is-active', tab === 'content');
         document.getElementById('tabDestinationsBtn').classList.toggle('is-active', tab === 'destinations');
+        document.getElementById('tabEventsBtn').classList.toggle('is-active', tab === 'events');
         if (tab === 'content') loadContentItems();
         if (tab === 'destinations') loadDestinations();
+        if (tab === 'events') loadEvents();
       }
 
       // ---- Bookings ----
@@ -933,6 +1078,189 @@
         const { error } = await supabaseClient.from('destinations').update({ gallery: urls }).eq('id', id);
         if (error) { alert('Tatizo: ' + error.message); return; }
         renderDestGalleryThumbs(urls);
+      }
+
+      // ---- Events management ----
+      let eventFilter = 'all';
+
+      function autoEventSlug() {
+        const title = document.getElementById('eTitle').value;
+        document.getElementById('eSlug').value = title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
+      }
+
+      function isEventExpired(ev) {
+        const refDate = ev.end_date || ev.start_date;
+        if (!refDate) return false;
+        const today = new Date().toISOString().slice(0, 10);
+        return refDate < today;
+      }
+
+      function setEventFilter(filter) {
+        eventFilter = filter;
+        document.querySelectorAll('[data-efilter]').forEach(b => b.classList.toggle('is-active', b.dataset.efilter === filter));
+        loadEvents();
+      }
+
+      async function loadEvents() {
+        const body = document.getElementById('eventsBody');
+        body.innerHTML = '<tr><td colspan="6" class="loading-row">Loading…</td></tr>';
+
+        const { data, error } = await supabaseClient
+          .from('events')
+          .select('*')
+          .order('start_date', { ascending: true });
+
+        if (error) {
+          body.innerHTML = `<tr><td colspan="6" class="empty-state">Error: ${error.message}</td></tr>`;
+          return;
+        }
+
+        let filtered = data || [];
+        if (eventFilter === 'expired') {
+          filtered = filtered.filter(e => e.status === 'published' && isEventExpired(e));
+        } else if (eventFilter !== 'all') {
+          filtered = filtered.filter(e => e.status === eventFilter && !(eventFilter === 'published' && isEventExpired(e)));
+        }
+
+        if (!filtered.length) {
+          body.innerHTML = '<tr><td colspan="6" class="empty-state">No events in this view.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = filtered.map(e => {
+          const expired = e.status === 'published' && isEventExpired(e);
+          const displayStatus = expired ? 'expired' : e.status;
+          return `
+          <tr>
+            <td>${e.cover_image ? `<img class="thumb" src="${e.cover_image}" alt="" />` : '—'}</td>
+            <td><strong>${e.title}</strong><br><span style="color:var(--stone-600); font-size:0.82rem;">${e.venue_name || ''}</span></td>
+            <td>${e.start_date || '—'}</td>
+            <td>${e.category || '—'}</td>
+            <td><span class="status-badge status-${displayStatus === 'published' ? 'approved' : displayStatus === 'cancelled' || displayStatus === 'expired' ? 'rejected' : 'pending'}">${displayStatus.replace('_',' ')}</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="action-btn" onclick='editEvent(${JSON.stringify(e).replace(/'/g, "&apos;")})'>Edit</button>
+                <button class="action-btn reject" onclick="deleteEvent('${e.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `; }).join('');
+      }
+
+      function editEvent(e) {
+        document.getElementById('eventFormTitle').textContent = 'Edit event';
+        document.getElementById('eId').value = e.id;
+        document.getElementById('eTitle').value = e.title || '';
+        document.getElementById('eSlug').value = e.slug || '';
+        document.getElementById('eCategory').value = e.category || 'Music';
+        document.getElementById('eDescription').value = e.description || '';
+        document.getElementById('eStartDate').value = e.start_date || '';
+        document.getElementById('eStartTime').value = e.start_time || '';
+        document.getElementById('eEndDate').value = e.end_date || '';
+        document.getElementById('eEndTime').value = e.end_time || '';
+        document.getElementById('eVenue').value = e.venue_name || '';
+        document.getElementById('eLocation').value = e.location || '';
+        document.getElementById('eLat').value = e.latitude || '';
+        document.getElementById('eLng').value = e.longitude || '';
+        document.getElementById('eOrganizer').value = e.organizer || '';
+        document.getElementById('eContact').value = e.contact || '';
+        document.getElementById('eWhatsapp').value = e.whatsapp || '';
+        document.getElementById('eWebsite').value = e.website || '';
+        document.getElementById('eIsFree').value = e.is_free === false ? 'false' : 'true';
+        document.getElementById('eTicketPrice').value = e.ticket_price || '';
+        document.getElementById('eTicketUrl').value = e.ticket_url || '';
+        document.getElementById('eCoverImage').value = e.cover_image || '';
+        document.getElementById('eFeatured').checked = !!e.featured;
+        document.getElementById('eStatus').value = e.status || 'draft';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function resetEventForm() {
+        document.getElementById('eventFormTitle').textContent = 'Add new event';
+        ['eId','eTitle','eSlug','eDescription','eStartDate','eStartTime','eEndDate','eEndTime',
+         'eVenue','eLocation','eLat','eLng','eOrganizer','eContact','eWhatsapp','eWebsite',
+         'eTicketPrice','eTicketUrl','eCoverImage'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('eCategory').selectedIndex = 0;
+        document.getElementById('eIsFree').value = 'true';
+        document.getElementById('eFeatured').checked = false;
+        document.getElementById('eStatus').value = 'draft';
+        document.getElementById('eCoverFile').value = '';
+      }
+
+      async function saveEvent() {
+        const saveBtn = document.getElementById('eSaveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving…';
+
+        const id = document.getElementById('eId').value;
+        const file = document.getElementById('eCoverFile').files[0];
+        let imageUrl = document.getElementById('eCoverImage').value.trim();
+
+        if (file) {
+          const path = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+          const { error: uploadError } = await supabaseClient.storage.from('events').upload(path, file);
+          if (uploadError) {
+            alert('Tatizo la kupakia picha: ' + uploadError.message);
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save event';
+            return;
+          }
+          const { data: publicUrlData } = supabaseClient.storage.from('events').getPublicUrl(path);
+          imageUrl = publicUrlData.publicUrl;
+        }
+
+        const payload = {
+          title: document.getElementById('eTitle').value.trim(),
+          slug: document.getElementById('eSlug').value.trim(),
+          category: document.getElementById('eCategory').value,
+          description: document.getElementById('eDescription').value.trim(),
+          start_date: document.getElementById('eStartDate').value || null,
+          start_time: document.getElementById('eStartTime').value || null,
+          end_date: document.getElementById('eEndDate').value || null,
+          end_time: document.getElementById('eEndTime').value || null,
+          venue_name: document.getElementById('eVenue').value.trim(),
+          location: document.getElementById('eLocation').value.trim(),
+          latitude: document.getElementById('eLat').value ? parseFloat(document.getElementById('eLat').value) : null,
+          longitude: document.getElementById('eLng').value ? parseFloat(document.getElementById('eLng').value) : null,
+          organizer: document.getElementById('eOrganizer').value.trim(),
+          contact: document.getElementById('eContact').value.trim(),
+          whatsapp: document.getElementById('eWhatsapp').value.trim(),
+          website: document.getElementById('eWebsite').value.trim(),
+          is_free: document.getElementById('eIsFree').value === 'true',
+          ticket_price: document.getElementById('eTicketPrice').value.trim(),
+          ticket_url: document.getElementById('eTicketUrl').value.trim(),
+          cover_image: imageUrl || null,
+          featured: document.getElementById('eFeatured').checked,
+          status: document.getElementById('eStatus').value
+        };
+
+        let error;
+        if (id) {
+          ({ error } = await supabaseClient.from('events').update(payload).eq('id', id));
+        } else {
+          ({ error } = await supabaseClient.from('events').insert(payload));
+        }
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save event';
+
+        if (error) {
+          alert('Tatizo: ' + error.message);
+          return;
+        }
+
+        resetEventForm();
+        loadEvents();
+      }
+
+      async function deleteEvent(id) {
+        if (!confirm('Una uhakika unataka kufuta event hii?')) return;
+        const { error } = await supabaseClient.from('events').delete().eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+        loadEvents();
       }
 
       checkSession();
