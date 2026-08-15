@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moshi Yetu — The Digital Home of Kilimanjaro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --kilimanjaro-900: #0f2a2e;
+        --kilimanjaro-700: #1b4b4f;
+        --kilimanjaro-500: #2e7d6b;
+        --savanna-500: #e0a939;
+        --savanna-700: #b98320;
+        --sunrise-500: #e8703a;
+        --earth-500: #8a5a3b;
+        --sky-500: #4fa5d8;
+        --stone-50: #faf8f5;
+        --stone-100: #f3efe9;
+        --stone-200: #e7e1d8;
+        --stone-400: #a79c8c;
+        --stone-600: #6b6055;
+        --stone-800: #332c24;
+        --stone-950: #1a1611;
+        --success-500: #3f9142;
+        --warning-500: #d6963b;
+        --error-500: #c4483a;
+        --info-500: #4a7fbf;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+        --radius-full: 999px;
+        --shadow-xs: 0 1px 2px rgba(26, 22, 17, 0.04);
+        --shadow-sm: 0 2px 8px rgba(26, 22, 17, 0.06);
+        --shadow-md: 0 8px 24px rgba(26, 22, 17, 0.08);
+        --shadow-lg: 0 16px 48px rgba(26, 22, 17, 0.12);
+        --shadow-xl: 0 24px 64px rgba(26, 22, 17, 0.16);
+        --shadow-glow-gold: 0 0 32px rgba(224, 169, 57, 0.25);
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-6: 24px;
+        --space-8: 32px;
+        --space-12: 48px;
+        --space-16: 64px;
+        --space-24: 96px;
+        --space-32: 128px;
+        --icon-sm: 16px;
+        --icon-md: 20px;
+        --icon-lg: 24px;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        color: var(--stone-800);
+        background: var(--stone-50);
+        line-height: 1.5;
+      }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; text-decoration: none; }
+
+      /* Accessible focus ring — visible everywhere, not just inputs */
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      .card:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 2px solid var(--savanna-500);
+        outline-offset: 3px;
+        border-radius: var(--radius-sm);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      .icon {
+        width: var(--icon-md);
+        height: var(--icon-md);
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .icon-sm { width: var(--icon-sm); height: var(--icon-sm); }
+      .icon-lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+      .container {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+      .section {
+        padding: var(--space-24) 0;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--savanna-500);
+        margin-bottom: var(--space-3);
+      }
+      h1, h2, h3, .display {
+        font-family: Fraunces, Georgia, serif;
+        letter-spacing: -0.01em;
+      }
+      .display-xl { font-size: clamp(2.75rem, 5vw, 5.5rem); line-height: 0.95; }
+      .display-l { font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.05; }
+      .display-m { font-size: clamp(1.6rem, 2.3vw, 2.2rem); line-height: 1.15; }
+      .heading-m { font-size: 1.5rem; line-height: 1.2; }
+      .text-body { font-size: 1rem; color: var(--stone-600); }
+      .muted { color: var(--stone-600); }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(250, 248, 245, 0.86);
+        backdrop-filter: blur(20px) saturate(140%);
+        border-bottom: 1px solid rgba(231, 225, 216, 0.8);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 88px;
+        gap: var(--space-4);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--savanna-500), var(--kilimanjaro-500));
+        position: relative;
+      }
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 2px solid white;
+        border-radius: 50%;
+        border-top-color: transparent;
+        transform: rotate(25deg);
+      }
+      .nav-links { display: flex; gap: var(--space-6); color: var(--stone-800); }
+      .nav-links a:hover { color: var(--savanna-500); }
+      .nav-actions { display: flex; gap: var(--space-3); align-items: center; }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        border: 0;
+        border-radius: var(--radius-md);
+        padding: 0 16px;
+        height: 44px;
+        font-weight: 600;
+        font-family: inherit;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, opacity 180ms ease;
+      }
+      .button:hover { transform: translateY(-1px); }
+      .button:active { transform: translateY(0); filter: brightness(0.96); }
+      .button:disabled,
+      .button.is-disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        transform: none;
+        box-shadow: none;
+      }
+      .button-primary {
+        background: var(--savanna-500);
+        color: var(--stone-950);
+        box-shadow: var(--shadow-sm);
+      }
+      .button-primary:hover { box-shadow: var(--shadow-glow-gold); }
+      .button-secondary {
+        background: var(--kilimanjaro-700);
+        color: white;
+      }
+      .button-secondary:hover { background: var(--kilimanjaro-900); }
+      .button-outline {
+        background: transparent;
+        color: var(--stone-800);
+        border: 1.5px solid var(--stone-800);
+      }
+      .button-outline:hover { background: var(--stone-800); color: white; }
+      .button-ghost {
+        background: transparent;
+        color: var(--stone-800);
+        padding: 0;
+        height: auto;
+      }
+      .button-ghost:hover { color: var(--savanna-700); transform: none; }
+      .button-ghost:active { transform: none; }
+
+      .hero {
+        min-height: 90vh;
+        display: grid;
+        align-items: end;
+        position: relative;
+        color: white;
+        background:
+          linear-gradient(180deg, rgba(15, 42, 46, 0.14) 0%, rgba(15, 42, 46, 0.82) 100%),
+          url("https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&w=1600&q=80") center/cover;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(15,42,46,0.5) 0%, rgba(15,42,46,0.12) 100%);
+        pointer-events: none;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 7rem 0 5rem;
+      }
+      .hero-search {
+        margin-top: var(--space-8);
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: var(--radius-full);
+        padding: var(--space-3);
+        display: flex;
+        gap: var(--space-2);
+        align-items: center;
+        box-shadow: var(--shadow-md);
+      }
+      .hero-search .field {
+        background: rgba(255,255,255,0.9);
+        color: var(--stone-800);
+        border-radius: var(--radius-full);
+        padding: 0 16px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+      }
+      .hero-search .field + .field { border-left: 1px solid var(--stone-200); margin-left: var(--space-2); }
+
+      .pill-row {
+        display: flex;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+        margin-top: var(--space-6);
+      }
+      .pill {
+        padding: 10px 14px;
+        border-radius: var(--radius-full);
+        background: rgba(255,255,255,0.18);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .grid-2, .grid-3, .grid-4 {
+        display: grid;
+        gap: var(--space-6);
+      }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+      .panel {
+        background: white;
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        box-shadow: var(--shadow-sm);
+      }
+      .panel.alt { background: var(--stone-100); }
+      .swatches { display: grid; gap: var(--space-4); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .swatch { border-radius: var(--radius-lg); padding: var(--space-4); min-height: 110px; color: white; box-shadow: var(--shadow-xs); }
+      .swatch.light { color: var(--stone-800); }
+      .swatch small { display: block; margin-top: var(--space-2); opacity: 0.85; }
+
+      .type-sample { padding: var(--space-4) 0; border-bottom: 1px solid var(--stone-200); }
+      .type-sample:last-child { border-bottom: 0; }
+
+      .card {
+        background: white;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--stone-200);
+        box-shadow: var(--shadow-sm);
+        transition: transform 250ms ease, box-shadow 250ms ease;
+      }
+      .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+      .card-media {
+        aspect-ratio: 4 / 3;
+        background-size: cover;
+        background-position: center;
+      }
+      .card-body { padding: var(--space-6); }
+      .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--stone-600);
+        font-size: 0.9rem;
+        margin-top: var(--space-3);
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .badge-green { background: rgba(46, 125, 107, 0.14); color: var(--kilimanjaro-500); }
+      .badge-gold { background: rgba(224, 169, 57, 0.18); color: var(--savanna-500); }
+      .badge-orange { background: rgba(232, 112, 58, 0.16); color: var(--sunrise-500); }
+      .list-card { display: flex; gap: var(--space-4); align-items: center; }
+      .list-card .thumb { width: 92px; height: 92px; border-radius: var(--radius-lg); background-size: cover; background-position: center; flex-shrink: 0; }
+      .stat-card { text-align: center; padding: var(--space-8); }
+      .stat-card strong { display: block; font-size: 2rem; font-family: Fraunces, Georgia, serif; margin-bottom: var(--space-2); }
+
+      .form-stack { display: grid; gap: var(--space-4); }
+      .field-label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: var(--space-2); }
+      .input {
+        border: 1.5px solid var(--stone-200);
+        border-radius: var(--radius-md);
+        padding: 0 14px;
+        height: 48px;
+        width: 100%;
+        background: var(--stone-50);
+      }
+      .input:focus { outline: 2px solid var(--savanna-500); outline-offset: 2px; border-color: var(--kilimanjaro-500); }
+      .input::placeholder { color: var(--stone-400); }
+      .input:disabled {
+        background: var(--stone-100);
+        color: var(--stone-400);
+        cursor: not-allowed;
+        border-color: var(--stone-200);
+      }
+      .input.is-success { border-color: var(--success-500); background: rgba(63, 145, 66, 0.05); }
+      .input.is-success:focus { outline-color: var(--success-500); }
+      .input.is-error { border-color: var(--error-500); background: rgba(196, 72, 58, 0.05); }
+      .input.is-error:focus { outline-color: var(--error-500); }
+      .field-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        margin-top: var(--space-2);
+        color: var(--stone-600);
+      }
+      .field-hint.is-success { color: var(--success-500); }
+      .field-hint.is-error { color: var(--error-500); }
+      .footer {
+        background: var(--kilimanjaro-900);
+        color: white;
+        padding: var(--space-24) 0 var(--space-8);
+      }
+      .footer-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: var(--space-8); }
+      .footer a { color: rgba(255,255,255,0.8); }
+      .footer a:hover { color: white; }
+      .footer .newsletter { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+      .footer .newsletter input { flex: 1; height: 44px; border-radius: var(--radius-full); border: 0; padding: 0 14px; }
+      .footer-legal {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        margin-top: var(--space-12);
+        padding-top: var(--space-6);
+        border-top: 1px solid rgba(255,255,255,0.12);
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.6);
+      }
+      .footer-legal-links { display: flex; gap: var(--space-6); }
+      .footer-legal-links a { color: rgba(255,255,255,0.6); }
+      .footer-legal-links a:hover { color: white; }
+
+      .nav-toggle {
+        display: none;
+        background: transparent;
+        border: 0;
+        padding: 8px;
+        cursor: pointer;
+        color: var(--stone-800);
+      }
+      .nav-toggle .icon { width: 24px; height: 24px; }
+      .nav-drawer {
+        display: none;
+        position: fixed;
+        inset: 88px 0 0 0;
+        background: var(--stone-50);
+        z-index: 19;
+        padding: var(--space-6) 0;
+        overflow-y: auto;
+      }
+      .nav-drawer.is-open { display: block; }
+      .nav-drawer-links { display: flex; flex-direction: column; gap: var(--space-1); }
+      .nav-drawer-links a {
+        padding: 14px 4px;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.3rem;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .nav-drawer-actions { display: flex; gap: var(--space-3); margin-top: var(--space-6); }
+      .nav-drawer-actions .button { flex: 1; }
+
+      .icon-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-lg);
+        background: white;
+      }
+      .icon-tile .icon { width: var(--icon-lg); height: var(--icon-lg); color: var(--kilimanjaro-500); }
+      .icon-tile span { font-size: 0.8rem; color: var(--stone-600); text-align: center; }
+      .icon-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-3); }
+
+      .state-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-4) 0;
+        border-bottom: 1px solid var(--stone-200);
+      }
+      .state-row:last-child { border-bottom: 0; }
+      .state-row .state-label {
+        width: 90px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--stone-600);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 900px) {
+        .nav-links { display: none; }
+        .nav-actions .button-outline { display: none; }
+        .nav-toggle { display: inline-flex; }
+        .grid-3, .grid-4, .footer-grid { grid-template-columns: 1fr 1fr; }
+        .icon-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      }
+      @media (max-width: 640px) {
+        .grid-2, .grid-3, .grid-4, .footer-grid, .swatches { grid-template-columns: 1fr; }
+        .icon-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .hero-search { flex-direction: column; align-items: stretch; border-radius: var(--radius-xl); }
+        .hero-search .field + .field { border-left: 0; border-top: 1px solid var(--stone-200); margin-left: 0; padding-top: var(--space-2); }
+        .hero-content { padding: 4.5rem 0 3.5rem; }
+        .nav-inner { height: 72px; }
+        .nav-drawer { inset: 72px 0 0 0; }
+        .state-row { flex-direction: column; align-items: flex-start; }
+      }
+
+      /* ---------- Home page ---------- */
+      .cta-banner {
+        background: var(--kilimanjaro-700);
+        border-radius: var(--radius-2xl);
+        padding: var(--space-16);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-8);
+        flex-wrap: wrap;
+        color: white;
+      }
+      .cta-banner .display-m { max-width: 480px; }
+      .category-pill-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: var(--radius-full);
+        border: 1.5px solid var(--stone-200);
+        background: white;
+        color: var(--stone-800);
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: border-color 150ms ease, color 150ms ease;
+      }
+      .category-pill-link:hover { border-color: var(--kilimanjaro-500); color: var(--kilimanjaro-500); }
+      .category-pill-link .icon { color: var(--kilimanjaro-500); }
+      @media (max-width: 640px) {
+        .cta-banner { padding: var(--space-8); text-align: center; justify-content: center; }
+      }
+
+      /* ---------- Home v2 additions ---------- */
+      .hero-infobar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        margin-top: var(--space-6);
+      }
+      .info-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.25);
+        backdrop-filter: blur(6px);
+        color: white;
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: var(--radius-full);
+      }
+      .info-chip .icon { width: 16px; height: 16px; color: var(--savanna-500); }
+
+      .category-tile-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--space-4);
+      }
+      .category-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: white;
+        border: 1px solid var(--stone-200);
+        border-radius: var(--radius-lg);
+        padding: var(--space-6) var(--space-4);
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--stone-800);
+        position: relative;
+        transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+      }
+      .category-tile:hover { border-color: var(--kilimanjaro-500); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+      .category-tile.is-soon { opacity: 0.55; cursor: default; }
+      .category-tile.is-soon:hover { transform: none; box-shadow: none; border-color: var(--stone-200); }
+      .tile-icon { font-size: 1.8rem; }
+      .soon-badge {
+        position: absolute; top: 10px; right: 10px;
+        font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em;
+        background: var(--stone-100); color: var(--stone-600);
+        padding: 2px 8px; border-radius: var(--radius-full); font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        .category-tile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      }
+      @media (max-width: 640px) {
+        .category-tile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .hero-infobar { flex-direction: column; align-items: flex-start; }
+      }
+    
+      /* ===== Dark mode ===== */
+      [data-theme="dark"] {
+        --stone-50: #15120e;
+        --stone-100: #1e1a15;
+        --stone-200: #332c22;
+        --stone-400: #9a8f7d;
+        --stone-600: #c9c0b0;
+        --stone-800: #f5f1ea;
+      }
+      [data-theme="dark"] body { background: var(--stone-50); color: var(--stone-800); }
+      [data-theme="dark"] .panel,
+      [data-theme="dark"] .card,
+      [data-theme="dark"] .icon-tile,
+      [data-theme="dark"] .filter-chip,
+      [data-theme="dark"] .sort-control select,
+      [data-theme="dark"] .event-row,
+      [data-theme="dark"] .dropzone,
+      [data-theme="dark"] .category-option,
+      [data-theme="dark"] .login-card,
+      [data-theme="dark"] input.input,
+      [data-theme="dark"] textarea.input,
+      [data-theme="dark"] select.input,
+      [data-theme="dark"] th,
+      [data-theme="dark"] td,
+      [data-theme="dark"] .tab-btn {
+        background: var(--stone-100) !important;
+        border-color: var(--stone-200) !important;
+        color: var(--stone-800) !important;
+      }
+      [data-theme="dark"] .tab-btn.is-active,
+      [data-theme="dark"] .filter-chip.is-active {
+        background: var(--kilimanjaro-700) !important;
+        color: white !important;
+      }
+      [data-theme="dark"] .muted,
+      [data-theme="dark"] .text-body,
+      [data-theme="dark"] p { color: var(--stone-600); }
+      [data-theme="dark"] .heading-m,
+      [data-theme="dark"] .heading-s,
+      [data-theme="dark"] .heading-l,
+      [data-theme="dark"] .display-l,
+      [data-theme="dark"] .display-m,
+      [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 { color: var(--stone-800); }
+      [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+      [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+      .theme-toggle .icon-sun { display: none; }
+      /* ===== Carousels ===== */
+      .carousel-section { padding: var(--space-10) 0; }
+      .carousel-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-6); gap: var(--space-4); }
+      .carousel-controls { display: flex; gap: 8px; flex-shrink: 0; }
+      .carousel-arrow {
+        width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--stone-200);
+        background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); cursor: pointer;
+        display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: var(--shadow-sm);
+      }
+      .carousel-arrow:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+      .carousel-arrow:focus-visible { outline: 2px solid var(--savanna-500); outline-offset: 2px; }
+      .carousel-arrow:disabled { opacity: 0.35; cursor: default; transform: none; box-shadow: none; }
+      .carousel-track {
+        display: flex; gap: var(--space-4); overflow-x: auto; scroll-snap-type: x proximity;
+        padding-bottom: 6px; scrollbar-width: none; scroll-behavior: smooth;
+      }
+      .carousel-track:focus-visible { outline: 2px solid var(--savanna-500); outline-offset: 4px; }
+      .carousel-track::-webkit-scrollbar { display: none; }
+      .carousel-card {
+        flex: 0 0 84%; scroll-snap-align: start; background: white; border: 1px solid var(--stone-200);
+        border-radius: var(--radius-xl); overflow: hidden; text-decoration: none; color: inherit;
+        transition: transform 0.25s ease, box-shadow 0.25s ease; display: block;
+      }
+      .carousel-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+      .carousel-card:hover .carousel-card-img { transform: scale(1.03); }
+      .carousel-card-media { height: 200px; overflow: hidden; background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900)); position: relative; }
+      .carousel-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; display: block; }
+      .carousel-card-body { padding: var(--space-4); }
+      .carousel-card-body h3 { font-family: Fraunces, serif; font-size: 1.05rem; margin: 6px 0 4px; }
+      .carousel-card-body p { font-size: 0.85rem; color: var(--stone-600); margin: 0 0 8px; }
+      .carousel-card-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; margin-top: 8px; }
+      .carousel-explore { color: var(--kilimanjaro-700); font-weight: 700; font-size: 0.85rem; }
+      .carousel-skeleton { flex: 0 0 84%; height: 320px; border-radius: var(--radius-xl); background: linear-gradient(90deg, var(--stone-100) 25%, var(--stone-200) 37%, var(--stone-100) 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; }
+      @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+      .carousel-empty { padding: var(--space-8); color: var(--stone-600); text-align: center; width: 100%; }
+      @media (min-width: 640px) { .carousel-card, .carousel-skeleton { flex-basis: 320px; } }
+      @media (min-width: 1024px) { .carousel-card, .carousel-skeleton { flex-basis: calc(25% - 18px); } }
+      @media (prefers-reduced-motion: reduce) { .carousel-track { scroll-behavior: auto; } .carousel-card, .carousel-card-img { transition: none; } }
+    </style>
+      <script>
+
+      function toggleTheme() {
+        var html = document.documentElement;
+        if (html.getAttribute('data-theme') === 'dark') {
+          html.removeAttribute('data-theme');
+          localStorage.setItem('moshiyetu-theme', 'light');
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          localStorage.setItem('moshiyetu-theme', 'dark');
+        }
+      }
+      (function() {
+        if (localStorage.getItem('moshiyetu-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-mark"></span>
+          <span>Moshi Yetu</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="index.html" aria-current="page" style="color: var(--kilimanjaro-500);">Home</a>
+          <a href="moshi-yetu-map.html">Explore Map</a>
+          <a href="moshi-yetu-destinations.html">Destinations</a>
+          <a href="moshi-yetu-culture.html">Culture</a>
+          <a href="moshi-yetu-hotels.html">Hotels</a>
+          <a href="moshi-yetu-coffee.html">Coffee</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="button button-outline theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" style="padding:0 14px;">
+            <svg class="icon icon-sm icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+            <svg class="icon icon-sm icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </button>
+          <button class="button button-outline">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/><path d="M3 12h18"/></svg>
+            EN / SW
+          </button>
+          <a href="moshi-yetu-booking.html" class="button button-primary">Book Now</a>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer" onclick="toggleNavDrawer()">
+            <svg class="icon" id="navToggleIcon" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <nav id="navDrawer" class="nav-drawer" aria-label="Mobile">
+        <div class="container">
+          <div class="nav-drawer-links">
+            <a href="index.html">Home</a>
+            <a href="moshi-yetu-destinations.html">Destinations</a>
+            <a href="moshi-yetu-culture.html">Culture</a>
+            <a href="moshi-yetu-events.html">Events</a>
+          </div>
+          <p class="muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; margin: var(--space-4) 0 var(--space-2);">Stay &amp; Eat</p>
+          <div class="nav-drawer-links">
+            <a href="moshi-yetu-hotels.html">Hotels</a>
+            <a href="moshi-yetu-restaurants.html">Restaurants</a>
+            <a href="moshi-yetu-coffee.html">Coffee Experiences</a>
+            <a href="moshi-yetu-list-business.html">Local Businesses</a>
+          </div>
+          <p class="muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; margin: var(--space-4) 0 var(--space-2);">Company</p>
+          <div class="nav-drawer-links">
+            <a href="moshi-yetu-about.html">About</a>
+            <a href="moshi-yetu-list-business.html">List Your Business</a>
+            <a href="moshi-yetu-contact.html">Contact</a>
+            <a href="index.html" onclick="document.getElementById('navDrawer').classList.remove('is-open')">Home</a>
+          </div>
+          <div class="nav-drawer-actions">
+            <button class="button button-outline theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+              <svg class="icon icon-sm icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+              <svg class="icon icon-sm icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </button>
+            
+            <button class="button button-outline">EN / SW</button>
+            <a href="moshi-yetu-booking.html" class="button button-primary">Book Now</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <script>
+      function toggleNavDrawer() {
+        const drawer = document.getElementById('navDrawer');
+        const toggle = document.querySelector('.nav-toggle');
+        const isOpen = drawer.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        document.getElementById('navToggleIcon').innerHTML = isOpen
+          ? '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'
+          : '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>';
+      }
+    </script>
+
+    <section class="hero" style="background-image: url('https://images.unsplash.com/photo-1464908394256-327852e6539a?auto=format&fit=crop&w=1920&q=85');">
+      <div class="container hero-content">
+        <p class="eyebrow" style="color: var(--savanna-500);">Tanzania, Kilimanjaro Region</p>
+        <h1 class="display-l" style="color: white; max-width: 640px;">Everything Kilimanjaro. One place.</h1>
+        <p class="text-body" style="color: rgba(255,255,255,0.82); max-width: 540px; margin-top: 10px;">The mountain, the coffee, the culture — verified guides, lodges, and experiences booked directly, no middlemen.</p>
+
+        <form class="hero-search" id="heroSearch" onsubmit="return handleHeroSearch(event)">
+          <div class="field">
+            <svg class="icon icon-sm" style="margin-right:8px; color: var(--stone-400);" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <select id="searchWhere" style="border:0; background:transparent; font:inherit; color:inherit; width:100%; appearance:none;">
+              <option value="">Anywhere in the region</option>
+              <option value="moshi">Moshi Town</option>
+              <option value="marangu">Marangu</option>
+              <option value="machame">Machame</option>
+              <option value="materuni">Materuni</option>
+            </select>
+          </div>
+          <div class="field">
+            <svg class="icon icon-sm" style="margin-right:8px; color: var(--stone-400);" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <select id="searchWhat" style="border:0; background:transparent; font:inherit; color:inherit; width:100%; appearance:none;">
+              <option value="">What are you looking for?</option>
+              <option value="trekking" data-page="moshi-yetu-destinations.html">Trekking route</option>
+              <option value="nature" data-page="moshi-yetu-destinations.html">Waterfall / nature</option>
+              <option value="lodge" data-page="moshi-yetu-hotels.html">Hotel</option>
+              <option value="guesthouse" data-page="moshi-yetu-hotels.html">Guesthouse</option>
+              <option value="tour" data-page="moshi-yetu-coffee.html">Coffee tour</option>
+              <option value="museum" data-page="moshi-yetu-culture.html">Culture / village</option>
+            </select>
+          </div>
+          <button class="button button-primary" type="submit">
+            Search
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </button>
+        </form>
+
+        <div class="pill-row">
+          <a href="moshi-yetu-destinations.html" class="pill">🏔️ Trekking routes</a>
+          <a href="moshi-yetu-coffee.html" class="pill">☕ Coffee farms</a>
+          <a href="moshi-yetu-destinations.html" class="pill">🌊 Waterfalls</a>
+          <a href="moshi-yetu-culture.html" class="pill">🏛️ Culture &amp; villages</a>
+        </div>
+
+        <div class="hero-infobar" id="heroInfobar">
+          <div class="info-chip">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+            <span id="weatherText">Loading Moshi weather…</span>
+          </div>
+          <div class="info-chip">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
+            Next event: Kilimanjaro Marathon · Feb 22
+          </div>
+          <div class="info-chip">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            <span id="listingCount">24 verified listings</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      function handleHeroSearch(e) {
+        e.preventDefault();
+        const whatSelect = document.getElementById('searchWhat');
+        const opt = whatSelect.options[whatSelect.selectedIndex];
+        const page = opt.dataset.page || 'moshi-yetu-destinations.html';
+        const filter = opt.value;
+        window.location.href = filter ? `${page}?filter=${filter}` : page;
+      }
+
+      // Live weather for Moshi, Tanzania — no API key required (Open-Meteo)
+      const weatherCodes = {
+        0: 'Clear sky', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Overcast',
+        45: 'Fog', 48: 'Fog', 51: 'Light drizzle', 61: 'Light rain', 63: 'Rain',
+        65: 'Heavy rain', 80: 'Rain showers', 95: 'Thunderstorm'
+      };
+      fetch('https://api.open-meteo.com/v1/forecast?latitude=-3.3349&longitude=37.3400&current_weather=true')
+        .then(r => r.json())
+        .then(data => {
+          const w = data.current_weather;
+          const label = weatherCodes[w.weathercode] || 'Weather';
+          document.getElementById('weatherText').textContent = `${Math.round(w.temperature)}°C, ${label} in Moshi`;
+        })
+        .catch(() => {
+          document.getElementById('weatherText').textContent = 'Moshi weather unavailable right now';
+        });
+    </script>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid-4">
+          <div class="stat-card panel">
+            <strong>24</strong>
+            <span class="text-body">Verified listings</span>
+          </div>
+          <div class="stat-card panel">
+            <strong>6</strong>
+            <span class="text-body">Trekking routes</span>
+          </div>
+          <div class="stat-card panel">
+            <strong>6</strong>
+            <span class="text-body">Coffee experiences</span>
+          </div>
+          <div class="stat-card panel">
+            <strong>Feb 22</strong>
+            <span class="text-body">Next big event</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="eyebrow">Browse by category</div>
+        <h2 class="display-l">Find what you need, fast</h2>
+        <div class="category-tile-grid" style="margin-top: 2rem;">
+          <a href="moshi-yetu-destinations.html" class="category-tile">
+            <span class="tile-icon">🏔️</span>
+            <span>Trekking</span>
+          </a>
+          <a href="moshi-yetu-coffee.html" class="category-tile">
+            <span class="tile-icon">☕</span>
+            <span>Coffee</span>
+          </a>
+          <a href="moshi-yetu-hotels.html" class="category-tile">
+            <span class="tile-icon">🏨</span>
+            <span>Hotels</span>
+          </a>
+          <a href="moshi-yetu-culture.html" class="category-tile">
+            <span class="tile-icon">🎭</span>
+            <span>Culture</span>
+          </a>
+          <a href="moshi-yetu-events.html" class="category-tile">
+            <span class="tile-icon">🎉</span>
+            <span>Events</span>
+          </a>
+          <a href="moshi-yetu-destinations.html" class="category-tile">
+            <span class="tile-icon">🌊</span>
+            <span>Waterfalls</span>
+          </a>
+          <div class="category-tile is-soon">
+            <span class="tile-icon">🍽️</span>
+            <span>Restaurants</span>
+            <span class="soon-badge">Soon</span>
+          </div>
+          <div class="category-tile is-soon">
+            <span class="tile-icon">🚕</span>
+            <span>Transport</span>
+            <span class="soon-badge">Soon</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Handpicked</div>
+            <h2 class="display-l">Featured experiences</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('featured', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('featured', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-featured" tabindex="0" role="region" aria-label="Featured experiences">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Everything Kilimanjaro</div>
+            <h2 class="display-l">Explore Kilimanjaro</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('destinations', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('destinations', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-destinations" tabindex="0" role="region" aria-label="Explore Kilimanjaro destinations">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Verified &amp; local</div>
+            <h2 class="display-l">Discover local businesses</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('businesses', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('businesses', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-businesses" tabindex="0" role="region" aria-label="Discover local businesses">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Don't miss out</div>
+            <h2 class="display-l">What's happening</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('events', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('events', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-events" tabindex="0" role="region" aria-label="Upcoming events">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Chagga highlands coffee</div>
+            <h2 class="display-l">Taste Kilimanjaro</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('coffee', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('coffee', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-coffee" tabindex="0" role="region" aria-label="Coffee experiences">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (function() {
+        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        window.scrollCarousel = function(id, dir) {
+          const track = document.getElementById('carousel-' + id);
+          if (!track) return;
+          const card = track.querySelector('.carousel-card, .carousel-skeleton');
+          const amount = card ? card.offsetWidth + 16 : 320;
+          track.scrollBy({ left: dir * amount, behavior: reduceMotion ? 'auto' : 'smooth' });
+        };
+
+        document.querySelectorAll('.carousel-track').forEach(track => {
+          track.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') { scrollCarousel(track.id.replace('carousel-', ''), 1); e.preventDefault(); }
+            if (e.key === 'ArrowLeft') { scrollCarousel(track.id.replace('carousel-', ''), -1); e.preventDefault(); }
+          });
+        });
+
+        function cardHtml({ image, badge, badgeClass, title, desc, metaLeft, metaRight, href }) {
+          return `
+            <a class="carousel-card" href="${href || '#'}">
+              <div class="carousel-card-media">
+                ${image ? `<img class="carousel-card-img" src="${image}" alt="" loading="lazy" />` : ''}
+              </div>
+              <div class="carousel-card-body">
+                ${badge ? `<span class="badge ${badgeClass || 'badge-green'}">${badge}</span>` : ''}
+                <h3>${title}</h3>
+                <p>${desc || ''}</p>
+                <div class="carousel-card-meta">
+                  <span class="muted">${metaLeft || ''}</span>
+                  <span class="carousel-explore">${metaRight || 'Explore →'}</span>
+                </div>
+              </div>
+            </a>`;
+        }
+
+        function renderTrack(id, html) {
+          document.getElementById('carousel-' + id).innerHTML = html;
+        }
+        function renderEmpty(id, message) {
+          renderTrack(id, `<p class="carousel-empty">${message}</p>`);
+        }
+        function renderError(id, message) {
+          renderTrack(id, `<p class="carousel-empty">${message}</p>`);
+        }
+
+        // 1. Featured experiences (featured destinations)
+        sb.from('destinations').select('slug,name,district,short_description,cover_image,entry_fee')
+          .eq('status', 'published').eq('featured', true).limit(8)
+          .then(({ data, error }) => {
+            if (error) return renderError('featured', 'Unable to load experiences right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('featured', 'No featured experiences available yet.');
+            renderTrack('featured', data.map(d => cardHtml({
+              image: d.cover_image, badge: 'Featured', title: d.name, desc: d.short_description,
+              metaLeft: d.district || '', metaRight: d.entry_fee ? d.entry_fee : 'Explore →',
+              href: 'moshi-yetu-destination-detail.html?slug=' + d.slug
+            })).join(''));
+          });
+
+        // 2. Explore Kilimanjaro (all published destinations)
+        sb.from('destinations').select('slug,name,district,short_description,cover_image')
+          .eq('status', 'published').order('created_at', { ascending: false }).limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('destinations', 'Unable to load destinations right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('destinations', 'No destinations published yet — check back soon.');
+            renderTrack('destinations', data.map(d => cardHtml({
+              image: d.cover_image, badge: 'Destination', title: d.name, desc: d.short_description,
+              metaLeft: d.district || '', metaRight: 'Explore destination →',
+              href: 'moshi-yetu-destination-detail.html?slug=' + d.slug
+            })).join(''));
+          });
+
+        // 3. Discover local businesses (approved, any category)
+        sb.from('business_listings').select('business_name,category,description,region,address')
+          .eq('status', 'approved').order('created_at', { ascending: false }).limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('businesses', 'Unable to load businesses right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('businesses', 'No verified businesses yet — be the first to list yours!');
+            renderTrack('businesses', data.map(b => cardHtml({
+              image: null, badge: '✓ Verified', badgeClass: 'badge-green', title: b.business_name, desc: b.description,
+              metaLeft: [b.address, b.region].filter(Boolean).join(', '), metaRight: 'View business →',
+              href: 'moshi-yetu-list-business.html'
+            })).join(''));
+          });
+
+        // 4. What's happening (published, upcoming events)
+        const today = new Date().toISOString().split('T')[0];
+        sb.from('events').select('slug,title,category,description,cover_image,start_date,location,venue_name')
+          .eq('status', 'published').gte('start_date', today).order('start_date', { ascending: true }).limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('events', 'Unable to load events right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('events', 'No upcoming events yet — check back soon.');
+            renderTrack('events', data.map(e => cardHtml({
+              image: e.cover_image, badge: e.category || 'Event', title: e.title, desc: e.description,
+              metaLeft: new Date(e.start_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+              metaRight: 'View event →',
+              href: 'moshi-yetu-event-detail.html?slug=' + e.slug
+            })).join(''));
+          });
+
+        // 5. Taste Kilimanjaro (coffee experiences)
+        sb.from('business_listings').select('business_name,description,region,address')
+          .eq('status', 'approved').eq('category', 'Coffee Experience').limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('coffee', 'Unable to load coffee experiences right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('coffee', 'No coffee experiences listed yet — check back soon.');
+            renderTrack('coffee', data.map(c => cardHtml({
+              image: null, badge: 'Coffee', badgeClass: 'badge-gold', title: c.business_name, desc: c.description,
+              metaLeft: [c.address, c.region].filter(Boolean).join(', '), metaRight: 'Explore →',
+              href: 'moshi-yetu-coffee.html'
+            })).join(''));
+          });
+      })();
+    </script>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-banner">
+          <div>
+            <p class="eyebrow" style="color: var(--savanna-500);">For business owners</p>
+            <h2 class="display-m" style="color: white;">Run a lodge, café, or tour company here?</h2>
+            <p class="text-body" style="color: rgba(255,255,255,0.82); margin-top: 8px;">Join 200+ verified businesses getting direct bookings — no commission middlemen.</p>
+          </div>
+          <a href="moshi-yetu-list-business.html" class="button button-primary">
+            List your business
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="color: white; margin-bottom: var(--space-4);">
+              <span class="brand-mark"></span>
+              <span>Moshi Yetu</span>
+            </div>
+            <p class="muted" style="color: rgba(255,255,255,0.75);">Get weekly travel ideas from Kilimanjaro — trails, coffee farms, and events, straight to your inbox.</p>
+            <div class="newsletter">
+              <input type="email" placeholder="Your email" />
+              <button class="button button-primary">Subscribe</button>
+            </div>
+          </div>
+          <div>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Explore</h3>
+            <p><a href="moshi-yetu-destinations.html">Destinations</a></p>
+            <p><a href="moshi-yetu-culture.html">Culture</a></p>
+            <p><a href="moshi-yetu-events.html">Events</a></p>
+            <p><a href="moshi-yetu-destinations.html">Travel Guides</a></p>
+          </div>
+          <div>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Stay &amp; Eat</h3>
+            <p><a href="moshi-yetu-hotels.html">Hotels</a></p>
+            <p><a href="moshi-yetu-destinations.html">Restaurants</a></p>
+            <p><a href="moshi-yetu-coffee.html">Coffee Experiences</a></p>
+            <p><a href="moshi-yetu-list-business.html">Local Businesses</a></p>
+          </div>
+          <div>
+            <h3 class="heading-m" style="margin-bottom: var(--space-4);">Company</h3>
+            <p><a href="moshi-yetu-about.html">About</a></p>
+            <p><a href="moshi-yetu-list-business.html">List Your Business</a></p>
+            <p><a href="moshi-yetu-contact.html">Contact</a></p>
+            <p><a href="index.html">Home</a></p>
+            <p><a href="moshi-yetu-design-system-preview.html">Design System</a></p>
+          </div>
+        </div>
+        <div class="footer-legal">
+          <span>© 2026 Moshi Yetu. All rights reserved.</span>
+          <div class="footer-legal-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
