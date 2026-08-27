@@ -623,6 +623,45 @@
       [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
       [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
       .theme-toggle .icon-sun { display: none; }
+      /* ===== Carousels ===== */
+      .carousel-section { padding: var(--space-10) 0; }
+      .carousel-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-6); gap: var(--space-4); }
+      .carousel-controls { display: flex; gap: 8px; flex-shrink: 0; }
+      .carousel-arrow {
+        width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--stone-200);
+        background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); cursor: pointer;
+        display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: var(--shadow-sm);
+      }
+      .carousel-arrow:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+      .carousel-arrow:focus-visible { outline: 2px solid var(--savanna-500); outline-offset: 2px; }
+      .carousel-arrow:disabled { opacity: 0.35; cursor: default; transform: none; box-shadow: none; }
+      .carousel-track {
+        display: flex; gap: var(--space-4); overflow-x: auto; scroll-snap-type: x proximity;
+        padding-bottom: 6px; scrollbar-width: none; scroll-behavior: smooth;
+      }
+      .carousel-track:focus-visible { outline: 2px solid var(--savanna-500); outline-offset: 4px; }
+      .carousel-track::-webkit-scrollbar { display: none; }
+      .carousel-card {
+        flex: 0 0 84%; scroll-snap-align: start; background: white; border: 1px solid var(--stone-200);
+        border-radius: var(--radius-xl); overflow: hidden; text-decoration: none; color: inherit;
+        transition: transform 0.25s ease, box-shadow 0.25s ease; display: block;
+      }
+      .carousel-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+      .carousel-card:hover .carousel-card-img { transform: scale(1.03); }
+      .carousel-card-media { height: 200px; overflow: hidden; background: linear-gradient(135deg, var(--kilimanjaro-500), var(--kilimanjaro-900)); position: relative; }
+      .carousel-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; display: block; }
+      .carousel-card-body { padding: var(--space-4); }
+      .carousel-card-body h3 { font-family: Fraunces, serif; font-size: 1.05rem; margin: 6px 0 4px; }
+      .carousel-card-body p { font-size: 0.85rem; color: var(--stone-600); margin: 0 0 8px; }
+      .carousel-card-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; margin-top: 8px; }
+      .carousel-explore { color: var(--kilimanjaro-700); font-weight: 700; font-size: 0.85rem; }
+      .carousel-skeleton { flex: 0 0 84%; height: 320px; border-radius: var(--radius-xl); background: linear-gradient(90deg, var(--stone-100) 25%, var(--stone-200) 37%, var(--stone-100) 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; }
+      @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+      .carousel-empty { padding: var(--space-8); color: var(--stone-600); text-align: center; width: 100%; }
+      @media (min-width: 640px) { .carousel-card, .carousel-skeleton { flex-basis: 320px; } }
+      @media (min-width: 1024px) { .carousel-card, .carousel-skeleton { flex-basis: calc(25% - 18px); } }
+      @media (prefers-reduced-motion: reduce) { .carousel-track { scroll-behavior: auto; } .carousel-card, .carousel-card-img { transition: none; } }
     </style>
       <script>
 
@@ -872,41 +911,235 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="carousel-section">
       <div class="container">
-        <div class="eyebrow">Handpicked</div>
-        <h2 class="display-l">Featured this month</h2>
-        <div class="grid-3" style="margin-top: 2rem;">
-          <a href="moshi-yetu-destinations.html" class="card">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=900&q=80');"></div>
-            <div class="card-body">
-              <span class="badge badge-green">Trekking</span>
-              <h3 class="heading-m" style="margin-top: var(--space-3);">Machame Route</h3>
-              <p class="muted">The "Whiskey Route" — rainforest to alpine desert in 7 days.</p>
-              <div class="card-meta"><span>4.9 ★ · 128 reviews</span><strong style="color: var(--stone-800);">$420</strong></div>
-            </div>
-          </a>
-          <a href="moshi-yetu-destinations.html" class="card">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=900&q=80');"></div>
-            <div class="card-body">
-              <span class="badge badge-gold">Coffee</span>
-              <h3 class="heading-m" style="margin-top: var(--space-3);">Materuni Waterfalls &amp; Coffee</h3>
-              <p class="muted">A half-day hike to a 90m falls, plus a hands-on roasting demo.</p>
-              <div class="card-meta"><span>4.8 ★ · 340 reviews</span><strong style="color: var(--stone-800);">$45</strong></div>
-            </div>
-          </a>
-          <a href="moshi-yetu-destinations.html" class="card">
-            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?auto=format&fit=crop&w=900&q=80');"></div>
-            <div class="card-body">
-              <span class="badge badge-gold">Culture</span>
-              <h3 class="heading-m" style="margin-top: var(--space-3);">Chagga Live Museum</h3>
-              <p class="muted">Underground tunnels and banana-beer brewing with Chagga elders.</p>
-              <div class="card-meta"><span>4.6 ★ · 210 reviews</span><strong style="color: var(--stone-800);">$25</strong></div>
-            </div>
-          </a>
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Handpicked</div>
+            <h2 class="display-l">Featured experiences</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('featured', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('featured', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-featured" tabindex="0" role="region" aria-label="Featured experiences">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
         </div>
       </div>
     </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Everything Kilimanjaro</div>
+            <h2 class="display-l">Explore Kilimanjaro</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('destinations', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('destinations', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-destinations" tabindex="0" role="region" aria-label="Explore Kilimanjaro destinations">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Verified &amp; local</div>
+            <h2 class="display-l">Discover local businesses</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('businesses', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('businesses', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-businesses" tabindex="0" role="region" aria-label="Discover local businesses">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Don't miss out</div>
+            <h2 class="display-l">What's happening</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('events', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('events', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-events" tabindex="0" role="region" aria-label="Upcoming events">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-header">
+          <div>
+            <div class="eyebrow">Chagga highlands coffee</div>
+            <h2 class="display-l">Taste Kilimanjaro</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-arrow" aria-label="Previous" onclick="scrollCarousel('coffee', -1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" aria-label="Next" onclick="scrollCarousel('coffee', 1)">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="carousel-track" id="carousel-coffee" tabindex="0" role="region" aria-label="Coffee experiences">
+          <div class="carousel-skeleton"></div><div class="carousel-skeleton"></div><div class="carousel-skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (function() {
+        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        window.scrollCarousel = function(id, dir) {
+          const track = document.getElementById('carousel-' + id);
+          if (!track) return;
+          const card = track.querySelector('.carousel-card, .carousel-skeleton');
+          const amount = card ? card.offsetWidth + 16 : 320;
+          track.scrollBy({ left: dir * amount, behavior: reduceMotion ? 'auto' : 'smooth' });
+        };
+
+        document.querySelectorAll('.carousel-track').forEach(track => {
+          track.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') { scrollCarousel(track.id.replace('carousel-', ''), 1); e.preventDefault(); }
+            if (e.key === 'ArrowLeft') { scrollCarousel(track.id.replace('carousel-', ''), -1); e.preventDefault(); }
+          });
+        });
+
+        function cardHtml({ image, badge, badgeClass, title, desc, metaLeft, metaRight, href }) {
+          return `
+            <a class="carousel-card" href="${href || '#'}">
+              <div class="carousel-card-media">
+                ${image ? `<img class="carousel-card-img" src="${image}" alt="" loading="lazy" />` : ''}
+              </div>
+              <div class="carousel-card-body">
+                ${badge ? `<span class="badge ${badgeClass || 'badge-green'}">${badge}</span>` : ''}
+                <h3>${title}</h3>
+                <p>${desc || ''}</p>
+                <div class="carousel-card-meta">
+                  <span class="muted">${metaLeft || ''}</span>
+                  <span class="carousel-explore">${metaRight || 'Explore →'}</span>
+                </div>
+              </div>
+            </a>`;
+        }
+
+        function renderTrack(id, html) {
+          document.getElementById('carousel-' + id).innerHTML = html;
+        }
+        function renderEmpty(id, message) {
+          renderTrack(id, `<p class="carousel-empty">${message}</p>`);
+        }
+        function renderError(id, message) {
+          renderTrack(id, `<p class="carousel-empty">${message}</p>`);
+        }
+
+        // 1. Featured experiences (featured destinations)
+        sb.from('destinations').select('slug,name,district,short_description,cover_image,entry_fee')
+          .eq('status', 'published').eq('featured', true).limit(8)
+          .then(({ data, error }) => {
+            if (error) return renderError('featured', 'Unable to load experiences right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('featured', 'No featured experiences available yet.');
+            renderTrack('featured', data.map(d => cardHtml({
+              image: d.cover_image, badge: 'Featured', title: d.name, desc: d.short_description,
+              metaLeft: d.district || '', metaRight: d.entry_fee ? d.entry_fee : 'Explore →',
+              href: 'moshi-yetu-destination-detail.html?slug=' + d.slug
+            })).join(''));
+          });
+
+        // 2. Explore Kilimanjaro (all published destinations)
+        sb.from('destinations').select('slug,name,district,short_description,cover_image')
+          .eq('status', 'published').order('created_at', { ascending: false }).limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('destinations', 'Unable to load destinations right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('destinations', 'No destinations published yet — check back soon.');
+            renderTrack('destinations', data.map(d => cardHtml({
+              image: d.cover_image, badge: 'Destination', title: d.name, desc: d.short_description,
+              metaLeft: d.district || '', metaRight: 'Explore destination →',
+              href: 'moshi-yetu-destination-detail.html?slug=' + d.slug
+            })).join(''));
+          });
+
+        // 3. Discover local businesses (approved, any category)
+        sb.from('business_listings').select('business_name,category,description,region,address')
+          .eq('status', 'approved').order('created_at', { ascending: false }).limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('businesses', 'Unable to load businesses right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('businesses', 'No verified businesses yet — be the first to list yours!');
+            renderTrack('businesses', data.map(b => cardHtml({
+              image: null, badge: '✓ Verified', badgeClass: 'badge-green', title: b.business_name, desc: b.description,
+              metaLeft: [b.address, b.region].filter(Boolean).join(', '), metaRight: 'View business →',
+              href: 'moshi-yetu-list-business.html'
+            })).join(''));
+          });
+
+        // 4. What's happening (published, upcoming events)
+        const today = new Date().toISOString().split('T')[0];
+        sb.from('events').select('slug,title,category,description,cover_image,start_date,location,venue_name')
+          .eq('status', 'published').gte('start_date', today).order('start_date', { ascending: true }).limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('events', 'Unable to load events right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('events', 'No upcoming events yet — check back soon.');
+            renderTrack('events', data.map(e => cardHtml({
+              image: e.cover_image, badge: e.category || 'Event', title: e.title, desc: e.description,
+              metaLeft: new Date(e.start_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+              metaRight: 'View event →',
+              href: 'moshi-yetu-event-detail.html?slug=' + e.slug
+            })).join(''));
+          });
+
+        // 5. Taste Kilimanjaro (coffee experiences)
+        sb.from('business_listings').select('business_name,description,region,address')
+          .eq('status', 'approved').eq('category', 'Coffee Experience').limit(10)
+          .then(({ data, error }) => {
+            if (error) return renderError('coffee', 'Unable to load coffee experiences right now. Please try again.');
+            if (!data || !data.length) return renderEmpty('coffee', 'No coffee experiences listed yet — check back soon.');
+            renderTrack('coffee', data.map(c => cardHtml({
+              image: null, badge: 'Coffee', badgeClass: 'badge-gold', title: c.business_name, desc: c.description,
+              metaLeft: [c.address, c.region].filter(Boolean).join(', '), metaRight: 'Explore →',
+              href: 'moshi-yetu-coffee.html'
+            })).join(''));
+          });
+      })();
+    </script>
 
     <section class="section">
       <div class="container">
