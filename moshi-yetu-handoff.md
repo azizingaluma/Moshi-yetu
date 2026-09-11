@@ -1,27 +1,40 @@
 # Moshi Yetu — Handoff Notes
 
-## Hali ya sasa
-Frontend prototype kamili (static HTML/CSS/JS, hakuna backend) — kurasa 9 zilizounganishwa:
+## Hali ya sasa (imesasishwa)
+**Backend HALISI tayari ipo na inatumika** — mradi si "static prototype" tena. Kurasa 17 za HTML, nyingi zikiwa zimeunganishwa moja kwa moja na **Supabase** (`https://nlvekegglbuabbxhdywm.supabase.co`) kupitia `@supabase/supabase-js` client-side, kwa kutumia "publishable" key iliyowekwa wazi kwenye kila faili husika.
 
-| Faili | Kazi |
-|---|---|
-| `index.html` | Home — hero, search, featured destinations, CTA |
-| `moshi-yetu-destinations.html` | Orodha ya maeneo, filters zinazofanya kazi |
-| `moshi-yetu-hotels.html` | Hoteli & malazi, filters |
-| `moshi-yetu-coffee.html` | Coffee experiences, filters |
-| `moshi-yetu-culture.html` | Utamaduni & vijiji, filters |
-| `moshi-yetu-events.html` | Matukio, orodha yenye tarehe |
-| `moshi-yetu-booking.html` | Booking flow (hatua 4, validation, hakuna backend) |
-| `moshi-yetu-list-business.html` | Fomu ya biashara kujisajili (hatua 4, upload picha ya client-side tu) |
-| `moshi-yetu-design-system-preview.html` | Style guide ya ndani (rangi, fonti, components, icons, states) |
+| Faili | Kazi | Imeunganishwa na Supabase? |
+|---|---|---|
+| `index.html` | Home — hero, search, featured destinations, CTA | Ndiyo (destinations za featured) |
+| `moshi-yetu-destinations.html` | Orodha ya maeneo, filters | Hapana (data tuli/hardcoded bado) |
+| `moshi-yetu-hotels.html` | Hoteli & malazi, filters | Hapana (data tuli) |
+| `moshi-yetu-coffee.html` | Coffee experiences, filters | Hapana (data tuli) |
+| `moshi-yetu-culture.html` | Utamaduni & vijiji, filters | Hapana (data tuli) |
+| `moshi-yetu-restaurants.html` | Migahawa | Ndiyo |
+| `moshi-yetu-transport.html` | Usafiri | Ndiyo |
+| `moshi-yetu-events.html` | Matukio (yanapakiwa moja kwa moja kutoka DB) | Ndiyo |
+| `moshi-yetu-event-detail.html` | Ukurasa wa tukio moja (kwa `?slug=`) | Ndiyo |
+| `moshi-yetu-destination-detail.html` | Ukurasa wa eneo moja (kwa `?slug=`) | Ndiyo — **inahitaji rekodi kwenye jedwali la `destinations`** |
+| `moshi-yetu-booking.html` | Booking flow (hatua 4, validation) | Hapana bado — form haihifadhi popote |
+| `moshi-yetu-list-business.html` | Fomu ya biashara kujisajili (hatua 4) | Ndiyo — inahifadhi kwenye `business_listings` |
+| `moshi-yetu-contact.html` | Fomu ya mawasiliano | Ndiyo — inahifadhi kwenye `contact_messages` |
+| `moshi-yetu-admin.html` | Dashibodi ya ndani (login + CRUD ya bookings/listings/destinations) | Ndiyo — ina Supabase Auth (`signInWithPassword`). **Haijaunganishwa kwenye nav kuu kwa makusudi** — inafikika tu kupitia kiungo kidogo cha "Staff Login" chini ya footer ya `index.html`, au URL moja kwa moja |
+| `moshi-yetu-about.html` | Kuhusu kampuni | Hapana |
+| `moshi-yetu-design-system-preview.html` | Style guide ya ndani | Hapana |
 
-Design tokens zote (rangi, spacing, radius, shadows, fonti Fraunces+Inter) ziko kama CSS variables ndani ya kila faili (zimerudufiwa, sio shared stylesheet — zingeweza kuunganishwa kuwa faili moja ya CSS wakati wa ujenzi wa backend).
+Design tokens zote (rangi, spacing, radius, shadows, fonti Fraunces+Inter) ziko kama CSS variables ndani ya kila faili (zimerudufiwa, sio shared stylesheet).
+
+## ⚠️ Muhimu kwa yeyote atakayeendelea na mradi huu
+1. **RLS (Row Level Security)** — kwa kuwa Supabase key iko wazi kwenye kila ukurasa (kama ilivyokusudiwa kwa "publishable"/"anon" key), ulinzi WOTE wa data unategemea RLS policies kwenye kila jedwali (`bookings`, `business_listings`, `destinations`, `events`, `contact_messages`). **Hii lazima ithibitishwe kwenye Supabase dashboard** kabla ya kuzindua site hadharani — bila RLS sahihi, mtu yeyote anaweza kusoma/kuandika/kufuta data moja kwa moja kutoka browser console.
+2. **Jedwali la `destinations` bado halina rekodi za maeneo yaliyoorodheshwa kwenye `moshi-yetu-destinations.html`** (Machame Route, Marangu Route, Materuni Waterfalls & Coffee Farm, Chagga Live Museum, Lake Chala, Kikuletwa Hot Springs). Kadi hizo sasa zinaelekeza `moshi-yetu-destination-detail.html?slug=...` lakini zitaonyesha "Not Found" mpaka rekodi ziongezwe kwenye database kwa slugs zinazolingana:
+   - `machame-route`, `marangu-route`, `materuni-waterfalls-coffee-farm`, `chagga-live-museum`, `lake-chala`, `kikuletwa-hot-springs`
+3. `moshi-yetu-booking.html` bado HAIHIFADHI data popote (JS inaonyesha tu uthibitisho) — hii ndiyo fomu pekee kubwa ambayo bado inahitaji kuunganishwa na database.
 
 ## Kinachohitajika kufuata (kazi ya Claude Code)
 
-1. **Database** — jedwali za `bookings`, `business_listings`, `businesses`, `users` (angalau)
-2. **Backend/API** — kupokea data kutoka fomu za `moshi-yetu-booking.html` na `moshi-yetu-list-business.html` (kwa sasa JS inaonyesha tu uthibitisho bila kuhifadhi popote)
-3. **Uthibitishaji wa maudhui** — mfumo wa timu ya ndani kukagua/kuidhinisha listings mpya kabla hazijaonekana kwa umma
+1. **Database** — jedwali kuu tayari zipo (`business_listings`, `destinations`, `events`, `contact_messages`); bado zinahitajika: `bookings` (kwa uhifadhi halisi wa fomu ya booking), `users`
+2. **Backend/API** — booking.html pekee bado haihifadhi (list-business na contact tayari zinahifadhi kwenye Supabase)
+3. **Uthibitishaji wa maudhui** — mfumo wa timu ya ndani kukagua/kuidhinisha listings mpya (dashibodi ya admin.html tayari ina sehemu hii, ithibitishwe inafanya kazi vizuri na RLS)
 4. **Malipo** — kuunganisha Stripe/M-Pesa kwa booking deposits
 5. **Picha halisi** — kubadilisha picha za Unsplash placeholder na picha halisi za biashara (baada ya uthibitishaji)
 6. **Lugha mbili** — kitufe cha "EN/SW" kipo kwenye UI lakini hakina utendaji bado
