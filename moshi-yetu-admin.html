@@ -201,7 +201,7 @@
         <div class="tabs">
           <button class="tab-btn is-active" id="tabBookingsBtn" onclick="showTab('bookings')">Bookings</button>
           <button class="tab-btn" id="tabListingsBtn" onclick="showTab('listings')">Business listings</button>
-          <button class="tab-btn" id="tabContentBtn" onclick="showTab('content')">Manage content</button>
+          <button class="tab-btn" id="tabContentBtn" onclick="showTab('content')">Business content</button>
           <button class="tab-btn" id="tabDestinationsBtn" onclick="showTab('destinations')">Destinations</button>
         </div>
 
@@ -228,76 +228,104 @@
         </div>
 
         <div id="contentPanel" style="display:none;">
-          <div class="panel" style="padding: var(--space-6);">
-            <h2 style="margin-top:0; font-size:1.2rem;" id="contentFormTitle">Add new listing</h2>
+          <div class="panel" style="padding: var(--space-6); margin-bottom: var(--space-6);">
+            <h2 style="margin-top:0; font-size:1.2rem;" id="contentFormTitle">Add business listing</h2>
+            <p class="muted" style="margin-top:-6px;">Use this section for verified real businesses. Data is saved in <strong>business_listings</strong>.</p>
             <input type="hidden" id="cId" />
             <div class="form-grid">
               <div>
                 <label class="field-label">Category</label>
                 <select class="input" id="cCategory">
-                  <option>Destinations</option>
-                  <option>Hotels</option>
-                  <option>Coffee</option>
-                  <option>Culture</option>
-                  <option>Events</option>
-                  <option>Restaurants</option>
-                  <option>Transport</option>
+                  <option value="Restaurant & Café">Restaurant & Café</option>
+                  <option value="Coffee Experience">Coffee Experience</option>
+                  <option value="Hotel & Lodge">Hotel & Lodge</option>
+                  <option value="Tour Operator">Tour Operator</option>
+                  <option value="Cultural Site">Cultural Site</option>
+                  <option value="Transport">Transport</option>
                 </select>
               </div>
               <div>
-                <label class="field-label">Title</label>
-                <input class="input" id="cTitle" placeholder="e.g. Kilimanjaro Wonders Lodge" />
+                <label class="field-label">Business name</label>
+                <input class="input" id="cTitle" placeholder="e.g. Union Café" required />
               </div>
               <div>
-                <label class="field-label">Location</label>
-                <input class="input" id="cLocation" placeholder="e.g. Machame Gate Road, Moshi" />
+                <label class="field-label">Address</label>
+                <input class="input" id="cLocation" placeholder="e.g. School Street, Moshi" />
               </div>
               <div>
-                <label class="field-label">Price (text)</label>
-                <input class="input" id="cPrice" placeholder="e.g. $180/night" />
+                <label class="field-label">Region</label>
+                <input class="input" id="cRegion" value="Kilimanjaro" />
               </div>
               <div>
-                <label class="field-label">Rating (0-5)</label>
-                <input class="input" id="cRating" type="number" step="0.1" min="0" max="5" placeholder="4.9" />
+                <label class="field-label">Phone</label>
+                <input class="input" id="cPhone" placeholder="+255 ..." />
               </div>
               <div>
-                <label class="field-label">Reviews count</label>
-                <input class="input" id="cReviews" type="number" min="0" placeholder="210" />
+                <label class="field-label">Email</label>
+                <input class="input" id="cEmail" type="email" placeholder="info@example.com" />
+              </div>
+              <div>
+                <label class="field-label">Website</label>
+                <input class="input" id="cWebsite" type="url" placeholder="https://..." />
+              </div>
+              <div>
+                <label class="field-label">WhatsApp</label>
+                <input class="input" id="cWhatsapp" placeholder="+255 ..." />
+              </div>
+              <div>
+                <label class="field-label">Instagram</label>
+                <input class="input" id="cInstagram" placeholder="https://instagram.com/..." />
+              </div>
+              <div>
+                <label class="field-label">Opening hours</label>
+                <input class="input" id="cHours" placeholder="Mon–Sun, 07:00–22:00" />
+              </div>
+              <div>
+                <label class="field-label">Contact person</label>
+                <input class="input" id="cContactPerson" placeholder="Optional" />
+              </div>
+              <div>
+                <label class="field-label">Status</label>
+                <select class="input" id="cStatus">
+                  <option value="pending">Pending review</option>
+                  <option value="approved">Approved / Verified</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Latitude</label>
+                <input class="input" id="cLat" type="number" step="any" placeholder="-3.3349" />
+              </div>
+              <div>
+                <label class="field-label">Longitude</label>
+                <input class="input" id="cLng" type="number" step="any" placeholder="37.3400" />
               </div>
             </div>
             <label class="field-label">Description</label>
-            <textarea class="input" id="cDescription" style="height:80px; padding-top:10px;" placeholder="Short description shown on the card"></textarea>
+            <textarea class="input" id="cDescription" style="height:110px; padding-top:10px;" placeholder="Accurate description of the business and its services"></textarea>
 
-            <label class="field-label">Image — upload a file</label>
+            <label class="field-label">Cover image — upload a file</label>
             <input class="input" id="cImageFile" type="file" accept="image/*" style="padding-top:10px;" />
             <label class="field-label">…or paste an image URL instead</label>
-            <input class="input" id="cImageUrl" placeholder="https://images.unsplash.com/..." />
+            <input class="input" id="cImageUrl" type="url" placeholder="https://..." />
 
-            <div style="display:flex; gap: var(--space-4); align-items:center; margin: var(--space-3) 0 var(--space-4);">
+            <div style="display:flex; gap:var(--space-3); align-items:center; margin:var(--space-3) 0 var(--space-4);">
               <label style="display:flex; align-items:center; gap:6px; font-size:0.9rem;"><input type="checkbox" id="cFeatured" /> Featured</label>
-              <label style="display:flex; align-items:center; gap:6px; font-size:0.9rem;"><input type="checkbox" id="cPublished" checked /> Published (visible to public)</label>
             </div>
 
-            <div style="display:flex; gap: var(--space-3);">
-              <button class="button button-primary" style="width:auto; padding:0 24px;" id="cSaveBtn" onclick="saveContentItem()">Save listing</button>
+            <div style="display:flex; gap:var(--space-3);">
+              <button class="button button-primary" style="width:auto; padding:0 24px;" id="cSaveBtn" onclick="saveContentItem()">Save business</button>
               <button class="button" style="width:auto; padding:0 24px; background:var(--stone-100);" onclick="resetContentForm()">Clear</button>
-            </div>
-
-            <div id="gallerySection" style="display:none; margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--stone-200);">
-              <label class="field-label">Gallery — extra photos for this listing</label>
-              <div id="galleryThumbs" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: var(--space-3);"></div>
-              <input class="input" id="cGalleryFiles" type="file" accept="image/*" multiple style="padding-top:10px;" />
-              <button class="button button-primary" style="width:auto; padding:0 20px; margin-top:10px;" id="cGalleryBtn" onclick="uploadGalleryImages()">Add to gallery</button>
             </div>
           </div>
 
           <div class="panel">
             <table>
               <thead>
-                <tr><th>Image</th><th>Title</th><th>Category</th><th>Featured</th><th>Status</th><th>Action</th></tr>
+                <tr><th>Image</th><th>Business</th><th>Category</th><th>Contact</th><th>Location</th><th>Status</th><th>Action</th></tr>
               </thead>
               <tbody id="contentBody">
-                <tr><td colspan="6" class="loading-row">Loading…</td></tr>
+                <tr><td colspan="7" class="loading-row">Loading…</td></tr>
               </tbody>
             </table>
           </div>
@@ -316,14 +344,6 @@
 
             <label class="field-label" for="dDistrict">District</label>
             <input class="input" id="dDistrict" placeholder="e.g. Moshi Rural" />
-
-            <label class="field-label" for="dCategory">Category</label>
-            <select class="input" id="dCategory">
-              <option value="trekking">Trekking</option>
-              <option value="nature">Nature &amp; waterfalls</option>
-              <option value="culture">Culture &amp; villages</option>
-              <option value="coffee">Coffee</option>
-            </select>
 
             <label class="field-label" for="dShortDesc">Short description (shown on cards)</label>
             <input class="input" id="dShortDesc" placeholder="One sentence summary" />
@@ -580,78 +600,99 @@
         loadListings();
       }
 
-      // ---- Content management (listings) ----
+      // ---- Business content management ----
+      function escHtml(value) {
+        return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[ch]));
+      }
+
       async function loadContentItems() {
         const body = document.getElementById('contentBody');
-        body.innerHTML = '<tr><td colspan="6" class="loading-row">Loading…</td></tr>';
+        body.innerHTML = '<tr><td colspan="7" class="loading-row">Loading…</td></tr>';
 
         const { data, error } = await supabaseClient
-          .from('listings')
+          .from('business_listings')
           .select('*')
           .order('created_at', { ascending: false });
 
         if (error) {
-          body.innerHTML = `<tr><td colspan="6" class="empty-state">Error: ${error.message}</td></tr>`;
+          body.innerHTML = `<tr><td colspan="7" class="empty-state">Error: ${escHtml(error.message)}</td></tr>`;
           return;
         }
-        if (!data.length) {
-          body.innerHTML = '<tr><td colspan="6" class="empty-state">Hakuna listings bado. Tumia fomu hapo juu kuongeza ya kwanza.</td></tr>';
+        if (!data || !data.length) {
+          body.innerHTML = '<tr><td colspan="7" class="empty-state">Hakuna business listings bado. Tumia fomu hapo juu kuongeza ya kwanza.</td></tr>';
           return;
         }
 
-        body.innerHTML = data.map(item => `
-          <tr>
-            <td>${item.image_url ? `<img class="thumb" src="${item.image_url}" alt="" />` : '—'}</td>
-            <td><strong>${item.title}</strong><br><span style="color:var(--stone-600); font-size:0.82rem;">${item.location || ''}</span></td>
-            <td>${item.category}</td>
-            <td>${item.featured ? '⭐ Yes' : 'No'}</td>
-            <td><span class="status-badge ${item.published ? 'status-approved' : 'status-pending'}">${item.published ? 'Published' : 'Draft'}</span></td>
-            <td>
-              <div class="row-actions">
-                <button class="action-btn" onclick='editContentItem(${JSON.stringify(item).replace(/'/g, "&apos;")})'>Edit</button>
-                <button class="action-btn reject" onclick="deleteContentItem('${item.id}')">Delete</button>
-              </div>
-            </td>
-          </tr>
-        `).join('');
+        body.innerHTML = data.map(item => {
+          const status = item.status || 'pending';
+          return `<tr>
+            <td>${item.image_url ? `<img class="thumb" src="${escHtml(item.image_url)}" alt="" />` : '—'}</td>
+            <td><strong>${escHtml(item.business_name)}</strong><br><span style="color:var(--stone-600); font-size:0.82rem;">${escHtml(item.address || '')}</span></td>
+            <td>${escHtml(item.category || '—')}</td>
+            <td>${escHtml(item.phone || item.email || '—')}</td>
+            <td>${escHtml(item.region || '—')}</td>
+            <td><span class="status-badge status-${escHtml(status)}">${escHtml(status.replace('_',' '))}</span></td>
+            <td><div class="row-actions">
+              <button class="action-btn" onclick='editContentItem(${JSON.stringify(item).replace(/'/g, "&apos;")})'>Edit</button>
+              ${status !== 'approved' ? `<button class="action-btn approve" onclick="updateContentStatus('${item.id}','approved')">Approve</button>` : ''}
+              ${status !== 'rejected' ? `<button class="action-btn reject" onclick="updateContentStatus('${item.id}','rejected')">Reject</button>` : ''}
+            </div></td>
+          </tr>`;
+        }).join('');
       }
 
       function editContentItem(item) {
-        document.getElementById('contentFormTitle').textContent = 'Edit listing';
-        document.getElementById('cId').value = item.id;
-        document.getElementById('cCategory').value = item.category;
-        document.getElementById('cTitle').value = item.title || '';
-        document.getElementById('cLocation').value = item.location || '';
-        document.getElementById('cPrice').value = item.price || '';
-        document.getElementById('cRating').value = item.rating || '';
-        document.getElementById('cReviews').value = item.reviews_count || '';
+        document.getElementById('contentFormTitle').textContent = 'Edit business listing';
+        document.getElementById('cId').value = item.id || '';
+        document.getElementById('cCategory').value = item.category || 'Restaurant & Café';
+        document.getElementById('cTitle').value = item.business_name || '';
+        document.getElementById('cLocation').value = item.address || '';
+        document.getElementById('cRegion').value = item.region || 'Kilimanjaro';
+        document.getElementById('cPhone').value = item.phone || '';
+        document.getElementById('cEmail').value = item.email || '';
+        document.getElementById('cWebsite').value = item.website || '';
+        document.getElementById('cWhatsapp').value = item.whatsapp || '';
+        document.getElementById('cInstagram').value = item.instagram || '';
+        document.getElementById('cHours').value = item.opening_hours || '';
+        document.getElementById('cContactPerson').value = item.contact_person || '';
+        document.getElementById('cLat').value = item.latitude ?? '';
+        document.getElementById('cLng').value = item.longitude ?? '';
         document.getElementById('cDescription').value = item.description || '';
         document.getElementById('cImageUrl').value = item.image_url || '';
         document.getElementById('cFeatured').checked = !!item.featured;
-        document.getElementById('cPublished').checked = !!item.published;
-        document.getElementById('gallerySection').style.display = 'block';
-        loadGalleryImages(item.id);
+        document.getElementById('cStatus').value = item.status || 'pending';
+        document.getElementById('cImageFile').value = '';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       function resetContentForm() {
-        document.getElementById('contentFormTitle').textContent = 'Add new listing';
+        document.getElementById('contentFormTitle').textContent = 'Add business listing';
         document.getElementById('cId').value = '';
-        document.getElementById('cCategory').selectedIndex = 0;
+        document.getElementById('cCategory').value = 'Restaurant & Café';
         document.getElementById('cTitle').value = '';
         document.getElementById('cLocation').value = '';
-        document.getElementById('cPrice').value = '';
-        document.getElementById('cRating').value = '';
-        document.getElementById('cReviews').value = '';
+        document.getElementById('cRegion').value = 'Kilimanjaro';
+        document.getElementById('cPhone').value = '';
+        document.getElementById('cEmail').value = '';
+        document.getElementById('cWebsite').value = '';
+        document.getElementById('cWhatsapp').value = '';
+        document.getElementById('cInstagram').value = '';
+        document.getElementById('cHours').value = '';
+        document.getElementById('cContactPerson').value = '';
+        document.getElementById('cLat').value = '';
+        document.getElementById('cLng').value = '';
         document.getElementById('cDescription').value = '';
         document.getElementById('cImageFile').value = '';
         document.getElementById('cImageUrl').value = '';
         document.getElementById('cFeatured').checked = false;
-        document.getElementById('cPublished').checked = true;
+        document.getElementById('cStatus').value = 'pending';
       }
 
       async function saveContentItem() {
         const saveBtn = document.getElementById('cSaveBtn');
+        const businessName = document.getElementById('cTitle').value.trim();
+        if (!businessName) { alert('Weka jina la biashara kwanza.'); return; }
+
         saveBtn.disabled = true;
         saveBtn.textContent = 'Saving…';
 
@@ -659,48 +700,48 @@
         const file = document.getElementById('cImageFile').files[0];
         let imageUrl = document.getElementById('cImageUrl').value.trim();
 
-        // If a file was chosen, upload it to Storage and use that URL instead
         if (file) {
-          const path = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-          const { error: uploadError } = await supabaseClient.storage
-            .from('listing-images')
-            .upload(path, file);
-
+          const path = `business-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+          const { error: uploadError } = await supabaseClient.storage.from('listing-images').upload(path, file);
           if (uploadError) {
             alert('Tatizo la kupakia picha: ' + uploadError.message);
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Save listing';
-            return;
+            saveBtn.disabled = false; saveBtn.textContent = 'Save business'; return;
           }
-          const { data: publicUrlData } = supabaseClient.storage
-            .from('listing-images')
-            .getPublicUrl(path);
+          const { data: publicUrlData } = supabaseClient.storage.from('listing-images').getPublicUrl(path);
           imageUrl = publicUrlData.publicUrl;
         }
 
         const payload = {
+          business_name: businessName,
           category: document.getElementById('cCategory').value,
-          title: document.getElementById('cTitle').value.trim(),
-          location: document.getElementById('cLocation').value.trim(),
-          price: document.getElementById('cPrice').value.trim(),
-          rating: document.getElementById('cRating').value ? parseFloat(document.getElementById('cRating').value) : null,
-          reviews_count: document.getElementById('cReviews').value ? parseInt(document.getElementById('cReviews').value) : null,
           description: document.getElementById('cDescription').value.trim(),
+          address: document.getElementById('cLocation').value.trim(),
+          region: document.getElementById('cRegion').value.trim(),
+          phone: document.getElementById('cPhone').value.trim(),
+          email: document.getElementById('cEmail').value.trim(),
+          website: document.getElementById('cWebsite').value.trim(),
+          whatsapp: document.getElementById('cWhatsapp').value.trim(),
+          instagram: document.getElementById('cInstagram').value.trim(),
+          opening_hours: document.getElementById('cHours').value.trim(),
+          contact_person: document.getElementById('cContactPerson').value.trim(),
+          latitude: document.getElementById('cLat').value ? parseFloat(document.getElementById('cLat').value) : null,
+          longitude: document.getElementById('cLng').value ? parseFloat(document.getElementById('cLng').value) : null,
+          status: document.getElementById('cStatus').value,
           image_url: imageUrl || null,
           featured: document.getElementById('cFeatured').checked,
-          published: document.getElementById('cPublished').checked,
           updated_at: new Date().toISOString()
         };
 
         let error;
         if (id) {
-          ({ error } = await supabaseClient.from('listings').update(payload).eq('id', id));
+          ({ error } = await supabaseClient.from('business_listings').update(payload).eq('id', id));
         } else {
-          ({ error } = await supabaseClient.from('listings').insert(payload));
+          payload.reference = 'MY-B-' + Math.floor(100000 + Math.random() * 899999);
+          ({ error } = await supabaseClient.from('business_listings').insert(payload));
         }
 
         saveBtn.disabled = false;
-        saveBtn.textContent = 'Save listing';
+        saveBtn.textContent = 'Save business';
 
         if (error) {
           alert('Tatizo: ' + error.message);
@@ -711,9 +752,16 @@
         loadContentItems();
       }
 
+      async function updateContentStatus(id, status) {
+        const { error } = await supabaseClient.from('business_listings').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+        if (error) { alert('Tatizo: ' + error.message); return; }
+        loadContentItems();
+        loadListings();
+      }
+
       async function deleteContentItem(id) {
-        if (!confirm('Una uhakika unataka kufuta listing hii?')) return;
-        const { error } = await supabaseClient.from('listings').delete().eq('id', id);
+        if (!confirm('Una uhakika unataka kufuta business listing hii?')) return;
+        const { error } = await supabaseClient.from('business_listings').delete().eq('id', id);
         if (error) { alert('Tatizo: ' + error.message); return; }
         loadContentItems();
       }
@@ -771,7 +819,6 @@
         document.getElementById('dName').value = d.name || '';
         document.getElementById('dSlug').value = d.slug || '';
         document.getElementById('dDistrict').value = d.district || '';
-        document.getElementById('dCategory').value = d.category || 'trekking';
         document.getElementById('dShortDesc').value = d.short_description || '';
         document.getElementById('dFullDesc').value = d.full_description || '';
         document.getElementById('dHistory').value = d.history || '';
@@ -796,7 +843,6 @@
         document.getElementById('dName').value = '';
         document.getElementById('dSlug').value = '';
         document.getElementById('dDistrict').value = '';
-        document.getElementById('dCategory').value = 'trekking';
         document.getElementById('dShortDesc').value = '';
         document.getElementById('dFullDesc').value = '';
         document.getElementById('dHistory').value = '';
@@ -840,7 +886,6 @@
           name: document.getElementById('dName').value.trim(),
           slug: document.getElementById('dSlug').value.trim(),
           district: document.getElementById('dDistrict').value.trim(),
-          category: document.getElementById('dCategory').value,
           short_description: document.getElementById('dShortDesc').value.trim(),
           full_description: document.getElementById('dFullDesc').value.trim(),
           history: document.getElementById('dHistory').value.trim(),
