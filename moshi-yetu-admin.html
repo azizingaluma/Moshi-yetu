@@ -317,6 +317,14 @@
             <label class="field-label" for="dDistrict">District</label>
             <input class="input" id="dDistrict" placeholder="e.g. Moshi Rural" />
 
+            <label class="field-label" for="dCategory">Category</label>
+            <select class="input" id="dCategory">
+              <option value="trekking">Trekking</option>
+              <option value="nature">Nature &amp; waterfalls</option>
+              <option value="culture">Culture &amp; villages</option>
+              <option value="coffee">Coffee</option>
+            </select>
+
             <label class="field-label" for="dShortDesc">Short description (shown on cards)</label>
             <input class="input" id="dShortDesc" placeholder="One sentence summary" />
 
@@ -763,6 +771,7 @@
         document.getElementById('dName').value = d.name || '';
         document.getElementById('dSlug').value = d.slug || '';
         document.getElementById('dDistrict').value = d.district || '';
+        document.getElementById('dCategory').value = d.category || 'trekking';
         document.getElementById('dShortDesc').value = d.short_description || '';
         document.getElementById('dFullDesc').value = d.full_description || '';
         document.getElementById('dHistory').value = d.history || '';
@@ -787,6 +796,7 @@
         document.getElementById('dName').value = '';
         document.getElementById('dSlug').value = '';
         document.getElementById('dDistrict').value = '';
+        document.getElementById('dCategory').value = 'trekking';
         document.getElementById('dShortDesc').value = '';
         document.getElementById('dFullDesc').value = '';
         document.getElementById('dHistory').value = '';
@@ -830,6 +840,7 @@
           name: document.getElementById('dName').value.trim(),
           slug: document.getElementById('dSlug').value.trim(),
           district: document.getElementById('dDistrict').value.trim(),
+          category: document.getElementById('dCategory').value,
           short_description: document.getElementById('dShortDesc').value.trim(),
           full_description: document.getElementById('dFullDesc').value.trim(),
           history: document.getElementById('dHistory').value.trim(),

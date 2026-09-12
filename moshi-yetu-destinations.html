@@ -810,6 +810,7 @@
           </div>
         </a>
 
+        <div id="liveDestStatus" class="muted" style="margin-bottom:12px;">Loading published destinations…</div>
         <div class="dest-grid" id="destGrid">
           <article class="card dest-card" data-category="trekking" style="cursor:pointer" onclick="window.location.href='moshi-yetu-destination-detail.html?slug=machame-route'">
             <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=900&q=80');">
@@ -1009,6 +1010,48 @@
 
     <script>
       const chips = document.querySelectorAll('.filter-chip');
+
+      // Database-first rendering. Requires `category` in destinations; falls back gracefully if absent.
+      (async function loadPublishedDestinations() {
+        const SUPABASE_URL = 'https://nlvekegglbuabbxhdywm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8';
+        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const grid = document.getElementById('destGrid');
+        const status = document.getElementById('liveDestStatus');
+        if (!grid) return;
+        try {
+          const { data, error } = await client.from('destinations')
+            .select('id,slug,name,district,short_description,cover_image,entry_fee,best_time,difficulty,featured,category')
+            .eq('status','published').order('featured',{ascending:false}).order('name',{ascending:true});
+          if (error) throw error;
+          if (!data || !data.length) {
+            status.textContent = 'No published destinations yet. Add verified destination records in Admin.';
+            return;
+          }
+          const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+          grid.innerHTML = data.map(d => `
+            <article class="card dest-card" data-category="${esc((d.category || '').toLowerCase())}" style="cursor:pointer" onclick="window.location.href='moshi-yetu-destination-detail.html?slug=${encodeURIComponent(d.slug)}'">
+              <div class="card-media" style="background-image:url('${esc(d.cover_image || '')}');">
+                <span class="badge ${d.featured ? 'badge-green' : 'badge-gold'}">${esc(d.featured ? 'Featured' : (d.category || 'Destination'))}</span>
+              </div>
+              <div class="card-body">
+                <h3 class="heading-m">${esc(d.name)}</h3>
+                <p class="location-tag">${esc(d.district || 'Kilimanjaro')}</p>
+                <p class="muted">${esc(d.short_description || '')}</p>
+                <div class="card-meta"><span>${esc(d.difficulty || 'Explore')}</span><strong>${esc(d.entry_fee || '')}</strong></div>
+              </div>
+            </article>`).join('');
+          status.textContent = `${data.length} published destination${data.length === 1 ? '' : 's'}`;
+          const initial = new URLSearchParams(location.search).get('filter');
+          if (initial) {
+            const target = Array.from(chips).find(c => c.dataset.filter === initial);
+            if (target) target.click();
+          }
+        } catch (err) {
+          console.error(err);
+          status.textContent = 'Unable to load live destinations. Check Supabase and RLS configuration.';
+        }
+      })();
       const cards = document.querySelectorAll('.dest-card');
       function applyFilter(filter) {
         chips.forEach(c => c.classList.toggle('is-active', c.dataset.filter === filter));

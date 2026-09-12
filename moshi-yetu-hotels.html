@@ -961,6 +961,17 @@
       </div>
     </main>
 
+    <section class="section" id="verifiedLiveSection">
+      <div class="container">
+        <div class="page-header">
+          <p class="eyebrow">Live directory</p>
+          <h2 class="display-m">Verified stays on Moshi Yetu</h2>
+          <p class="text-body">Only businesses that are approved in the Moshi Yetu database appear here.</p>
+        </div>
+        <div class="dest-grid" id="verifiedLiveGrid"><p class="muted">Loading…</p></div>
+      </div>
+    </section>
+
     <footer class="footer">
       <div class="container">
         <div class="footer-grid">
@@ -1018,5 +1029,18 @@
         applyFilter(urlFilter);
       }
     </script>
-  </body>
+  
+    <script>
+      (async function() {
+        const client = window.supabase ? window.supabase.createClient('https://nlvekegglbuabbxhdywm.supabase.co','sb_publishable_vIPSB5xRtjZMopdH1jANhw_vBYolT_8') : null;
+        const grid = document.getElementById('verifiedLiveGrid');
+        if (!client || !grid) return;
+        const { data, error } = await client.from('business_listings').select('id,business_name,description,address,region,category,phone,website,whatsapp').eq('status','approved').eq('category','Hotel & Lodge').order('created_at',{ascending:false});
+        if (error) { console.error(error); grid.innerHTML='<p class="muted">Live data is temporarily unavailable.</p>'; return; }
+        if (!data || !data.length) { grid.innerHTML='<p class="muted">No approved listings yet. Use “List your business” to add one for review.</p>'; return; }
+        const esc=v=>String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+        grid.innerHTML=data.map(b=>`<article class="card dest-card"><div class="card-media" style="background:linear-gradient(135deg,var(--kilimanjaro-500),var(--kilimanjaro-900));"><span class="badge badge-green">✓ Verified</span></div><div class="card-body"><h3 class="heading-m">${esc(b.business_name)}</h3><p class="location-tag">${esc([b.address,b.region].filter(Boolean).join(', '))}</p><p class="muted">${esc(b.description)}</p><div class="card-meta"><span>${esc(b.category)}</span><span>${b.website?`<a href="${esc(b.website)}" target="_blank" rel="noopener">Website →</a>`:''}</span></div></div></article>`).join('');
+      })();
+    </script>
+</body>
 </html>

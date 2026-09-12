@@ -810,7 +810,7 @@
           </div>
           <div class="info-chip">
             <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
-            Next event: Kilimanjaro Marathon · Feb 22
+            <span id="heroNextEvent">Next event loading…</span>
           </div>
           <div class="info-chip">
             <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
@@ -852,20 +852,20 @@
       <div class="container">
         <div class="grid-4">
           <div class="stat-card panel">
-            <strong>24</strong>
+            <strong id="statListings">—</strong>
             <span class="text-body">Verified listings</span>
           </div>
           <div class="stat-card panel">
-            <strong>6</strong>
+            <strong id="statTrekking">—</strong>
             <span class="text-body">Trekking routes</span>
           </div>
           <div class="stat-card panel">
-            <strong>6</strong>
+            <strong id="statCoffee">—</strong>
             <span class="text-body">Coffee experiences</span>
           </div>
           <div class="stat-card panel">
-            <strong>Feb 22</strong>
-            <span class="text-body">Next big event</span>
+            <strong id="statNextEvent">—</strong>
+            <span class="text-body">Next event</span>
           </div>
         </div>
       </div>
@@ -1141,6 +1141,24 @@
               href: 'moshi-yetu-coffee.html'
             })).join(''));
           });
+
+        // 6. Honest, database-backed homepage statistics
+        Promise.all([
+          sb.from('business_listings').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
+          sb.from('destinations').select('id', { count: 'exact', head: true }).eq('status', 'published'),
+          sb.from('events').select('title,start_date').eq('status', 'published').gte('start_date', new Date().toISOString().slice(0,10)).order('start_date', { ascending: true }).limit(1)
+        ]).then(([bizRes, destRes, eventRes]) => {
+          document.getElementById('statListings').textContent = bizRes.count ?? '—';
+          document.getElementById('statTrekking').textContent = destRes.count ?? '—';
+          const coffeeCountPromise = sb.from('business_listings').select('id', { count: 'exact', head: true }).eq('status', 'approved').eq('category', 'Coffee Experience');
+          return Promise.all([coffeeCountPromise, Promise.resolve(eventRes)]);
+        }).then(([coffeeRes, eventRes]) => {
+          document.getElementById('statCoffee').textContent = coffeeRes.count ?? '—';
+          const next = eventRes.data?.[0];
+          const label = next ? `${next.title} · ${new Date(next.start_date + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' })}` : 'No upcoming event listed';
+          document.getElementById('statNextEvent').textContent = next ? new Date(next.start_date + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '—';
+          document.getElementById('heroNextEvent').textContent = `Next event: ${label}`;
+        }).catch(() => {});
       })();
     </script>
 
@@ -1150,7 +1168,7 @@
           <div>
             <p class="eyebrow" style="color: var(--savanna-500);">For business owners</p>
             <h2 class="display-m" style="color: white;">Run a lodge, café, or tour company here?</h2>
-            <p class="text-body" style="color: rgba(255,255,255,0.82); margin-top: 8px;">Join 200+ verified businesses getting direct bookings — no commission middlemen.</p>
+            <p class="text-body" style="color: rgba(255,255,255,0.82); margin-top: 8px;">List your business on Moshi Yetu and reach travelers looking for trusted local experiences.</p>
           </div>
           <a href="moshi-yetu-list-business.html" class="button button-primary">
             List your business
